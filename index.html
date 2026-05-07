@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="VOLTIQ">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="pwa/manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%230a0a0f'/><path d='M108 32L60 100H92L80 160L140 88H108Z' fill='white'/></svg>">
+<title>VOLTIQ · Start</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ══ APPLE-INSPIRED DESIGN SYSTEM ════════════════════════════ */
+:root{
+  --bg:#000;
+  --bg2:#1c1c1e;
+  --bg3:#2c2c2e;
+  --bg4:#3a3a3c;
+  --tx:#fff;
+  --tx2:rgba(255,255,255,.65);
+  --tx3:rgba(255,255,255,.35);
+  --tx4:rgba(255,255,255,.15);
+  --sep:rgba(255,255,255,.08);
+  --ac:#6366f1;
+  --ok:#30d158;
+  --warn:#ff9f0a;
+  --err:#ff453a;
+  --pur:#bf5af2;
+  --teal:#40c8e0;
+  --sa:-apple-system,'Inter',system-ui,sans-serif;
+  --mo:'SF Mono','JetBrains Mono',ui-monospace,monospace;
+  --r:10px;--r2:14px;--r3:16px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* ── HEADER ── */
+.hdr{
+  position:sticky;top:0;z-index:100;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--sep);
+  padding:.7rem 1.25rem;
+  display:flex;align-items:center;gap:.75rem;
+}
+.logo{display:flex;align-items:center;gap:.6rem;flex:1;}
+.logo-mark{width:30px;height:30px;border-radius:7px;flex-shrink:0;overflow:hidden;}
+.logo-text{font-size:16px;font-weight:700;letter-spacing:-.3px;}
+.logo-text span{color:var(--ac);}
+
+/* ── HERO ── */
+.hero{padding:2.75rem 1.5rem 2rem;}
+.hero-title{
+  font-size:clamp(34px,10vw,50px);font-weight:700;letter-spacing:-.5px;
+  line-height:1.06;margin-bottom:.55rem;
+  animation:fadeUp .4s ease both;
+}
+.hero-title .hl{color:var(--ac);}
+.hero-sub{
+  font-size:15px;color:var(--tx3);line-height:1.55;
+  animation:fadeUp .4s .07s ease both;
+}
+
+/* ── STATS STRIP ── */
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--sep);border-bottom:1px solid var(--sep);
+  margin-bottom:2rem;
+}
+.stat{padding:1.1rem .5rem;text-align:center;}
+.stat+.stat{border-left:1px solid var(--sep);}
+.stat-val{font-size:26px;font-weight:700;letter-spacing:-.5px;line-height:1;}
+.stat-lbl{font-size:11px;color:var(--tx3);margin-top:4px;letter-spacing:.01em;}
+
+/* ── SECTION LABEL ── */
+.sec-label{
+  font-size:13px;font-weight:600;color:var(--tx2);
+  padding:0 1.25rem;margin-bottom:.65rem;
+}
+
+/* ── APP GRID ── */
+.app-grid{padding:0 1rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.app-tile{
+  background:var(--bg2);border-radius:var(--r3);
+  padding:1.1rem 1rem;text-decoration:none;
+  display:flex;flex-direction:column;gap:.35rem;
+  transition:opacity .15s;
+}
+.app-tile:active{opacity:.55;}
+.app-tile.wide{grid-column:1/-1;}
+
+/* Tile accent per category */
+.t-blue  .tile-icon{color:#6366f1;}
+.t-green .tile-icon{color:#30d158;}
+.t-orange .tile-icon{color:#ff9f0a;}
+.t-purple .tile-icon{color:#bf5af2;}
+.t-teal  .tile-icon{color:#40c8e0;}
+
+.tile-icon{font-size:30px;display:block;line-height:1;margin-bottom:.1rem;}
+.tile-num{font-size:10px;font-weight:500;color:var(--tx3);letter-spacing:.04em;text-transform:uppercase;}
+.tile-name{font-size:15px;font-weight:600;color:var(--tx);letter-spacing:-.2px;line-height:1.2;}
+.tile-tag{font-size:12px;color:var(--tx3);line-height:1.4;}
+.tile-features{display:flex;flex-direction:column;gap:1px;margin-top:.3rem;}
+.tile-feat{font-size:11px;color:var(--tx3);padding:2px 0;display:flex;align-items:center;gap:.4rem;}
+.tile-feat::before{content:'·';color:var(--tx4);font-size:16px;line-height:.8;}
+.tile-cta{
+  margin-top:auto;padding-top:.65rem;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;font-weight:500;color:var(--ac);
+}
+
+/* Wide tile */
+.app-tile.wide .tile-body{display:flex;gap:1rem;align-items:flex-start;}
+.app-tile.wide .tile-icon{font-size:36px;flex-shrink:0;}
+.app-tile.wide .tile-info{flex:1;min-width:0;}
+.app-tile.wide .tile-features{flex-direction:row;flex-wrap:wrap;gap:5px;margin-top:.4rem;}
+.app-tile.wide .tile-feat{
+  background:var(--bg3);border-radius:20px;
+  padding:3px 10px;font-size:10px;
+}
+.app-tile.wide .tile-feat::before{display:none;}
+
+/* ── LIVE DASHBOARD ── */
+.dash-section{padding:0 1rem 1.75rem;}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.dash-card{
+  background:var(--bg2);border-radius:var(--r2);
+  padding:.9rem 1rem;
+  cursor:pointer;text-decoration:none;display:block;
+  transition:opacity .15s;
+}
+.dash-card:active{opacity:.6;}
+.dc-bh{grid-column:1/-1;}
+.dash-ico{font-size:18px;margin-bottom:.3rem;display:block;}
+.dash-lbl{font-size:10px;font-weight:600;color:var(--tx3);letter-spacing:.04em;text-transform:uppercase;margin-bottom:.2rem;}
+.dash-val{font-size:24px;font-weight:700;letter-spacing:-.5px;color:var(--tx);line-height:1;}
+.dash-sub{font-size:11px;color:var(--tx3);margin-top:.3rem;line-height:1.4;}
+.dash-val.ok{color:var(--ok);}
+.dash-val.warn{color:var(--warn);}
+.dash-val.err{color:var(--err);}
+.dash-val.pur{color:var(--pur);}
+.dash-bar{height:2px;background:var(--bg3);border-radius:1px;margin-top:.55rem;overflow:hidden;}
+.dash-bar-fill{height:100%;border-radius:1px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+
+/* BH row */
+.bh-row{display:flex;align-items:center;gap:.65rem;}
+.bh-ico{font-size:18px;flex-shrink:0;}
+.bh-info{flex:1;min-width:0;}
+.bh-title{font-size:13px;font-weight:500;color:var(--tx);margin-bottom:2px;}
+.bh-meta{font-size:11px;color:var(--tx3);}
+.bh-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;flex-shrink:0;}
+.bh-badge.ok{background:rgba(48,209,88,.18);color:var(--ok);}
+.bh-badge.warn{background:rgba(255,159,10,.18);color:var(--warn);}
+.bh-badge.err{background:rgba(255,69,58,.15);color:var(--err);}
+
+/* ── BACKUP PANEL ── */
+.backup-panel{margin:0 1rem 2rem;background:var(--bg2);border-radius:var(--r2);overflow:hidden;}
+.backup-hdr{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;cursor:pointer;user-select:none;}
+.backup-hdr-icon{font-size:16px;}
+.backup-hdr-title{font-size:13px;font-weight:500;color:var(--tx);flex:1;}
+.backup-hdr-arrow{color:var(--tx3);font-size:13px;transition:transform .2s;}
+.backup-hdr.open .backup-hdr-arrow{transform:rotate(90deg);}
+.backup-body{display:none;border-top:1px solid var(--sep);padding:1rem;}
+.backup-body.open{display:block;}
+.backup-key-list{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:.85rem;}
+.backup-key{
+  display:flex;align-items:center;gap:6px;
+  font-size:10px;color:var(--tx3);
+  padding:5px 8px;background:var(--bg3);border-radius:7px;
+}
+.backup-key-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.backup-key.has-data .backup-key-dot{background:var(--ok);}
+.backup-key.no-data .backup-key-dot{background:var(--tx4);}
+.backup-key.has-data{color:var(--tx2);}
+.backup-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.backup-btn{
+  font-size:14px;font-weight:600;
+  padding:12px;border-radius:var(--r);border:none;cursor:pointer;transition:opacity .15s;
+}
+.backup-btn:active{opacity:.7;}
+.backup-btn.export{background:var(--ok);color:#000;}
+.backup-btn.import{background:var(--bg3);color:var(--tx2);}
+.backup-status{font-size:11px;color:var(--tx3);text-align:center;margin-top:.65rem;min-height:1.4em;}
+.backup-status.ok{color:var(--ok);}
+.backup-status.err{color:var(--err);}
+.backup-status.warn{color:var(--warn);}
+
+/* ── FOOTER ── */
+.footer{padding:2rem 1.5rem 3.5rem;text-align:center;border-top:1px solid var(--sep);}
+.footer-logo{font-size:14px;font-weight:700;color:var(--tx3);letter-spacing:-.2px;margin-bottom:.35rem;}
+.footer-logo span{color:var(--ac);}
+.footer-sub{font-size:11px;color:var(--tx3);line-height:1.6;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+@keyframes gradshift{to{background-position:200% center;}}
+.app-tile{animation:fadeUp .3s ease both;}
+.app-tile:nth-child(1){animation-delay:.08s;}
+.app-tile:nth-child(2){animation-delay:.12s;}
+.app-tile:nth-child(3){animation-delay:.16s;}
+.app-tile:nth-child(4){animation-delay:.20s;}
+.app-tile:nth-child(5){animation-delay:.24s;}
+
+/* ── LIGHT MODE ── */
+.lm{
+  --bg:#f2f2f7;--bg2:#fff;--bg3:#e5e5ea;--bg4:#d1d1d6;
+  --tx:#000;--tx2:rgba(0,0,0,.7);--tx3:rgba(0,0,0,.38);--tx4:rgba(0,0,0,.15);
+  --sep:rgba(0,0,0,.08);--ac:#4f46e5;
+}
+.lm .hdr{background:rgba(242,242,247,.85);}
+.lm .hero-title .hl{color:var(--ac);}
+@media print{.thm-btn{display:none!important;}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+      <rect width="30" height="30" rx="7" fill="#6366f1"/>
+      <path d="M17 5L9 16H14L12 25L20 14H15L17 5Z" fill="white"/>
+    </svg></div>
+    <div class="logo-text">VOLT<span>IQ</span></div>
+  </div>
+  <button class="thm-btn" id="thm-btn" onclick="thmToggle()" title="Hell/Dunkel" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;">🌙</button>
+</header>
+
+<section class="hero">
+  <h1 class="hero-title">Dein digitaler<br><span class="hl">Azubi-Begleiter</span></h1>
+  <p class="hero-sub">5 Apps für die Mechatroniker-Ausbildung — offline, kein Account.</p>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-val">5</div><div class="stat-lbl">Apps</div></div>
+  <div class="stat"><div class="stat-val">120+</div><div class="stat-lbl">Quiz-Fragen</div></div>
+  <div class="stat"><div class="stat-val">95+</div><div class="stat-lbl">Vokabeln</div></div>
+</div>
+
+
+<!-- LIVE DASHBOARD -->
+<div class="dash-section">
+  <div class="sec-label" style="padding:0;margin-bottom:.75rem;">Live-Status</div>
+  <div class="dash-grid">
+
+    <!-- Lernstreak -->
+    <a class="dash-card dc-streak" href="VOLTECH-lern-extra.html" id="dc-streak">
+      <span class="dash-ico">🔥</span>
+      <div class="dash-lbl">Lernstreak</div>
+      <div class="dash-val" id="dc-streak-val">—</div>
+      <div class="dash-sub" id="dc-streak-sub">Lade...</div>
+    </a>
+
+    <!-- SR fällig -->
+    <a class="dash-card dc-sr" href="VOLTECH-lern-basis.html" id="dc-sr">
+      <span class="dash-ico">🧠</span>
+      <div class="dash-lbl">Karteikarten fällig</div>
+      <div class="dash-val" id="dc-sr-val">—</div>
+      <div class="dash-sub" id="dc-sr-sub">Lade...</div>
+      <div class="dash-bar">
+        <div class="dash-bar-fill" id="dc-sr-bar" style="width:0%;background:var(--ac);"></div>
+      </div>
+    </a>
+
+    <!-- AP1 Sim -->
+    <a class="dash-card dc-ap1" href="VOLTECH-lern-basis.html" id="dc-ap1">
+      <span class="dash-ico">🎓</span>
+      <div class="dash-lbl">AP1 Bestleistung</div>
+      <div class="dash-val" id="dc-ap1-val">—</div>
+      <div class="dash-sub" id="dc-ap1-sub">Noch keine Simulation</div>
+    </a>
+
+    <!-- Berichtsheft -->
+    <a class="dash-card dc-bh" href="VOLTECH-berichtsheft.html" id="dc-bh" style="grid-column:1/-1;">
+      <div class="dash-lbl" style="margin-bottom:.5rem;">Berichtsheft · Aktuelle Woche</div>
+      <div class="bh-row" id="dc-bh-row">
+        <div class="bh-ico">📓</div>
+        <div class="bh-info">
+          <div class="bh-title" id="dc-bh-title">Lade...</div>
+          <div class="bh-meta" id="dc-bh-meta"></div>
+        </div>
+        <div class="bh-badge ok" id="dc-bh-badge">✓</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<div class="sec-label">Apps</div>
+
+<div class="app-grid">
+
+  <a class="app-tile t-blue wide" href="VOLTECH-mechatronik-pro.html">
+    <div class="tile-body">
+      <span class="tile-icon">⚙️</span>
+      <div class="tile-info">
+        <div class="tile-num">Tool-App</div>
+        <div class="tile-name">Profi-Rechner</div>
+        <div class="tile-tag">DC/AC · Kurzschluss · FU · Kabelquerschnitt</div>
+        <div class="tile-features">
+          <span class="tile-feat">Prüfbericht &amp; IBN-Protokoll</span>
+          <span class="tile-feat">KI-Assistent &amp; Normen</span>
+        </div>
+      </div>
+    </div>
+    <div class="tile-cta">Öffnen <span>→</span></div>
+  </a>
+
+  <a class="app-tile t-green" href="VOLTECH-lern-basis.html">
+    <span class="tile-icon">📚</span>
+    <div class="tile-num">Lern-App</div>
+    <div class="tile-name">Lernmodus</div>
+    <div class="tile-features">
+      <div class="tile-feat">Spaced Repetition</div>
+      <div class="tile-feat">121 Quiz-Fragen</div>
+      <div class="tile-feat">AP1-Simulation</div>
+    </div>
+    <div class="tile-cta">Öffnen <span>→</span></div>
+  </a>
+
+  <a class="app-tile t-orange" href="VOLTECH-berichtsheft.html">
+    <span class="tile-icon">📓</span>
+    <div class="tile-num">Berichtsheft</div>
+    <div class="tile-name">Ausbildungsheft</div>
+    <div class="tile-features">
+      <div class="tile-feat">Mo–Fr Einträge</div>
+      <div class="tile-feat">Textbausteine</div>
+      <div class="tile-feat">PDF-Export</div>
+    </div>
+    <div class="tile-cta">Öffnen <span>→</span></div>
+  </a>
+
+  <a class="app-tile t-purple" href="VOLTECH-sps.html">
+    <span class="tile-icon">🔧</span>
+    <div class="tile-num">SPS-App</div>
+    <div class="tile-name">SPS Trainer</div>
+    <div class="tile-features">
+      <div class="tile-feat">KOP Lernen &amp; Trainer</div>
+      <div class="tile-feat">Quiz &amp; Simulator</div>
+    </div>
+    <div class="tile-cta">Öffnen <span>→</span></div>
+  </a>
+
+  <a class="app-tile t-teal" href="VOLTECH-tools2.html">
+    <span class="tile-icon">🔬</span>
+    <div class="tile-num">Lerntools</div>
+    <div class="tile-name">Extras</div>
+    <div class="tile-features">
+      <div class="tile-feat">95+ Vokabeln DE↔EN</div>
+      <div class="tile-feat">Multimeter &amp; Logik</div>
+    </div>
+    <div class="tile-cta">Öffnen <span>→</span></div>
+  </a>
+
+</div>
+
+<!-- BACKUP PANEL -->
+<div class="backup-panel">
+  <div class="backup-hdr" id="backup-hdr" onclick="backupToggle()">
+    <span class="backup-hdr-icon">💾</span>
+    <div>
+      <div class="backup-hdr-title">Daten-Backup & Geräte-Transfer</div>
+      <div style="font-family:var(--mo);font-size:10px;color:var(--tx3);margin-top:1px;">Alle App-Daten exportieren oder importieren</div>
+    </div>
+    <span class="backup-hdr-arrow">›</span>
+  </div>
+  <div class="backup-body" id="backup-body">
+    <div style="font-family:var(--mo);font-size:10px;color:var(--tx3);margin-bottom:.65rem;line-height:1.6;">
+      Exportiert alle gespeicherten Daten aus dem Browser-Speicher (localStorage) als JSON-Datei.
+      Auf dem neuen Gerät dieselbe Datei importieren — alle Daten werden wiederhergestellt.
+    </div>
+    <!-- Key inventory -->
+    <div class="backup-key-list" id="backup-key-list"></div>
+    <!-- Actions -->
+    <div class="backup-btn-row">
+      <button class="backup-btn export" onclick="backupExport()">↓ Exportieren</button>
+      <button class="backup-btn import" onclick="backupImport()">↑ Importieren</button>
+    </div>
+    <div class="backup-status" id="backup-status"></div>
+    <!-- Hidden file input -->
+    <input type="file" id="backup-file-inp" accept=".json" style="display:none;" onchange="backupFileSelected(this)">
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">VOLT<span>IQ</span></div>
+  <div class="footer-sub" style="margin-top:.25rem;font-size:10px;opacity:.6;letter-spacing:.04em;">
+    <a href="arc-studio.html" style="color:inherit;text-decoration:none;">by Arc Studio</a>
+  </div>
+  <div class="footer-sub" style="margin-top:.5rem;">Alle Daten lokal · Kein Account · 100% offline</div>
+  <div class="footer-sub" style="margin-top:.35rem;font-size:9px;opacity:.5;">Alle Dateien in denselben Ordner legen für Offline-Modus</div>
+</footer>
+
+<script>
+
+// ── LIVE DASHBOARD ────────────────────────────────────────────────────
+(function(){
+  var now = Date.now();
+
+  // ── Helper ───────────────────────────────────────────────────────────
+  function lsGet(key, def){
+    try{ var v=localStorage.getItem(key); return v?JSON.parse(v):def; }
+    catch(e){ return def; }
+  }
+  function getISOWeek(date){
+    var d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));
+    var day=d.getUTCDay()||7;
+    d.setUTCDate(d.getUTCDate()+4-day);
+    var ys=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+    return Math.ceil((((d-ys)/86400000)+1)/7);
+  }
+
+  // ── 1. LERNSTREAK ─────────────────────────────────────────────────
+  var strData = lsGet('vt_streak', {days:[], best:0});
+  var today   = new Date().toISOString().split('T')[0];
+  var days    = strData.days || [];
+  var streak  = 0;
+  // Count consecutive days back from today
+  var d = new Date();
+  while(true){
+    var key = d.toISOString().split('T')[0];
+    if(days.indexOf(key) >= 0){ streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  var best = strData.best || 0;
+  var todayLearned = days.indexOf(today) >= 0;
+
+  var sVal = document.getElementById('dc-streak-val');
+  var sSub = document.getElementById('dc-streak-sub');
+  if(sVal){
+    sVal.textContent = streak + ' Tag' + (streak===1?'':'e');
+    sVal.className   = 'dash-val ' + (streak>=7?'ok': streak>=3?'warn':'');
+  }
+  if(sSub){
+    sSub.textContent = todayLearned
+      ? '✓ Heute schon gelernt · Bestleistung: '+best+'T'
+      : '⚠ Heute noch nicht gelernt — Streak in Gefahr!';
+    if(!todayLearned) sSub.style.color='var(--warn)';
+  }
+
+  // ── 2. SR KARTEN FÄLLIG ───────────────────────────────────────────
+  var srData  = lsGet('vt_sr_data', {});
+  var TOTAL   = 55; // approx total cards
+  var dueCount= 0, learnedCount=0;
+  Object.keys(srData).forEach(function(id){
+    var card = srData[id];
+    if(card.reps > 0) learnedCount++;
+    if(card.due && card.due <= now) dueCount++;
+  });
+  // Also count cards that have never been seen as "new/due"
+  var newCards   = TOTAL - learnedCount;
+  var totalDue   = dueCount + Math.min(newCards, 10); // max 10 new per day shown
+
+  var srVal = document.getElementById('dc-sr-val');
+  var srSub = document.getElementById('dc-sr-sub');
+  var srBar = document.getElementById('dc-sr-bar');
+  if(srVal){
+    srVal.textContent = dueCount;
+    srVal.className   = 'dash-val ' + (dueCount===0?'ok': dueCount>15?'err':'warn');
+  }
+  if(srSub){
+    srSub.textContent = learnedCount + '/' + TOTAL + ' Karten gelernt'
+      + (newCards>0 ? ' · '+newCards+' neu verfügbar' : ' · Alle bekannt 🎉');
+  }
+  if(srBar){
+    var pct = Math.min(100, Math.round(learnedCount / TOTAL * 100));
+    srBar.style.width   = pct + '%';
+    srBar.style.background = pct>=80?'var(--ok)':pct>=50?'var(--warn)':'var(--ac)';
+  }
+
+  // ── 3. AP1 BESTLEISTUNG ───────────────────────────────────────────
+  var ap1Best = lsGet('ap1_best', null);
+  var apVal   = document.getElementById('dc-ap1-val');
+  var apSub   = document.getElementById('dc-ap1-sub');
+  if(ap1Best && apVal){
+    var pct = ap1Best.pct||0;
+    var note = pct>=92?1:pct>=81?2:pct>=67?3:pct>=50?4:pct>=30?5:6;
+    var emoji= pct>=92?'🏆':pct>=81?'🥇':pct>=67?'👍':pct>=50?'✅':'⚠️';
+    apVal.textContent = 'Note '+note;
+    apVal.className   = 'dash-val ' + (note<=2?'ok':note<=3?'warn':note<=4?'':' err');
+    if(apSub) apSub.textContent = emoji+' '+pct+'% · '+ap1Best.correct+'/40 richtig · '+ap1Best.date;
+  } else {
+    if(apVal){ apVal.textContent='—'; apVal.className='dash-val'; }
+    if(apSub){ apSub.textContent='Noch keine AP1-Simulation gemacht'; }
+  }
+
+  // ── 4. BERICHTSHEFT STATUS ────────────────────────────────────────
+  var weeks   = lsGet('bh_weeks', []);
+  var curDate = new Date();
+  var curKW   = getISOWeek(curDate);
+  var curYear = curDate.getFullYear();
+  var curWeek = weeks.find(function(w){ return w.kw===curKW && w.jahr===curYear; });
+  var isWeekend = [0,6].indexOf(curDate.getDay()) >= 0;
+
+  var bhTitle = document.getElementById('dc-bh-title');
+  var bhMeta  = document.getElementById('dc-bh-meta');
+  var bhBadge = document.getElementById('dc-bh-badge');
+
+  function calcPct(w){
+    if(!w) return 0;
+    var filled = ['mo','di','mi','do','fr'].filter(function(d){
+      return w[d] && w[d].taetig && w[d].taetig.length > 5;
+    }).length;
+    return Math.round(filled/5*100);
+  }
+  function isWeekDone(w){
+    if(!w) return false;
+    return ['mo','di','mi','do','fr'].every(function(d){
+      return w[d] && w[d].taetig && w[d].taetig.length > 10;
+    });
+  }
+
+  if(!weeks.length){
+    if(bhTitle) bhTitle.textContent = 'Noch keine Wochen eingetragen';
+    if(bhMeta)  bhMeta.textContent  = 'Öffne das Berichtsheft und starte jetzt';
+    if(bhBadge){ bhBadge.textContent='Leer'; bhBadge.className='bh-badge err'; }
+  } else if(!curWeek){
+    if(bhTitle) bhTitle.textContent = 'KW '+curKW+' / '+curYear+' noch nicht begonnen';
+    if(bhMeta)  bhMeta.textContent  = weeks.length+' Wochen gesamt gespeichert';
+    if(bhBadge){
+      if(isWeekend){ bhBadge.textContent='Wochenende'; bhBadge.className='bh-badge ok'; }
+      else          { bhBadge.textContent='Fehlt!'; bhBadge.className='bh-badge err'; }
+    }
+  } else {
+    var pct  = calcPct(curWeek);
+    var done = isWeekDone(curWeek);
+    if(bhTitle) bhTitle.textContent = 'KW '+curKW+' / '+curYear+' · '+pct+'% ausgefüllt';
+    if(bhMeta){
+      var missingDays = ['mo','di','mi','do','fr'].filter(function(d){
+        return !(curWeek[d] && curWeek[d].taetig && curWeek[d].taetig.length > 5);
+      });
+      bhMeta.textContent = done
+        ? 'Woche vollständig ✓ · '+weeks.length+' Wochen gesamt'
+        : missingDays.length + ' Tag' + (missingDays.length===1?'':'e') + ' fehlen noch · '+weeks.length+' Wochen gesamt';
+    }
+    if(bhBadge){
+      if(done){ bhBadge.textContent='Vollständig'; bhBadge.className='bh-badge ok'; }
+      else if(pct>=60){ bhBadge.textContent=pct+'% fertig'; bhBadge.className='bh-badge warn'; }
+      else { bhBadge.textContent='Unvollständig'; bhBadge.className='bh-badge err'; }
+    }
+  }
+
+  // ── Animate values in on scroll ──────────────────────────────────
+  if('IntersectionObserver' in window){
+    var cards = document.querySelectorAll('.dash-card');
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting) e.target.style.animation='fadeUp .3s ease both';
+      });
+    }, {threshold:.1});
+    cards.forEach(function(c){ io.observe(c); });
+  }
+})();
+// ─────────────────────────────────────────────────────────────────
+
+</script>
+
+<script>
+// Service Worker — nur aktiv wenn lokal vom eigenen Server geladen
+// (nicht in Vorschau-Umgebungen wie claudeusercontent.com)
+if('serviceWorker' in navigator){
+  var isLocal = ['localhost','127.0.0.1','0.0.0.0'].includes(location.hostname)
+             || location.protocol === 'file:'
+             || location.hostname.endsWith('.local')
+             || location.hostname.endsWith('.github.io');
+  if(isLocal){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./pwa/sw.js', {scope: './'})
+        .then(function(reg){ console.log('[VOLTIQ] Offline-Modus aktiv:', reg.scope); })
+        .catch(function(err){ console.warn('[VOLTIQ] SW nicht geladen:', err.message); });
+    });
+  }
+}
+
+// ── DATEN-BACKUP ─────────────────────────────────────────────────────
+var BACKUP_KEYS = [
+  // Berichtsheft
+  { key:'bh_weeks',         label:'BH Wochen',       app:'📓' },
+  { key:'bh_profile',       label:'BH Profil',        app:'📓' },
+  { key:'bh_vorlagen',      label:'BH Vorlagen',      app:'📓' },
+  // Lernmodus Kern
+  { key:'vt_sr_data',       label:'SR-Karten',        app:'📚' },
+  { key:'vt_lern_prog',     label:'Lernfortschritt',  app:'📚' },
+  { key:'vt_fc_known',      label:'Karten bekannt',   app:'📚' },
+  { key:'vt_fc_unknown',    label:'Karten unbekannt', app:'📚' },
+  { key:'vt_quiz_hist',     label:'Quiz-Verlauf',     app:'📚' },
+  { key:'vt_szq_hs',        label:'SZ-Quiz Score',    app:'📚' },
+  { key:'vt_ft_hs',         label:'Formel-Highscore', app:'📚' },
+  { key:'vt_cd_data',       label:'Countdown',        app:'📚' },
+  { key:'ap1_best',         label:'AP1 Bestleistung', app:'📚' },
+  // Lernmodus Extras
+  { key:'vt_streak',        label:'Lernstreak',       app:'📗' },
+  { key:'vt_ap1',           label:'AP1-Checkliste',   app:'📗' },
+  { key:'vt_mycards',       label:'Eigene Karten',    app:'📗' },
+  { key:'vt_lt_hs',         label:'Logik-Score',      app:'📗' },
+  { key:'vt_vk_known',      label:'Vokabeln bekannt', app:'📗' },
+  { key:'vt_vk_unknown',    label:'Vokabeln offen',   app:'📗' },
+  // VOLTIQ
+  { key:'mechhub_pb',       label:'Prüfbericht',      app:'⚙️' },
+  // SPS
+  { key:'vt_sps_hs',        label:'SPS-Score',        app:'🔧' },
+  { key:'vt_tr_hs',         label:'Trainer-Score',    app:'🔧' },
+  // NICHT exportiert (sicherheitskritisch)
+  // ai_key  → API-Key bleibt bewusst lokal
+  // ai_history → zu groß, nicht sinnvoll übertragbar
+];
+
+function backupToggle(){
+  var hdr  = document.getElementById('backup-hdr');
+  var body = document.getElementById('backup-body');
+  if(!hdr||!body) return;
+  var open = body.classList.toggle('open');
+  hdr.classList.toggle('open', open);
+  if(open) backupRenderKeys();
+}
+
+function backupRenderKeys(){
+  var list = document.getElementById('backup-key-list');
+  if(!list) return;
+  list.innerHTML = BACKUP_KEYS.map(function(k){
+    var raw = localStorage.getItem(k.key);
+    var hasData = raw && raw !== 'null' && raw !== '{}' && raw !== '[]';
+    var size = raw ? Math.round(raw.length / 1024 * 10) / 10 : 0;
+    return '<div class="backup-key '+(hasData?'has-data':'no-data')+'">'+
+      '<div class="backup-key-dot"></div>'+
+      '<span>'+k.app+' '+k.label+'</span>'+
+      (hasData ? '<span style="margin-left:auto;font-size:9px;opacity:.6;">'+size+'KB</span>' : '')+
+    '</div>';
+  }).join('');
+}
+
+function backupExport(){
+  var data = {
+    version:  '1.0',
+    exported: new Date().toISOString(),
+    device:   navigator.userAgent.slice(0,80),
+    data:     {}
+  };
+  var count = 0;
+  BACKUP_KEYS.forEach(function(k){
+    var raw = localStorage.getItem(k.key);
+    if(raw && raw !== 'null'){
+      try{ data.data[k.key] = JSON.parse(raw); count++; }
+      catch(e){ data.data[k.key] = raw; count++; }
+    }
+  });
+
+  var json = JSON.stringify(data, null, 2);
+  var blob = new Blob([json], {type:'application/json'});
+  var url  = URL.createObjectURL(blob);
+  var date = new Date().toISOString().split('T')[0];
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'voltiq-backup-'+date+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  backupStatus('✓ '+count+' Datensätze exportiert ('+Math.round(json.length/1024)+'KB)', 'ok');
+  backupRenderKeys();
+}
+
+function backupImport(){
+  var inp = document.getElementById('backup-file-inp');
+  if(inp) inp.click();
+}
+
+function backupFileSelected(inp){
+  if(!inp.files||!inp.files[0]) return;
+  var file = inp.files[0];
+  backupStatus('⋯ Lese Datei…', 'warn');
+
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      var backup = JSON.parse(e.target.result);
+
+      // Validate
+      if(!backup.data || typeof backup.data !== 'object'){
+        backupStatus('✗ Ungültige Backup-Datei', 'err'); return;
+      }
+      // Version check
+      if(backup.version && backup.version !== '1.0'){
+        backupStatus('⚠ Unbekannte Version: '+backup.version, 'warn');
+      }
+
+      // Confirm
+      var keys = Object.keys(backup.data);
+      if(!confirm('Backup vom '+
+          (backup.exported?backup.exported.split('T')[0]:'unbekannt')+
+          ' importieren?\n'+keys.length+' Datensätze werden wiederhergestellt.\n'+
+          '\n⚠ Bestehende Daten werden ÜBERSCHRIEBEN!')){
+        backupStatus('Abgebrochen', ''); return;
+      }
+
+      // Restore
+      var restored = 0, failed = 0;
+      keys.forEach(function(key){
+        // Only restore known keys (security)
+        var known = BACKUP_KEYS.find(function(k){ return k.key === key; });
+        if(!known){ return; }
+        try{
+          localStorage.setItem(key, JSON.stringify(backup.data[key]));
+          restored++;
+        } catch(err){ failed++; }
+      });
+
+      backupStatus(
+        '✓ '+restored+' Datensätze wiederhergestellt'+(failed?' · '+failed+' Fehler':''),
+        failed ? 'warn' : 'ok'
+      );
+      backupRenderKeys();
+
+      // Refresh dashboard
+      if(typeof initDashboard === 'function') initDashboard();
+      else location.reload();
+
+    } catch(err){
+      backupStatus('✗ Fehler: '+err.message, 'err');
+    }
+  };
+  reader.readAsText(file);
+  // Reset input so same file can be selected again
+  inp.value = '';
+}
+
+function backupStatus(msg, cls){
+  var el = document.getElementById('backup-status');
+  if(!el) return;
+  el.textContent = msg;
+  el.className = 'backup-status' + (cls ? ' '+cls : '');
+}
+// ─────────────────────────────────────────────────────────────────────
+
+
+// ── THEME TOGGLE ─────────────────────────────────────────────────────
+(function(){
+  var KEY='voltiq_theme';
+  var isLight=localStorage.getItem(KEY)==='light';
+  function apply(l){
+    document.documentElement.classList.toggle('lm',l);
+    var b=document.getElementById('thm-btn');
+    if(b)b.textContent=l?'☀️':'🌙';
+  }
+  if(isLight)document.documentElement.classList.add('lm');
+  window.thmToggle=function(){
+    isLight=!isLight;
+    localStorage.setItem(KEY,isLight?'light':'dark');
+    apply(isLight);
+  };
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){apply(isLight);});
+  }else{apply(isLight);}
+})();
+// ─────────────────────────────────────────────────────────────────────
+
+</script>
+</body>
+</html>

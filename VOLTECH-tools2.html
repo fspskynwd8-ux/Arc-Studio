@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<link rel="manifest" href="pwa/manifest.json">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%230a0a0f'/><path d='M108 32L60 100H92L80 160L140 88H108Z' fill='white'/></svg>">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="VOLTIQ">
+<title>VOLTIQ · Lerntools</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ══ DESIGN SYSTEM ══════════════════════════════════════════ */
+:root{
+  --bg:#0a0a0f;
+  --bg2:#13131a;
+  --bg3:#1c1c26;
+  --bg4:#22222f;
+  --br:rgba(255,255,255,.07);
+  --br2:rgba(255,255,255,.12);
+  --br3:rgba(255,255,255,.18);
+  --tx:#f0f0f5;
+  --tx2:#b0b0c0;
+  --tx3:#6a6a80;
+  --tx4:#3a3a50;
+  --ac:#6366f1;
+  --acd:#4f46e5;
+  --acg:rgba(99,102,241,.15);
+  --ok:#30d158;
+  --okd:#1e9e42;
+  --warn:#ff9f0a;
+  --err:#ff453a;
+  --pur:#bf5af2;
+  --teal:#40c8e0;
+  --sa:'Inter',system-ui,sans-serif;
+  --mo:'JetBrains Mono',monospace;
+  --r:10px;--r2:14px;--r3:18px;
+  --sh:0 1px 4px rgba(0,0,0,.5),0 4px 16px rgba(0,0,0,.3);
+  --sh2:0 2px 8px rgba(0,0,0,.6),0 12px 40px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+body{
+  font-family:var(--sa);
+  background:var(--bg);
+  color:var(--tx);
+  min-height:100vh;
+  padding-bottom:5rem;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.35;
+}
+
+/* ── HEADER ── */
+.hdr{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,15,.88);
+  backdrop-filter:saturate(180%) blur(24px);
+  -webkit-backdrop-filter:saturate(180%) blur(24px);
+  border-bottom:1px solid var(--br);
+  padding:.75rem 1rem;
+  display:flex;align-items:center;gap:.65rem;
+}
+.hdr-logo{display:flex;align-items:center;gap:.6rem;flex:1;min-width:0;}
+.hdr-mark{
+  width:32px;height:32px;border-radius:9px;
+  background:linear-gradient(135deg,var(--app-accent1,#6366f1),var(--app-accent2,#5b5ef4));
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:16px;
+  box-shadow:0 2px 10px rgba(99,102,241,.35);
+}
+.hdr-title{font-size:15px;font-weight:700;color:var(--tx);letter-spacing:-.3px;}
+.hdr-title span{color:var(--app-color,var(--ac));}
+.hdr-sub{font-family:var(--mo);font-size:9px;color:var(--tx3);margin-top:1px;}
+.hdr-badge{
+  font-family:var(--mo);font-size:9px;font-weight:600;
+  color:var(--app-color,var(--ac));
+  background:var(--app-bg,var(--acg));
+  border:1px solid var(--app-border,rgba(99,102,241,.25));
+  border-radius:20px;padding:3px 9px;letter-spacing:.04em;
+  white-space:nowrap;flex-shrink:0;
+}
+
+/* ── BOTTOM NAV ── */
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(10,10,15,.92);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--br);
+  display:flex;padding:.4rem .5rem calc(.4rem + env(safe-area-inset-bottom));
+  z-index:40;
+}
+.bnav-btn{
+  flex:1;font-family:var(--sa);font-size:10px;font-weight:500;
+  padding:.45rem 2px;border:none;background:transparent;
+  cursor:pointer;color:var(--tx3);border-radius:var(--r);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  transition:all .15s;
+}
+.bnav-btn .bico{font-size:19px;line-height:1;}
+.bnav-btn.on{color:var(--app-color,var(--ac));}
+.bnav-btn:hover{background:rgba(255,255,255,.05);}
+
+/* ── SCREENS ── */
+.screen{display:none;padding:.85rem;position:relative;z-index:1;}
+.screen.on{display:block;animation:fi .2s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ── CARDS ── */
+.card{
+  background:var(--bg2);border-radius:var(--r2);
+  padding:1rem;margin-bottom:.75rem;
+  border:1px solid var(--br);box-shadow:var(--sh);
+  position:relative;overflow:hidden;
+}
+.card::after{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);
+}
+
+/* ── BADGES ── */
+.bdg{
+  display:inline-flex;font-family:var(--mo);
+  font-size:10px;font-weight:600;border-radius:6px;
+  padding:3px 9px;margin-bottom:.75rem;letter-spacing:.02em;
+}
+.bdg-b{background:var(--acg);color:#7db8ff;border:1px solid rgba(99,102,241,.2);}
+.bdg-g{background:rgba(48,209,88,.1);color:#4cd97a;border:1px solid rgba(48,209,88,.2);}
+.bdg-a{background:rgba(255,159,10,.1);color:#ffb830;border:1px solid rgba(255,159,10,.2);}
+.bdg-p{background:rgba(191,90,242,.1);color:#d67ff5;border:1px solid rgba(191,90,242,.2);}
+.bdg-r{background:rgba(255,69,58,.08);color:#ff6b62;border:1px solid rgba(255,69,58,.2);}
+.bdg-t{background:rgba(64,200,224,.1);color:#5dd4e8;border:1px solid rgba(64,200,224,.2);}
+
+/* ── HINT BOX ── */
+.hint{
+  font-family:var(--mo);font-size:11px;color:var(--tx3);
+  background:var(--bg3);border-radius:8px;
+  padding:7px 10px;margin-bottom:.75rem;
+  line-height:1.65;border:1px solid var(--br);
+}
+
+/* ── METRIC GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.mc{border-radius:var(--r);padding:.7rem;border:1px solid var(--br);}
+.mc.full{grid-column:1/-1;}
+.mc.g{background:rgba(48,209,88,.07);border-color:rgba(48,209,88,.15);}
+.mc.b{background:rgba(99,102,241,.07);border-color:rgba(99,102,241,.15);}
+.mc.a{background:rgba(255,159,10,.07);border-color:rgba(255,159,10,.15);}
+.mc.r{background:rgba(255,69,58,.06);border-color:rgba(255,69,58,.15);}
+.mc.p{background:rgba(191,90,242,.07);border-color:rgba(191,90,242,.15);}
+.mc.t{background:rgba(64,200,224,.07);border-color:rgba(64,200,224,.15);}
+.ml{font-family:var(--mo);font-size:9px;font-weight:700;margin-bottom:2px;
+    letter-spacing:.08em;text-transform:uppercase;}
+.mc.g .ml{color:#4cd97a;}.mc.b .ml{color:#7db8ff;}.mc.a .ml{color:#ffb830;}
+.mc.r .ml{color:#ff6b62;}.mc.p .ml{color:#d67ff5;}.mc.t .ml{color:#5dd4e8;}
+.mv{font-family:var(--mo);font-size:16px;font-weight:600;}
+.mc.g .mv{color:var(--ok);}.mc.b .mv{color:var(--ac);}
+.mc.a .mv{color:var(--warn);}.mc.r .mv{color:var(--err);}
+.mc.p .mv{color:var(--pur);}.mc.t .mv{color:var(--teal);}
+.ms{font-family:var(--mo);font-size:9px;color:var(--tx3);margin-top:2px;}
+
+/* ── BUTTONS ── */
+.btn{
+  width:100%;font-family:var(--sa);font-size:13px;font-weight:600;
+  padding:12px;border-radius:var(--r);border:none;
+  background:var(--app-color,var(--ac));color:#fff;
+  cursor:pointer;margin-top:6px;transition:all .15s;
+  box-shadow:0 1px 6px rgba(99,102,241,.25);
+  position:relative;z-index:1;
+}
+.btn:hover{filter:brightness(1.1);}
+.btn:active{transform:scale(.98);}
+.btn-s{
+  background:var(--bg3);color:var(--tx2);
+  box-shadow:none;border:1px solid var(--br2);
+}
+.btn-s:hover{background:var(--bg4);}
+.btn-r{
+  background:rgba(255,69,58,.08);color:var(--err);
+  box-shadow:none;border:1px solid rgba(255,69,58,.2);
+}
+
+/* ── SUB TAB BAR ── */
+.sbar{
+  display:flex;gap:3px;background:var(--bg3);
+  border-radius:var(--r2);padding:3px;margin-bottom:.85rem;
+  border:1px solid var(--br);
+}
+.sb{
+  flex:1;font-family:var(--sa);font-size:11px;font-weight:500;
+  padding:7px 4px;border-radius:10px;border:none;
+  background:transparent;color:var(--tx3);
+  cursor:pointer;text-align:center;transition:all .15s;
+}
+.sb.on{
+  background:var(--bg2);color:var(--app-color,var(--ac));
+  box-shadow:0 1px 4px rgba(0,0,0,.4);
+}
+
+/* ── FORMS ── */
+.f{display:flex;flex-direction:column;gap:4px;margin-bottom:.7rem;}
+.f label{
+  font-family:var(--mo);font-size:9px;font-weight:700;
+  color:var(--tx3);letter-spacing:.08em;text-transform:uppercase;
+}
+input,select,textarea{
+  width:100%;font-size:13px;font-family:var(--mo);
+  padding:10px 12px;border-radius:var(--r);
+  border:1px solid var(--br2);
+  background:var(--bg3);color:var(--tx);
+  outline:none;transition:all .15s;appearance:none;
+  -webkit-appearance:none;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--app-color,var(--ac));
+  box-shadow:0 0 0 3px var(--app-bg,var(--acg));
+  background:var(--bg2);
+}
+textarea{resize:vertical;line-height:1.6;}
+
+/* ── PROGRESS BAR ── */
+.prog-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:.5rem;}
+.prog-fill{height:100%;background:var(--app-color,var(--ac));border-radius:2px;transition:width .4s;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:5.5rem;left:50%;
+  transform:translateX(-50%) translateY(120px);
+  background:var(--bg3);border:1px solid var(--br2);
+  border-radius:var(--r);padding:.55rem 1.1rem;
+  font-family:var(--mo);font-size:11px;color:var(--tx);
+  z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;box-shadow:var(--sh2);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── SWITCHER ── */
+.sw-btn{
+  width:32px;height:32px;border-radius:9px;
+  background:rgba(255,255,255,.06);border:1px solid var(--br2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:all .15s;font-size:15px;
+}
+.sw-btn:hover{background:rgba(255,255,255,.1);}
+.sw-backdrop{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.sw-backdrop.open{opacity:1;pointer-events:all;}
+.sw-drawer{
+  position:fixed;bottom:0;left:0;right:0;z-index:501;
+  background:#0f0f18;
+  border-top:1px solid var(--br2);
+  border-radius:22px 22px 0 0;
+  padding:0 1rem calc(1.2rem + env(safe-area-inset-bottom));
+  transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.32,0,.67,0);
+  box-shadow:0 -12px 48px rgba(0,0,0,.6);
+}
+.sw-drawer.open{transform:translateY(0);transition:transform .36s cubic-bezier(.33,1,.68,1);}
+.sw-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin:12px auto 1.1rem;}
+.sw-title{
+  font-family:var(--mo);font-size:9px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.25);margin-bottom:.75rem;
+}
+.sw-apps{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:1rem;}
+.sw-app{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:.6rem .2rem;border-radius:12px;border:1px solid transparent;
+  text-decoration:none;cursor:pointer;transition:all .15s;background:transparent;
+}
+.sw-app:hover{background:rgba(255,255,255,.05);}
+.sw-app.active{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);}
+.sw-app-icon{
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:19px;
+}
+.sw-app-label{
+  font-family:var(--mo);font-size:8px;font-weight:600;
+  color:rgba(255,255,255,.35);text-align:center;line-height:1.3;
+}
+.sw-app.active .sw-app-label{color:rgba(255,255,255,.7);}
+/* ════════════════════════════════════════════════════════════ */
+
+:root{--app-accent1:#40c8e0;--app-accent2:#28a8c0;--app-color:#40c8e0;--app-bg:rgba(64,200,224,.1);--app-border:rgba(64,200,224,.2);--app-glow:rgba(64,200,224,.4);}
+.hdr{background:rgba(10,10,15,.88);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--br);padding:.75rem 1rem;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:.75rem;}
+.logo-name{font-size:16px;font-weight:700;color:var(--tx);letter-spacing:-.2px;}
+.logo-name span{color:var(--ac);}
+.logo-sub{font-family:var(--mo);font-size:9px;color:var(--tx3);}
+.hdr-badge{margin-left:auto;font-family:var(--mo);font-size:10px;color:var(--ac);background:var(--acg);border:1px solid rgba(0,113,227,.2);border-radius:20px;padding:3px 10px;}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,15,.92);backdrop-filter:blur(20px);border-top:1px solid var(--br);display:flex;padding:.4rem .5rem calc(.4rem + env(safe-area-inset-bottom));z-index:40;}
+.bnav-btn{flex:1;font-family:var(--sa);font-size:10px;font-weight:500;padding:.5rem 2px;border:none;background:transparent;cursor:pointer;color:var(--tx3);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .15s;}
+.bnav-icon{font-size:20px;line-height:1;}
+.bnav-btn.on{color:var(--ac);}
+.screen{display:none;padding:.85rem;}
+.screen.on{display:block;animation:fi .2s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.card{background:var(--bg2);border-radius:var(--r2);padding:1.1rem;margin-bottom:.75rem;border:1px solid var(--br);box-shadow:var(--sh);}
+.bdg{display:inline-flex;font-family:var(--sa);font-size:11px;font-weight:600;border-radius:6px;padding:4px 10px;margin-bottom:.8rem;}
+.bdg-b{background:var(--acg);color:var(--acd);border:1px solid rgba(0,113,227,.2);}
+.bdg-g{background:rgba(52,199,89,.1);color:var(--okd);border:1px solid rgba(52,199,89,.25);}
+.bdg-a{background:rgba(255,159,10,.1);color:#b25000;border:1px solid rgba(255,159,10,.3);}
+.bdg-p{background:rgba(175,82,222,.1);color:#7e2ea8;border:1px solid rgba(175,82,222,.25);}
+.bdg-r{background:rgba(255,59,48,.08);color:#c0392b;border:1px solid rgba(255,59,48,.2);}
+.hint{font-family:var(--mo);font-size:11px;color:var(--tx3);background:var(--bg3);border-radius:8px;padding:6px 10px;margin-bottom:.75rem;line-height:1.6;border:1px solid var(--br);}
+.btn{width:100%;font-family:var(--sa);font-size:14px;font-weight:600;padding:13px;border-radius:var(--r);border:none;background:var(--ac);color:#fff;cursor:pointer;margin-top:6px;transition:all .15s;box-shadow:0 1px 4px rgba(0,113,227,.2);}
+.btn:hover{background:var(--acd);}
+.btn:active{transform:scale(.98);}
+.btn-s{background:var(--bg3);color:var(--tx2);box-shadow:none;border:1px solid var(--br);}
+.btn-s:hover{background:var(--bg4,#22222f);}
+.btn-r{background:rgba(255,59,48,.08);color:var(--err);box-shadow:none;border:1px solid rgba(255,59,48,.2);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.mc{border-radius:var(--r);padding:.75rem;border:1px solid var(--br);}
+.mc.full{grid-column:1/-1;}
+.mc.g{background:rgba(52,199,89,.07);border-color:rgba(52,199,89,.2);}
+.mc.b{background:rgba(0,113,227,.06);border-color:rgba(0,113,227,.18);}
+.mc.a{background:rgba(255,159,10,.07);border-color:rgba(255,159,10,.2);}
+.mc.r{background:rgba(255,59,48,.06);border-color:rgba(255,59,48,.18);}
+.mc.p{background:rgba(175,82,222,.07);border-color:rgba(175,82,222,.2);}
+.ml{font-family:var(--mo);font-size:9px;font-weight:700;margin-bottom:2px;letter-spacing:.1em;text-transform:uppercase;}
+.mc.g .ml{color:var(--okd);}.mc.b .ml{color:var(--acd);}.mc.a .ml{color:#b25000;}.mc.r .ml{color:#c0392b;}.mc.p .ml{color:#7e2ea8;}
+.mv{font-family:var(--mo);font-size:15px;font-weight:500;}
+.mc.g .mv{color:var(--ok);}.mc.b .mv{color:var(--ac);}.mc.a .mv{color:var(--warn);}.mc.r .mv{color:var(--err);}.mc.p .mv{color:var(--pur);}
+.ms{font-family:var(--mo);font-size:10px;color:var(--tx3);margin-top:2px;}
+.sbar{display:flex;gap:4px;background:var(--bg3);border-radius:var(--r2);padding:3px;margin-bottom:.85rem;}
+.sb{flex:1;font-family:var(--sa);font-size:12px;font-weight:500;padding:8px 4px;border-radius:10px;border:none;background:transparent;color:var(--tx3);cursor:pointer;text-align:center;transition:all .15s;}
+.sb.on{background:var(--bg2);color:var(--ac);box-shadow:var(--sh);}
+.prog-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:.5rem;}
+.prog-fill{height:100%;background:var(--ac);border-radius:3px;transition:width .4s;}
+.toast{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(120px);background:var(--tx);border-radius:var(--r);padding:.6rem 1.2rem;font-family:var(--mo);font-size:12px;color:#fff;z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;box-shadow:var(--sh2);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── LOGIK TRAINER ── */
+.lt-net{background:var(--bg2);border:1px solid var(--br);border-radius:var(--r2);padding:1rem;margin-bottom:.75rem;box-shadow:var(--sh);}
+.lt-desc{font-family:var(--sa);font-size:14px;font-weight:600;color:var(--tx);margin-bottom:.75rem;line-height:1.4;}
+.lt-inputs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:.75rem;}
+.lt-bit{background:var(--bg3);border:1px solid var(--br);border-radius:var(--r);padding:.65rem .85rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all .2s;user-select:none;}
+.lt-bit:hover{border-color:var(--ac);}
+.lt-bit.on{background:var(--acg);border-color:var(--ac);}
+.lt-bit-name{font-family:var(--mo);font-size:12px;font-weight:700;color:var(--tx);}
+.lt-bit-val{width:26px;height:26px;border-radius:50%;border:2px solid var(--br2);display:flex;align-items:center;justify-content:center;font-family:var(--mo);font-size:12px;font-weight:700;color:var(--tx3);transition:all .2s;}
+.lt-bit.on .lt-bit-val{background:var(--ac);border-color:var(--ac);color:#fff;}
+.lt-output{text-align:center;padding:1rem;border-radius:var(--r2);border:2px solid var(--br);background:var(--bg2);margin-bottom:.75rem;transition:all .3s;}
+.lt-output.active{background:rgba(52,199,89,.07);border-color:rgba(52,199,89,.4);}
+.lt-out-label{font-family:var(--mo);font-size:11px;color:var(--tx3);margin-bottom:4px;}
+.lt-out-val{font-family:var(--mo);font-size:32px;font-weight:700;transition:color .3s;}
+.lt-formula{font-family:var(--mo);font-size:12px;color:var(--acd);background:var(--acg);border-radius:8px;padding:6px 10px;margin-bottom:.75rem;border:1px solid rgba(0,113,227,.15);}
+.lt-feedback{font-family:var(--mo);font-size:12px;padding:9px 12px;border-radius:var(--r);margin-bottom:.75rem;display:none;line-height:1.5;}
+.lt-feedback.ok{background:rgba(52,199,89,.08);border:1px solid rgba(52,199,89,.25);color:var(--okd);}
+.lt-feedback.fail{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.18);color:var(--err);}
+.lt-answer-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lt-ans{font-family:var(--sa);font-size:14px;font-weight:600;padding:13px;border-radius:var(--r);border:1px solid var(--br);background:var(--bg2);cursor:pointer;transition:all .15s;box-shadow:var(--sh);}
+.lt-ans.a0{border-color:rgba(255,59,48,.3);color:var(--err);}
+.lt-ans.a0:hover{background:rgba(255,59,48,.08);}
+.lt-ans.a1{border-color:rgba(52,199,89,.3);color:var(--okd);}
+.lt-ans.a1:hover{background:rgba(52,199,89,.08);}
+
+/* ── MULTIMETER ── */
+.mm-body{background:#0e0e1a;border-radius:var(--r2);padding:1.25rem;margin-bottom:.85rem;box-shadow:var(--sh2);}
+.mm-display{background:#080810;border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;position:relative;border:1px solid #2a2a4a;}
+.mm-mode{font-family:var(--mo);font-size:10px;color:#4a90d9;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.25rem;}
+.mm-value{font-family:var(--mo);font-size:42px;font-weight:300;color:#00e5a0;text-align:right;letter-spacing:-.02em;line-height:1;}
+.mm-unit{font-family:var(--mo);font-size:14px;color:#4a90d9;text-align:right;margin-top:3px;}
+.mm-range{font-family:var(--mo);font-size:10px;color:#3a3a5a;text-align:right;margin-top:4px;}
+.mm-mode-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:.85rem;}
+.mm-mode-btn{font-family:var(--mo);font-size:10px;font-weight:600;padding:8px 4px;border-radius:7px;border:1px solid #2a2a4a;background:#0f1428;color:#4a90d9;cursor:pointer;text-align:center;transition:all .15s;}
+.mm-mode-btn:hover{border-color:#4a90d9;color:#7db8f0;}
+.mm-mode-btn.on{background:#4a90d9;border-color:#4a90d9;color:#fff;}
+.mm-circuit{background:var(--bg2);border-radius:var(--r2);border:1px solid var(--br);padding:1rem;margin-bottom:.85rem;box-shadow:var(--sh);}
+.mm-circuit svg{display:block;width:100%;}
+.mm-probe{display:flex;gap:8px;margin-bottom:.85rem;}
+.mm-probe-btn{flex:1;font-family:var(--mo);font-size:11px;font-weight:600;padding:9px;border-radius:var(--r);border:2px solid;cursor:pointer;transition:all .15s;text-align:center;}
+.mm-probe-btn.red{border-color:#ff3b30;color:#ff3b30;background:rgba(255,59,48,.06);}
+.mm-probe-btn.red.sel{background:#ff3b30;color:#fff;}
+.mm-probe-btn.black{border-color:#1d1d1f;color:var(--tx2);background:rgba(0,0,0,.04);}
+.mm-probe-btn.black.sel{background:#1d1d1f;color:#fff;}
+.mm-node{cursor:pointer;transition:all .2s;}
+.mm-node circle{transition:all .2s;}
+.mm-node:hover circle{r:7;}
+.mm-node.sel-red circle{fill:#ff3b30;r:7;}
+.mm-node.sel-black circle{fill:#1d1d1f;r:7;}
+.mm-task{background:var(--acg);border:1px solid rgba(0,113,227,.2);border-radius:var(--r);padding:.85rem;margin-bottom:.75rem;font-family:var(--mo);font-size:12px;color:var(--acd);line-height:1.6;}
+.mm-result{font-family:var(--mo);font-size:12px;padding:9px 12px;border-radius:var(--r);margin-bottom:.75rem;display:none;line-height:1.5;}
+.mm-result.ok{background:rgba(52,199,89,.08);border:1px solid rgba(52,199,89,.25);color:var(--okd);}
+.mm-result.fail{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.18);color:var(--err);}
+
+/* ── VOKABEL-TRAINER ── */
+.vk-card-wrap{perspective:1000px;margin-bottom:1rem;cursor:pointer;min-height:180px;}
+.vk-card{width:100%;min-height:180px;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.vk-card.flip{transform:rotateY(180deg);}
+.vk-front,.vk-back{position:absolute;width:100%;min-height:180px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r2);padding:1.5rem 1.25rem;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:1px solid var(--br);box-shadow:var(--sh);}
+.vk-front{background:var(--bg2);border-color:rgba(0,113,227,.2);}
+.vk-back{background:rgba(48,209,88,.07);border-color:rgba(52,199,89,.3);transform:rotateY(180deg);}
+.vk-lang{font-family:var(--mo);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:.6rem;}
+.vk-term{font-family:var(--sa);font-size:20px;font-weight:700;color:var(--tx);line-height:1.3;margin-bottom:.4rem;}
+.vk-context{font-family:var(--mo);font-size:11px;color:var(--tx3);line-height:1.5;}
+.vk-translation{font-family:var(--sa);font-size:19px;font-weight:700;color:var(--okd);line-height:1.3;margin-bottom:.4rem;}
+.vk-example{font-family:var(--mo);font-size:11px;color:var(--tx2);line-height:1.6;font-style:italic;}
+.vk-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:.85rem;}
+.vk-btn{font-family:var(--mo);font-size:12px;font-weight:600;padding:10px 6px;border-radius:var(--r);border:1px solid;cursor:pointer;text-align:center;transition:all .15s;}
+.vk-no{background:rgba(255,59,48,.07);border-color:rgba(255,59,48,.25);color:var(--err);}
+.vk-skip{background:var(--bg3);border-color:var(--br);color:var(--tx3);}
+.vk-yes{background:rgba(52,199,89,.09);border-color:rgba(52,199,89,.3);color:var(--okd);}
+.vk-cat-bar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.85rem;}
+.vk-cat{font-family:var(--mo);font-size:10px;font-weight:600;padding:5px 10px;border-radius:20px;border:1px solid var(--br);background:var(--bg2);color:var(--tx3);cursor:pointer;transition:all .15s;}
+.vk-cat.on{background:var(--ac);border-color:var(--acd);color:#fff;}
+.vk-search{width:100%;font-family:var(--mo);font-size:13px;padding:10px 13px;border-radius:var(--r);border:1px solid var(--br);background:var(--bg3);color:var(--tx);outline:none;margin-bottom:.75rem;}
+.vk-search:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(0,113,227,.1);}
+.vk-list-item{background:var(--bg2);border:1px solid var(--br);border-radius:var(--r);padding:.75rem;margin-bottom:5px;display:flex;gap:.75rem;align-items:flex-start;box-shadow:var(--sh);}
+.vk-de{font-family:var(--sa);font-size:13px;font-weight:600;color:var(--tx);min-width:120px;flex-shrink:0;}
+.vk-en{font-family:var(--sa);font-size:13px;color:var(--acd);}
+.vk-ctx{font-family:var(--mo);font-size:10px;color:var(--tx3);display:block;margin-top:2px;}
+
+/* ── APP SWITCHER ─────────────────────────────────────── */
+.sw-btn{
+  width:34px;height:34px;border-radius:10px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:all .15s;
+  font-size:16px;
+}
+.sw-btn:hover{background:rgba(255,255,255,.12);}
+.sw-backdrop{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+.sw-backdrop.open{opacity:1;pointer-events:all;}
+.sw-drawer{
+  position:fixed;bottom:0;left:0;right:0;z-index:501;
+  background:#13131a;
+  border-top:1px solid rgba(255,255,255,.08);
+  border-radius:20px 20px 0 0;
+  padding:0 1rem calc(1rem + env(safe-area-inset-bottom));
+  transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.32,0,.67,0);
+  box-shadow:0 -8px 40px rgba(0,0,0,.5);
+}
+.sw-drawer.open{
+  transform:translateY(0);
+  transition:transform .35s cubic-bezier(.33,1,.68,1);
+}
+.sw-handle{
+  width:36px;height:4px;border-radius:2px;
+  background:rgba(255,255,255,.15);
+  margin:10px auto 1rem;
+}
+.sw-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.3);
+  margin-bottom:.75rem;padding-left:2px;
+}
+.sw-apps{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:6px;margin-bottom:1rem;
+}
+.sw-app{
+  display:flex;flex-direction:column;align-items:center;
+  gap:5px;padding:.6rem .25rem;border-radius:12px;
+  border:1px solid transparent;
+  text-decoration:none;cursor:pointer;transition:all .15s;
+  background:transparent;
+}
+.sw-app:hover{background:rgba(255,255,255,.05);}
+.sw-app.active{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.1);
+}
+.sw-app-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;transition:transform .15s;
+}
+.sw-app:active .sw-app-icon{transform:scale(.92);}
+.sw-app-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;font-weight:600;
+  color:rgba(255,255,255,.45);text-align:center;
+  letter-spacing:.01em;line-height:1.2;
+}
+.sw-app.active .sw-app-label{color:rgba(255,255,255,.75);}
+.sw-home-link{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.85rem;border-radius:12px;
+  background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);
+  text-decoration:none;color:#6366f1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;font-weight:600;letter-spacing:.02em;
+  transition:all .15s;
+}
+.sw-home-link:hover{background:rgba(99,102,241,.15);}
+
+
+/* ══ ANIMATIONS & EFFECTS ══════════════════════════════════════════ */
+
+/* Entrance animations */
+@keyframes fadeUp   {from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn   {from{opacity:0;}to{opacity:1;}}
+@keyframes slideIn  {from{opacity:0;transform:translateX(-16px);}to{opacity:1;transform:none;}}
+@keyframes popIn    {from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+@keyframes shimmer  {0%{background-position:-200% 0;}100%{background-position:200% 0;}}
+@keyframes pulse    {0%,100%{opacity:1;}50%{opacity:.5;}}
+@keyframes spin     {to{transform:rotate(360deg);}}
+@keyframes glow     {0%,100%{box-shadow:0 0 8px var(--app-glow,rgba(99,102,241,.4));}
+                     50%{box-shadow:0 0 24px var(--app-glow,rgba(99,102,241,.7));}}
+@keyframes float    {0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes scanline {0%{transform:translateY(-100%);}100%{transform:translateY(100vh);}}
+
+/* Screen entrance */
+.screen.on  {animation:fadeUp .22s cubic-bezier(.33,1,.68,1) both;}
+.pnl.on,.pnl[style*="display: block"]
+            {animation:fadeUp .22s cubic-bezier(.33,1,.68,1) both;}
+
+/* Card hover lift */
+.card{transition:transform .18s,box-shadow .18s,border-color .18s;}
+.card:hover{transform:translateY(-2px);box-shadow:0 4px 24px rgba(0,0,0,.4);}
+
+/* Stagger children */
+.card:nth-child(1){animation-delay:.04s;}
+.card:nth-child(2){animation-delay:.08s;}
+.card:nth-child(3){animation-delay:.12s;}
+.card:nth-child(4){animation-delay:.16s;}
+
+/* Button press */
+.btn{transition:filter .15s,transform .12s,box-shadow .15s;}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px);}
+.btn:active{transform:scale(.97) translateY(0);}
+
+/* Glow border on focus */
+input:focus,select:focus,textarea:focus{
+  animation:none;
+  border-color:var(--app-color,var(--ac));
+  box-shadow:0 0 0 3px var(--app-bg,var(--acg)),0 0 12px var(--app-glow,rgba(99,102,241,.2));
+}
+
+/* Nav btn active indicator */
+.bnav-btn.on::after{
+  content:'';display:block;width:20px;height:2px;
+  background:var(--app-color,var(--ac));
+  border-radius:1px;margin:2px auto 0;
+  animation:popIn .2s ease both;
+}
+
+/* BNAV hover */
+.bnav-btn{transition:color .15s,background .15s;}
+.bnav-btn:hover .bico{transform:translateY(-2px);transition:transform .15s;}
+
+/* Metric cards pop */
+.mc{transition:transform .15s,border-color .15s;}
+.mc:hover{transform:scale(1.02);}
+
+/* Shimmer skeleton (for loading states) */
+.skeleton{
+  background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4,#22222f) 50%,var(--bg3) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:var(--r);
+}
+
+/* Progress bar animated fill */
+.prog-fill{transition:width .5s cubic-bezier(.4,0,.2,1);}
+
+/* Badge pulse for new/active */
+.bdg.pulse-badge{animation:pulse 2s infinite;}
+
+/* Logo mark glow */
+.hdr-mark{
+  transition:box-shadow .3s;
+  box-shadow:0 2px 10px var(--app-glow,rgba(99,102,241,.35));
+}
+.hdr-mark:hover{
+  box-shadow:0 4px 20px var(--app-glow,rgba(99,102,241,.6));
+}
+
+/* App tile hover (index) */
+.app-tile{transition:transform .2s cubic-bezier(.33,1,.68,1),border-color .2s,box-shadow .2s;}
+.app-tile:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5);}
+.app-tile:active{transform:scale(.98);}
+
+/* Drawer slide hint */
+.sw-drawer{transition:transform .35s cubic-bezier(.33,1,.68,1);}
+
+/* Toast bounce */
+.toast.show{animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both;}
+
+/* ── HEADER GLOW LINE ── */
+.hdr::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    var(--app-color,var(--ac)) 50%,
+    transparent 100%);
+  opacity:.4;
+}
+.hdr{position:sticky;top:0;z-index:100;}
+
+/* ── THEME TOGGLE ── */
+.thm-btn{
+  width:32px;height:32px;border-radius:9px;
+  background:rgba(128,128,128,.1);border:1px solid var(--br2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:all .15s;font-size:15px;
+  margin-right:4px;
+}
+.thm-btn:hover{background:rgba(128,128,128,.18);}
+@media print{.thm-btn{display:none!important;}}
+
+/* ══ LIGHT MODE ══════════════════════════════════════════════ */
+.lm{
+  --bg:#f5f5f7;--bg2:#ffffff;--bg3:#e8e8ed;--bg4:#d8d8de;
+  --br:rgba(0,0,0,.08);--br2:rgba(0,0,0,.14);--br3:rgba(0,0,0,.22);
+  --tx:#1a1a1f;--tx2:#3a3a4a;--tx3:#7a7a90;--tx4:#b0b0c0;
+  --sh:0 1px 4px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+  --sh2:0 2px 8px rgba(0,0,0,.12),0 12px 40px rgba(0,0,0,.1);
+}
+.lm body,.lm{background:var(--bg);color:var(--tx);}
+.lm body::before{opacity:.12;}
+.lm .hdr{background:rgba(245,245,247,.9);}
+.lm .bnav{background:rgba(245,245,247,.95);}
+.lm .toast{background:var(--bg2);color:var(--tx);}
+.lm .thm-btn{color:var(--tx2);}
+
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-logo">
+    <div class="hdr-mark" style="padding:0;"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+  <rect width="32" height="32" rx="8" fill="url(#gtools)"/>
+  <path d="M19 4L10 17H16L13 28L22 15H16L19 4Z" fill="white"/>
+  <defs><linearGradient id="gtools" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+    <stop offset="0%" stop-color="#40c8e0"/><stop offset="100%" stop-color="#28a8c0"/>
+  </linearGradient></defs>
+</svg></div>
+    <div>
+      <div class="hdr-title">Lern<span>tools</span></div>
+      <div class="hdr-sub">Logik · Messung · Englisch</div>
+    </div>
+  </div>
+  <div class="hdr-badge">AP1/AP2</div>
+  <button class="thm-btn" id="thm-btn" onclick="thmToggle()" title="Hell/Dunkel">🌙</button>
+  <button class="sw-btn" id="sw-open-btn" title="Apps wechseln">⊞</button>
+</header>
+
+<div class="sw-backdrop" id="sw-backdrop" onclick="swClose()"></div>
+<div class="sw-drawer" id="sw-drawer">
+  <div class="sw-handle"></div>
+  <div class="sw-title">VOLTIQ Suite</div>
+  <div class="sw-apps">
+    <a class="sw-app " href="VOLTECH-mechatronik-pro.html">
+      <div class="sw-app-icon" style="background:rgba(99,102,241,.15);">⚙️</div>
+      <div class="sw-app-label">VOLTIQ</div>
+    </a>
+    <a class="sw-app " href="VOLTECH-lern-basis.html">
+      <div class="sw-app-icon" style="background:rgba(48,209,88,.12);">📚</div>
+      <div class="sw-app-label">Lern­modus</div>
+    </a>
+    <a class="sw-app " href="VOLTECH-berichtsheft.html">
+      <div class="sw-app-icon" style="background:rgba(255,159,10,.12);">📓</div>
+      <div class="sw-app-label">Berichts­heft</div>
+    </a>
+    <a class="sw-app " href="VOLTECH-sps.html">
+      <div class="sw-app-icon" style="background:rgba(191,90,242,.12);">🔧</div>
+      <div class="sw-app-label">SPS­Trainer</div>
+    </a>
+    <a class="sw-app active" href="VOLTECH-tools2.html">
+      <div class="sw-app-icon" style="background:rgba(64,200,224,.12);">🔬</div>
+      <div class="sw-app-label">Lern­tools</div>
+    </a>
+  </div>
+  <a class="sw-home-link" href="index.html">⌂ VOLTIQ · Start</a>
+</div>
+
+<!-- LOGIK TRAINER -->
+<div id="s-logik" class="screen on">
+  <div id="lt-menu">
+    <div class="card">
+      <div class="bdg bdg-b">🔁 Logik-Trainer</div>
+      <p class="hint">// KOP-Schaltungen lesen — Ausgangszustand bestimmen. Eingänge schalten, Logik verstehen.</p>
+      <div class="g2" style="margin-bottom:1rem;">
+        <div class="mc b"><div class="ml">Aufgaben</div><div class="mv">20</div><div class="ms">AND · OR · NOT · Kombi</div></div>
+        <div class="mc g"><div class="ml">Highscore</div><div class="mv" id="lt-hs">–</div></div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <label style="font-family:var(--mo);font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:5px;">Schwierigkeit</label>
+        <select id="lt-diff" style="width:100%;font-size:14px;font-family:var(--mo);padding:11px 13px;border-radius:var(--r);border:1px solid var(--br);background:var(--bg3);color:var(--tx);outline:none;">
+          <option value="easy">Einfach — AND, OR, NOT</option>
+          <option value="medium" selected>Mittel — Kombinationen</option>
+          <option value="hard">Schwer — Selbsthaltung, Flanken</option>
+        </select>
+      </div>
+      <button class="btn" id="lt-start">→ TRAINER STARTEN</button>
+    </div>
+  </div>
+  <div id="lt-game" style="display:none;">
+    <div class="card" style="padding:.85rem;margin-bottom:.75rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
+        <div class="bdg bdg-b" id="lt-num" style="margin:0;">1/20</div>
+        <div style="font-family:var(--mo);font-size:11px;color:var(--tx3);" id="lt-score-live">0 ✓</div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="lt-prog" style="width:0%"></div></div>
+    </div>
+    <div class="lt-net">
+      <div class="lt-desc" id="lt-desc"></div>
+      <div class="lt-formula" id="lt-formula"></div>
+      <div class="lt-inputs" id="lt-inputs"></div>
+      <div class="lt-output" id="lt-output">
+        <div class="lt-out-label" id="lt-out-label">A0.0</div>
+        <div class="lt-out-val" id="lt-out-val" style="color:var(--tx3);">?</div>
+      </div>
+      <div class="lt-feedback" id="lt-feedback"></div>
+      <div class="lt-answer-btns" id="lt-ans-btns">
+        <button class="lt-ans a0" data-ans="0">✕ Ausgang = 0</button>
+        <button class="lt-ans a1" data-ans="1">✓ Ausgang = 1</button>
+      </div>
+      <button class="btn btn-s" id="lt-next" style="display:none;margin-top:.75rem;">Weiter →</button>
+    </div>
+    <button class="btn btn-s" id="lt-abort">← Abbrechen</button>
+  </div>
+  <div id="lt-end" style="display:none;">
+    <div class="card">
+      <div class="bdg bdg-g">Ergebnis 🎉</div>
+      <div style="font-family:var(--mo);font-size:38px;font-weight:700;text-align:center;margin:.5rem 0;" id="lt-final"></div>
+      <div id="lt-final-info" style="margin-bottom:1rem;"></div>
+      <button class="btn" id="lt-again">↺ Nochmal</button>
+      <button class="btn btn-s" id="lt-back" style="margin-top:8px;">← Menü</button>
+    </div>
+  </div>
+</div>
+
+<!-- MESSTECHNIK SIMULATOR -->
+<div id="s-mess" class="screen">
+  <div class="sbar">
+    <button class="sb on" data-sub="mm" data-sp="mm-sim">Simulator</button>
+    <button class="sb" data-sub="mm" data-sp="mm-aufg">Aufgaben</button>
+    <button class="sb" data-sub="mm" data-sp="mm-info">Tipps</button>
+  </div>
+
+  <div id="mm-sim" class="sp on">
+    <div class="mm-body">
+      <div class="mm-display">
+        <div class="mm-mode" id="mm-mode-label">SPANNUNG AC</div>
+        <div class="mm-value" id="mm-val">0.000</div>
+        <div class="mm-unit" id="mm-unit">V</div>
+        <div class="mm-range" id="mm-range">Messbereich: 600V</div>
+      </div>
+      <div class="mm-mode-btns">
+        <button class="mm-mode-btn on" data-mode="VAC">V~<br>AC</button>
+        <button class="mm-mode-btn" data-mode="VDC">V⎓<br>DC</button>
+        <button class="mm-mode-btn" data-mode="AAC">A~<br>AC</button>
+        <button class="mm-mode-btn" data-mode="ADC">A⎓<br>DC</button>
+        <button class="mm-mode-btn" data-mode="OHM">Ω<br>Widerstand</button>
+        <button class="mm-mode-btn" data-mode="CONT">))))<br>Durchgang</button>
+        <button class="mm-mode-btn" data-mode="DIODE">⊣<br>Diode</button>
+        <button class="mm-mode-btn" data-mode="CAP">⊤⊥<br>Kapazität</button>
+      </div>
+    </div>
+    <div class="card" style="padding:.85rem;">
+      <div style="font-family:var(--mo);font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem;">Messschaltung</div>
+      <div class="mm-circuit">
+        <svg id="mm-svg" viewBox="0 0 320 180" height="180" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="mm-probe">
+        <button class="mm-probe-btn red on" id="mm-red-btn">🔴 Roter Messstift</button>
+        <button class="mm-probe-btn black" id="mm-black-btn">⚫ Schwarzer COM</button>
+      </div>
+      <div style="font-family:var(--mo);font-size:11px;color:var(--tx3);margin-bottom:.75rem;" id="mm-probe-hint">// Tippe auf einen Messpunkt im Schaltkreis</div>
+      <button class="btn" id="mm-new-circuit">🔄 Neue Schaltung</button>
+    </div>
+  </div>
+
+  <div id="mm-aufg" class="sp">
+    <div id="mm-task-area"></div>
+    <div id="mm-task-controls" style="display:none;">
+      <div class="mm-task" id="mm-task-text"></div>
+      <div class="mm-result" id="mm-task-result"></div>
+      <div style="display:flex;gap:8px;">
+        <input id="mm-answer" type="number" inputmode="decimal" step="any" placeholder="Messwert eingeben" style="flex:1;font-family:var(--mo);font-size:14px;padding:11px 13px;border-radius:var(--r);border:1px solid var(--br);background:var(--bg3);color:var(--tx);outline:none;">
+        <select id="mm-unit-sel" style="width:auto;font-family:var(--mo);font-size:13px;padding:11px;border-radius:var(--r);border:1px solid var(--br);background:var(--bg3);color:var(--tx);outline:none;">
+          <option>V</option><option>mV</option><option>A</option><option>mA</option><option>Ω</option><option>kΩ</option>
+        </select>
+      </div>
+      <button class="btn" id="mm-check-btn" style="margin-top:8px;">→ PRÜFEN</button>
+      <button class="btn btn-s" id="mm-next-task" style="margin-top:8px;display:none;">Nächste Aufgabe →</button>
+    </div>
+  </div>
+
+  <div id="mm-info" class="sp">
+    <div class="card">
+      <div class="bdg bdg-b">📏 Messregeln</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.18);border-radius:var(--r);padding:.75rem;">
+          <div style="font-family:var(--sa);font-size:12px;font-weight:600;color:var(--err);margin-bottom:3px;">⚠ Strommessung</div>
+          <div style="font-family:var(--mo);font-size:11px;color:var(--tx2);line-height:1.6;">Amperemeter IMMER in Reihe schalten! Niemals parallel — Kurzschluss! Stromzange (Clamp) ist sicherer.</div>
+        </div>
+        <div style="background:rgba(0,113,227,.06);border:1px solid rgba(0,113,227,.18);border-radius:var(--r);padding:.75rem;">
+          <div style="font-family:var(--sa);font-size:12px;font-weight:600;color:var(--acd);margin-bottom:3px;">✓ Spannungsmessung</div>
+          <div style="font-family:var(--mo);font-size:11px;color:var(--tx2);line-height:1.6;">Voltmeter PARALLEL zum Bauteil. Hoher Innenwiderstand (≥10 MΩ). Messbereich von oben annähern!</div>
+        </div>
+        <div style="background:rgba(52,199,89,.06);border:1px solid rgba(52,199,89,.18);border-radius:var(--r);padding:.75rem;">
+          <div style="font-family:var(--sa);font-size:12px;font-weight:600;color:var(--okd);margin-bottom:3px;">✓ Widerstandsmessung</div>
+          <div style="font-family:var(--mo);font-size:11px;color:var(--tx2);line-height:1.6;">Nur spannungslos messen! Bauteil ausbauen oder einen Pol trennen. Sonst Parallelwiderstände verfälschen!</div>
+        </div>
+        <div style="background:rgba(255,159,10,.06);border:1px solid rgba(255,159,10,.2);border-radius:var(--r);padding:.75rem;">
+          <div style="font-family:var(--sa);font-size:12px;font-weight:600;color:#b25000;margin-bottom:3px;">💡 Durchgangsprüfung</div>
+          <div style="font-family:var(--mo);font-size:11px;color:var(--tx2);line-height:1.6;">Piept bei R &lt; 30Ω. Leitung spannungslos! Für Kabelprüfung, Schutzleiter, Kontakte.</div>
+        </div>
+        <div style="background:rgba(175,82,222,.07);border:1px solid rgba(175,82,222,.2);border-radius:var(--r);padding:.75rem;">
+          <div style="font-family:var(--sa);font-size:12px;font-weight:600;color:#7e2ea8;margin-bottom:3px;">🔌 Stiftreihenfolge</div>
+          <div style="font-family:var(--mo);font-size:11px;color:var(--tx2);line-height:1.6;">COM (schwarz) zuerst einstecken, dann Messstift (rot). Beim Herausziehen: Messstift zuerst raus!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VOKABEL TRAINER -->
+<div id="s-vokabel" class="screen">
+  <div class="sbar">
+    <button class="sb on" data-sub="vk" data-sp="vk-lernen">Lernen</button>
+    <button class="sb" data-sub="vk" data-sp="vk-liste">Wörterbuch</button>
+    <button class="sb" data-sub="vk" data-sp="vk-quiz">Mini-Quiz</button>
+  </div>
+
+  <div id="vk-lernen" class="sp on">
+    <div class="vk-cat-bar" id="vk-cats"></div>
+    <div class="prog-bar" style="margin-bottom:.5rem;"><div class="prog-fill" id="vk-prog" style="width:0%"></div></div>
+    <div style="font-family:var(--mo);font-size:10px;color:var(--tx3);display:flex;justify-content:space-between;margin-bottom:.85rem;">
+      <span id="vk-counter">1/1</span>
+      <span id="vk-stats">0 gewusst</span>
+    </div>
+    <div class="vk-card-wrap" id="vk-wrap">
+      <div class="vk-card" id="vk-card">
+        <div class="vk-front">
+          <div class="vk-lang" id="vk-from-lang">DEUTSCH</div>
+          <div class="vk-term" id="vk-term"></div>
+          <div class="vk-context" id="vk-context"></div>
+          <div style="font-family:var(--mo);font-size:11px;color:var(--tx3);margin-top:.75rem;">Tippe zum Umdrehen ↕</div>
+        </div>
+        <div class="vk-back">
+          <div class="vk-lang">ENGLISH</div>
+          <div class="vk-translation" id="vk-trans"></div>
+          <div class="vk-example" id="vk-example"></div>
+        </div>
+      </div>
+    </div>
+    <div class="vk-btns">
+      <button class="vk-btn vk-no" id="vk-no">✕ Nochmal</button>
+      <button class="vk-btn vk-skip" id="vk-skip">→ Weiter</button>
+      <button class="vk-btn vk-yes" id="vk-yes">✓ Gewusst</button>
+    </div>
+    <div style="display:flex;gap:7px;">
+      <button class="btn btn-s" id="vk-shuffle" style="flex:1;margin:0;">🔀 Mischen</button>
+      <button class="btn btn-s" id="vk-flip-dir" style="flex:1;margin:0;">⇄ EN→DE</button>
+    </div>
+  </div>
+
+  <div id="vk-liste" class="sp">
+    <input class="vk-search" id="vk-search" type="text" placeholder="// Suchbegriff eingeben...">
+    <div id="vk-list-content"></div>
+  </div>
+
+  <div id="vk-quiz" class="sp">
+    <div id="vkq-start">
+      <div class="card">
+        <div class="bdg bdg-p">❓ Vokabel-Quiz</div>
+        <p class="hint">// Englischen Begriff sehen → deutschen Begriff schreiben. Wie beim AP2-Fachgespräch!</p>
+        <button class="btn" id="vkq-start-btn">→ QUIZ STARTEN</button>
+      </div>
+    </div>
+    <div id="vkq-game" style="display:none;">
+      <div class="card" style="padding:.85rem;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:.5rem;">
+          <div class="bdg bdg-p" style="margin:0;" id="vkq-num">1/15</div>
+          <div style="font-family:var(--mo);font-size:11px;color:var(--tx3);" id="vkq-live">0 ✓</div>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="vkq-prog" style="width:0%"></div></div>
+      </div>
+      <div class="card">
+        <div style="font-family:var(--mo);font-size:10px;color:var(--tx3);margin-bottom:.4rem;">Englisch:</div>
+        <div style="font-family:var(--sa);font-size:20px;font-weight:700;color:var(--ac);margin-bottom:.5rem;" id="vkq-en"></div>
+        <div style="font-family:var(--mo);font-size:11px;color:var(--tx3);margin-bottom:1rem;" id="vkq-ctx"></div>
+        <div id="vkq-opts" style="display:flex;flex-direction:column;gap:7px;"></div>
+        <div class="lt-feedback" id="vkq-fb"></div>
+        <button class="btn" id="vkq-next" style="display:none;">Weiter →</button>
+      </div>
+    </div>
+    <div id="vkq-end" style="display:none;">
+      <div class="card">
+        <div class="bdg bdg-g">Ergebnis</div>
+        <div style="font-family:var(--mo);font-size:38px;font-weight:700;text-align:center;margin:.5rem 0;" id="vkq-final"></div>
+        <button class="btn" id="vkq-again">↺ Nochmal</button>
+        <button class="btn btn-s" id="vkq-back" style="margin-top:8px;">← Zurück</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<nav class="bnav">
+  <button class="bnav-btn on" data-screen="logik"><span class="bnav-icon">🔁</span>Logik</button>
+  <button class="bnav-btn" data-screen="mess"><span class="bnav-icon">🧪</span>Multimeter</button>
+  <button class="bnav-btn" data-screen="vokabel"><span class="bnav-icon">💬</span>Englisch</button>
+</nav>
+
+<script>
+var $=function(id){return document.getElementById(id);};
+function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2000);}
+function rnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('on');});
+  var el=$('s-'+id);if(el)el.classList.add('on');
+  var nb=document.querySelector('[data-screen="'+id+'"]');if(nb)nb.classList.add('on');
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.bnav-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){showScreen(this.dataset.screen);});
+});
+// Sub-tabs
+document.addEventListener('click',function(e){
+  var sb=e.target.closest('.sb[data-sub]');if(!sb)return;
+  var sub=sb.dataset.sub,sp=sb.dataset.sp;
+  document.querySelectorAll('[data-sub="'+sub+'"]').forEach(function(b){b.classList.remove('on');});
+  var parent=sb.closest('.screen');
+  if(parent)parent.querySelectorAll('.sp').forEach(function(p){p.classList.remove('on');});
+  sb.classList.add('on');
+  var t=document.getElementById(sp);if(t)t.classList.add('on');
+  if(sp==='vk-liste')renderVkList('');
+});
+
+// ══════════════════════════════════════════════════════════════════
+// LOGIK TRAINER
+// ══════════════════════════════════════════════════════════════════
+var LT_TASKS_EASY = [
+  {desc:'Ein Schließer (Öffner ist durchgestrichen)',formula:'A0.0 = E0.0',inputs:['E0.0'],fn:function(i){return i[0];}},
+  {desc:'Ein Öffner (Kontakt mit Schrägstrich)',formula:'A0.0 = NOT E0.0',inputs:['E0.0'],fn:function(i){return !i[0];}},
+  {desc:'Zwei Schließer in Reihe (AND)',formula:'A0.0 = E0.0 AND E0.1',inputs:['E0.0','E0.1'],fn:function(i){return i[0]&&i[1];}},
+  {desc:'Zwei Schließer parallel (OR)',formula:'A0.0 = E0.0 OR E0.1',inputs:['E0.0','E0.1'],fn:function(i){return i[0]||i[1];}},
+  {desc:'Schließer in Reihe mit Öffner',formula:'A0.0 = E0.0 AND NOT E0.1',inputs:['E0.0','E0.1'],fn:function(i){return i[0]&&!i[1];}},
+  {desc:'Zwei Öffner parallel (NOR invertiert)',formula:'A0.0 = NOT E0.0 OR NOT E0.1',inputs:['E0.0','E0.1'],fn:function(i){return !i[0]||!i[1];}},
+  {desc:'Drei Schließer in Reihe',formula:'A0.0 = E0.0 AND E0.1 AND E0.2',inputs:['E0.0','E0.1','E0.2'],fn:function(i){return i[0]&&i[1]&&i[2];}},
+];
+var LT_TASKS_MEDIUM = [
+  {desc:'Reihe kombiniert mit Parallel-Zweig',formula:'A0.0 = E0.0 AND (E0.1 OR E0.2)',inputs:['E0.0','E0.1','E0.2'],fn:function(i){return i[0]&&(i[1]||i[2]);}},
+  {desc:'Zwei Gruppen ODER-verknüpft',formula:'A0.0 = (E0.0 AND E0.1) OR (E0.2 AND E0.3)',inputs:['E0.0','E0.1','E0.2','E0.3'],fn:function(i){return (i[0]&&i[1])||(i[2]&&i[3]);}},
+  {desc:'Öffner im Parallel-Zweig',formula:'A0.0 = E0.0 AND (NOT E0.1 OR E0.2)',inputs:['E0.0','E0.1','E0.2'],fn:function(i){return i[0]&&(!i[1]||i[2]);}},
+  {desc:'NAND — nicht beide gleichzeitig',formula:'A0.0 = NOT (E0.0 AND E0.1)',inputs:['E0.0','E0.1'],fn:function(i){return !(i[0]&&i[1]);}},
+  {desc:'NOR — keiner aktiv',formula:'A0.0 = NOT E0.0 AND NOT E0.1',inputs:['E0.0','E0.1'],fn:function(i){return !i[0]&&!i[1];}},
+  {desc:'XOR — genau einer aktiv',formula:'A0.0 = (E0.0 OR E0.1) AND NOT (E0.0 AND E0.1)',inputs:['E0.0','E0.1'],fn:function(i){return (i[0]||i[1])&&!(i[0]&&i[1]);}},
+  {desc:'Komplex: drei Bedingungen',formula:'A0.0 = (E0.0 OR E0.1) AND E0.2 AND NOT E0.3',inputs:['E0.0','E0.1','E0.2','E0.3'],fn:function(i){return (i[0]||i[1])&&i[2]&&!i[3];}},
+];
+var LT_TASKS_HARD = [
+  {desc:'Selbsthaltung — A0.0 hält sich selbst (M0.0=1 simuliert)',formula:'A0.0 = (E0.0 OR M0.0) AND NOT E0.1',inputs:['E0.0 (START)','E0.1 (STOP)','M0.0 (läuft)'],fn:function(i){return (i[0]||i[2])&&!i[1];}},
+  {desc:'Verriegelung — nur einer von beiden aktiv sein darf',formula:'A0.0 = E0.0 AND NOT A0.1\nA0.1 = E0.1 AND NOT A0.0',inputs:['E0.0','E0.1'],fn:function(i){return i[0]&&!i[1];}},
+  {desc:'NOT-AUS Kreis — Ruhestromprinzip',formula:'A0.0 = E0.0 AND NOT E0.1 AND E0.2',inputs:['E0.0 (Start)','E0.1 (NOT-AUS NC)','E0.2 (Tür)'],fn:function(i){return i[0]&&!i[1]&&i[2];}},
+  {desc:'Zeitverzögerung — E0.1 nur wenn E0.0 schon aktiv ist',formula:'A0.0 = E0.0 AND E0.1 (E0.1=Timer-Q)',inputs:['E0.0 (Bedingung)','E0.1 (TON-Q)'],fn:function(i){return i[0]&&i[1];}},
+  {desc:'Flankenauswertung — Impuls für genau 1 Zyklus',formula:'M0.1 = E0.0 AND NOT M0.0\n(M0.0=E0.0 vorheriger Zyklus)',inputs:['E0.0 (Signal)','M0.0 (alt, vorher 1)'],fn:function(i){return i[0]&&!i[1];}},
+];
+
+var ltDeck=[],ltIdx=0,ltScore=0,ltInputs=[],ltAnswered=false;
+var ltHS=parseInt(localStorage.getItem('vt_lt_hs')||'0');
+$('lt-hs').textContent=ltHS+'/20';
+
+function ltGetDeck(){
+  var diff=$('lt-diff').value;
+  var base=diff==='easy'?LT_TASKS_EASY:diff==='hard'?LT_TASKS_HARD:LT_TASKS_MEDIUM;
+  var all=LT_TASKS_EASY.concat(LT_TASKS_MEDIUM).concat(diff==='hard'?LT_TASKS_HARD:[]);
+  return shuffle(diff==='easy'?LT_TASKS_EASY:diff==='hard'?all:LT_TASKS_EASY.concat(LT_TASKS_MEDIUM)).slice(0,20);
+}
+
+function ltStart(){
+  ltDeck=ltGetDeck();ltIdx=0;ltScore=0;ltAnswered=false;
+  $('lt-menu').style.display='none';$('lt-game').style.display='block';$('lt-end').style.display='none';
+  ltShow();
+}
+function ltShow(){
+  if(ltIdx>=ltDeck.length){ltEnd();return;}
+  var task=ltDeck[ltIdx];
+  ltInputs=task.inputs.map(function(){return false;});
+  ltAnswered=false;
+  $('lt-num').textContent=(ltIdx+1)+'/'+ltDeck.length;
+  $('lt-score-live').textContent=ltScore+' ✓';
+  $('lt-prog').style.width=Math.round(ltIdx/ltDeck.length*100)+'%';
+  $('lt-desc').textContent=task.desc;
+  $('lt-formula').textContent=task.formula;
+  $('lt-feedback').style.display='none';
+  $('lt-next').style.display='none';
+  $('lt-out-val').textContent='?';$('lt-out-val').style.color='var(--tx3)';
+  $('lt-output').classList.remove('active');
+  // Enable answer buttons
+  document.querySelectorAll('[data-ans]').forEach(function(b){b.disabled=false;b.style.opacity='1';});
+  // Build input bits
+  var container=$('lt-inputs');container.innerHTML='';
+  task.inputs.forEach(function(name,i){
+    var div=document.createElement('div');div.className='lt-bit';
+    div.innerHTML='<span class="lt-bit-name">'+name+'</span><span class="lt-bit-val">0</span>';
+    div.addEventListener('click',function(){
+      if(ltAnswered)return;
+      ltInputs[i]=!ltInputs[i];
+      div.classList.toggle('on',ltInputs[i]);
+      div.querySelector('.lt-bit-val').textContent=ltInputs[i]?'1':'0';
+      // Live update output display
+      var res=task.fn(ltInputs);
+      $('lt-out-val').textContent=res?'1':'0';
+      $('lt-out-val').style.color=res?'var(--ok)':'var(--err)';
+      $('lt-output').classList.toggle('active',res);
+    });
+    container.appendChild(div);
+  });
+}
+function ltCheck(guess){
+  if(ltAnswered)return;ltAnswered=true;
+  var result=ltDeck[ltIdx].fn(ltInputs);
+  var ok=(guess==1&&result)||(guess==0&&!result);
+  if(ok)ltScore++;
+  document.querySelectorAll('[data-ans]').forEach(function(b){b.disabled=true;b.style.opacity='.5';});
+  var fb=$('lt-feedback');fb.style.display='block';fb.className='lt-feedback '+(ok?'ok':'fail');
+  fb.textContent=(ok?'✓ Richtig! ':'✕ Falsch. ')+
+    'Der Ausgang war '+(result?'1 (aktiv, Spule zieht an)':'0 (inaktiv)')+'. '+
+    'Formel: '+ltDeck[ltIdx].formula;
+  $('lt-out-val').textContent=result?'1':'0';
+  $('lt-out-val').style.color=result?'var(--ok)':'var(--err)';
+  $('lt-output').classList.toggle('active',result);
+  $('lt-next').style.display='block';
+}
+function ltEnd(){
+  $('lt-game').style.display='none';$('lt-end').style.display='block';
+  var pct=Math.round(ltScore/ltDeck.length*100);
+  $('lt-final').textContent=ltScore+'/'+ltDeck.length+' ('+pct+'%)';
+  $('lt-final').style.color=pct>=70?'var(--ok)':pct>=50?'var(--warn)':'var(--err)';
+  $('lt-final-info').innerHTML='<div style="font-family:var(--mo);font-size:12px;text-align:center;color:'+(pct>=50?'var(--ok)':'var(--err)')+';">'+(pct>=70?'🏆 Sehr gut!':pct>=50?'✓ Bestanden!':'↺ Weiter üben!')+'</div>';
+  if(ltScore>ltHS){ltHS=ltScore;localStorage.setItem('vt_lt_hs',ltHS);$('lt-hs').textContent=ltHS+'/20';toast('🏆 Neuer Highscore!');}
+}
+$('lt-start').addEventListener('click',ltStart);
+document.querySelectorAll('[data-ans]').forEach(function(b){b.addEventListener('click',function(){ltCheck(parseInt(this.dataset.ans));});});
+$('lt-next').addEventListener('click',function(){ltIdx++;ltShow();});
+$('lt-abort').addEventListener('click',function(){$('lt-game').style.display='none';$('lt-menu').style.display='block';});
+$('lt-again').addEventListener('click',function(){$('lt-end').style.display='none';ltStart();});
+$('lt-back').addEventListener('click',function(){$('lt-end').style.display='none';$('lt-menu').style.display='block';});
+
+// ══════════════════════════════════════════════════════════════════
+// MESSTECHNIK SIMULATOR
+// ══════════════════════════════════════════════════════════════════
+var mmMode='VAC',mmRedNode=null,mmBlackNode=null;
+var MM_CIRCUITS=[
+  {name:'Einfacher Spannungsteiler',nodes:[
+    {id:'A',x:30,y:90,label:'+'},{id:'B',x:160,y:50,label:'Mitte'},{id:'C',x:290,y:90,label:'−'}
+  ],elements:[
+    {type:'R',from:'A',to:'B',val:1000,label:'R1\n1kΩ'},
+    {type:'R',from:'B',to:'C',val:470,label:'R2\n470Ω'},
+    {type:'U',from:'C',to:'A',val:12,label:'12V DC'},
+  ],calc:function(r,b){
+    var U=12,R1=1000,R2=470,Rges=R1+R2,I=U/Rges;
+    var VA=U,VB=R2*I,VC=0;
+    var Vmap={A:VA,B:VB,C:VC};
+    if(mmMode==='VDC'&&r&&b)return{val:(Vmap[r]-(Vmap[b]||0)).toFixed(3),unit:'V'};
+    if(mmMode==='OHM'&&r&&b){var R={AB:R1,BA:R1,BC:R2,CB:R2,AC:Rges,CA:Rges};return{val:(R[r+b]||0).toFixed(1),unit:'Ω'};}
+    if(mmMode==='CONT'&&r&&b){var connected=['AB','BA','BC','CB','AC','CA'];return{val:connected.indexOf(r+b)>=0?'0.1':'OL',unit:'Ω'};}
+    return{val:'OL',unit:''};
+  }},
+  {name:'LED mit Vorwiderstand',nodes:[
+    {id:'P',x:30,y:90,label:'+9V'},{id:'K',x:160,y:50,label:'Knoten'},{id:'G',x:290,y:90,label:'GND'}
+  ],elements:[
+    {type:'R',from:'P',to:'K',val:390,label:'R\n390Ω'},
+    {type:'D',from:'K',to:'G',val:0,label:'LED\n2V'},
+    {type:'U',from:'G',to:'P',val:9,label:'9V DC'},
+  ],calc:function(r,b){
+    var UB=9,UFWD=2,R=390,I=(UB-UFWD)/R;
+    var Vmap={P:UB,K:UFWD,G:0};
+    if(mmMode==='VDC'&&r&&b)return{val:((Vmap[r]||0)-(Vmap[b]||0)).toFixed(3),unit:'V'};
+    if(mmMode==='ADC'&&r&&b)return{val:(I*1000).toFixed(1),unit:'mA'};
+    if(mmMode==='OHM'&&r==='P'&&b==='K')return{val:'390',unit:'Ω'};
+    if(mmMode==='DIODE'&&r==='K'&&b==='G')return{val:'0.6~2.1',unit:'V'};
+    return{val:'OL',unit:''};
+  }},
+  {name:'Parallelwiderstand',nodes:[
+    {id:'L',x:30,y:90,label:'+'},{id:'M',x:160,y:90,label:'Mitte'},{id:'R',x:290,y:90,label:'−'}
+  ],elements:[
+    {type:'U',from:'R',to:'L',val:24,label:'24V'},
+    {type:'R',from:'L',to:'M',val:220,label:'R1\n220Ω'},
+    {type:'Rp',from:'M',to:'R',val:220,label:'R2||R3\n110Ω'},
+  ],calc:function(r,b){
+    var U=24,R1=220,Rp=110,I=U/(R1+Rp);
+    var Vmap={L:24,M:Rp*I,R:0};
+    if(mmMode==='VDC'&&r&&b)return{val:((Vmap[r]||0)-(Vmap[b]||0)).toFixed(3),unit:'V'};
+    if(mmMode==='ADC'&&r&&b)return{val:(I*1000).toFixed(1),unit:'mA'};
+    return{val:'OL',unit:''};
+  }},
+];
+var mmCircuitIdx=0;
+
+function mmDrawCircuit(circuit){
+  var svg=$('mm-svg');
+  svg.innerHTML='';
+  var addEl=function(tag,attrs){var e=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.keys(attrs).forEach(function(k){e.setAttribute(k,attrs[k]);});svg.appendChild(e);return e;};
+  var addTxt=function(x,y,txt,col,fs){var t=addEl('text',{x:x,y:y,fill:col||'#6e6e73','font-size':fs||9,'text-anchor':'middle','font-family':'JetBrains Mono,monospace'});t.textContent=txt;return t;};
+
+  // Draw elements
+  circuit.elements.forEach(function(el){
+    var n1=circuit.nodes.find(function(n){return n.id===el.from;});
+    var n2=circuit.nodes.find(function(n){return n.id===el.to;});
+    if(!n1||!n2)return;
+    var mx=(n1.x+n2.x)/2,my=(n1.y+n2.y)/2-25;
+    // Wire
+    addEl('line',{x1:n1.x,y1:n1.y,x2:n2.x,y2:n2.y,stroke:'#c7c7cc','stroke-width':2});
+    // Component symbol
+    if(el.type==='R'||el.type==='Rp'){
+      addEl('rect',{x:mx-18,y:my-8,width:36,height:16,rx:3,fill:'#fff',stroke:'#0071e3','stroke-width':2});
+      addTxt(mx,my+3,el.type==='Rp'?'R||':'R','#0071e3',9);
+    } else if(el.type==='U'){
+      addEl('circle',{cx:mx,cy:my,r:14,fill:'#fff',stroke:'#34c759','stroke-width':2});
+      addTxt(mx,my+3,'U','#34c759',10);
+    } else if(el.type==='D'){
+      addEl('polygon',{points:(mx-10)+','+(my-8)+' '+(mx-10)+','+(my+8)+' '+(mx+10)+','+my,fill:'none',stroke:'#ff9f0a','stroke-width':2});
+      addEl('line',{x1:mx+10,y1:my-8,x2:mx+10,y2:my+8,stroke:'#ff9f0a','stroke-width':2});
+    }
+    addTxt(mx,my-14,el.label,'#6e6e73',8);
+  });
+
+  // Draw nodes (measurement points)
+  circuit.nodes.forEach(function(node){
+    var g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','mm-node');g.setAttribute('data-nid',node.id);g.style.cursor='pointer';
+    var cls='';
+    if(mmRedNode===node.id)cls='sel-red';
+    else if(mmBlackNode===node.id)cls='sel-black';
+    if(cls)g.classList.add(cls);
+    var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',node.x);c.setAttribute('cy',node.y);c.setAttribute('r',6);
+    c.setAttribute('fill',mmRedNode===node.id?'#ff3b30':mmBlackNode===node.id?'#1d1d1f':'#e5e5ea');
+    c.setAttribute('stroke','#fff');c.setAttribute('stroke-width',2);
+    var t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',node.x);t.setAttribute('y',node.y-12);t.setAttribute('fill','#6e6e73');
+    t.setAttribute('font-size',9);t.setAttribute('text-anchor','middle');t.setAttribute('font-family','JetBrains Mono,monospace');
+    t.textContent=node.label;
+    g.appendChild(c);g.appendChild(t);
+    g.addEventListener('click',function(){mmNodeClick(node.id);});
+    svg.appendChild(g);
+  });
+  mmUpdateDisplay();
+}
+
+var mmActiveProbe='red';
+$('mm-red-btn').addEventListener('click',function(){mmActiveProbe='red';this.classList.add('sel');$('mm-black-btn').classList.remove('sel');});
+$('mm-black-btn').addEventListener('click',function(){mmActiveProbe='black';this.classList.add('sel');$('mm-red-btn').classList.remove('sel');});
+
+function mmNodeClick(nid){
+  if(mmActiveProbe==='red'){mmRedNode=nid;$('mm-probe-hint').textContent='// Roter Stift an '+nid+'. Jetzt schwarzen COM platzieren.';}
+  else{mmBlackNode=nid;$('mm-probe-hint').textContent='// COM an '+nid+'. Messung aktiv!';}
+  mmDrawCircuit(MM_CIRCUITS[mmCircuitIdx]);
+  mmUpdateDisplay();
+}
+
+function mmUpdateDisplay(){
+  var circuit=MM_CIRCUITS[mmCircuitIdx];
+  var MODES={VAC:{label:'SPANNUNG AC',unit:'V',range:'600V'},VDC:{label:'SPANNUNG DC',unit:'V',range:'600V'},
+    AAC:{label:'STROM AC',unit:'A',range:'10A'},ADC:{label:'STROM DC',unit:'A',range:'10A'},
+    OHM:{label:'WIDERSTAND',unit:'Ω',range:'∞'},CONT:{label:'DURCHGANG',unit:'Ω',range:'30Ω'},
+    DIODE:{label:'DIODE',unit:'V',range:'3V'},CAP:{label:'KAPAZITÄT',unit:'µF',range:'10mF'}};
+  var m=MODES[mmMode]||MODES.VDC;
+  $('mm-mode-label').textContent=m.label;
+  $('mm-unit').textContent=m.unit;
+  $('mm-range').textContent='Messbereich: '+m.range;
+  if(mmRedNode&&mmBlackNode&&circuit.calc){
+    var res=circuit.calc(mmRedNode,mmBlackNode);
+    $('mm-val').textContent=res.val;
+    $('mm-unit').textContent=res.unit||m.unit;
+  } else {
+    $('mm-val').textContent='----';
+  }
+}
+
+document.querySelectorAll('.mm-mode-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.mm-mode-btn').forEach(function(b){b.classList.remove('on');});
+    this.classList.add('on');mmMode=this.dataset.mode;mmUpdateDisplay();
+  });
+});
+
+$('mm-new-circuit').addEventListener('click',function(){
+  mmCircuitIdx=(mmCircuitIdx+1)%MM_CIRCUITS.length;
+  mmRedNode=null;mmBlackNode=null;
+  $('mm-probe-hint').textContent='// Tippe auf einen Messpunkt im Schaltkreis';
+  mmDrawCircuit(MM_CIRCUITS[mmCircuitIdx]);
+  toast(MM_CIRCUITS[mmCircuitIdx].name);
+});
+
+// Messtechnik Aufgaben
+var MM_TASKS=[
+  {q:'Messe die Spannung über R2 (zwischen Knoten B und GND).',ans:2.19,unit:'V',tol:0.3,hint:'UB=12V, R1=1kΩ, R2=470Ω → Teiler: U_R2=12×470/1470≈3,84V ... Schaltung 1 wählen!',circ:0},
+  {q:'Messe den Gesamtstrom des Spannungsteilers (R1 in Reihe mit R2).',ans:8.16,unit:'mA',tol:1,hint:'I=U/R_ges=12/1470≈8,16mA. Amperemeter in Reihe schalten!',circ:0},
+  {q:'Messe die Spannung über der LED (zwischen Knoten K und GND).',ans:2.0,unit:'V',tol:0.3,hint:'Flussspannung einer Silizium-LED ≈ 1,8–2,2V. Direktmessung mit Voltmeter parallel zur LED.',circ:1},
+  {q:'Messe den Strom durch die LED.',ans:17.9,unit:'mA',tol:2,hint:'I=(9V-2V)/390Ω≈17,9mA. Amperemeter in Reihe einschleifen.',circ:1},
+  {q:'Messe den Gesamtwiderstand der Parallelschaltung (R2||R3).',ans:110,unit:'Ω',tol:15,hint:'Zwei gleiche 220Ω parallel: R=220/2=110Ω. Spannungslos messen!',circ:2},
+];
+var mmTaskIdx=0,mmTaskAnswered=false;
+
+function mmBuildTasks(){
+  $('mm-task-area').innerHTML='<div class="card" style="text-align:center;"><div class="bdg bdg-b">🧪 Messaufgaben</div><p class="hint" style="text-align:left;">// Stelle den richtigen Modus am Multimeter ein, platziere die Messstäbe und lies den Wert ab.</p><button class="btn" id="mm-task-start">→ AUFGABEN STARTEN</button></div>';
+  $('mm-task-start').addEventListener('click',function(){
+    $('mm-task-area').innerHTML='';mmTaskIdx=0;mmTaskAnswered=false;
+    $('mm-task-controls').style.display='block';mmShowTask();
+  });
+}
+function mmShowTask(){
+  if(mmTaskIdx>=MM_TASKS.length){
+    $('mm-task-controls').style.display='none';
+    $('mm-task-area').innerHTML='<div class="card"><div class="bdg bdg-g">✓ Alle Aufgaben gelöst!</div><button class="btn" id="mm-restart">↺ Nochmal</button></div>';
+    $('mm-restart').addEventListener('click',function(){mmBuildTasks();$('mm-task-controls').style.display='none';});
+    return;
+  }
+  var t=MM_TASKS[mmTaskIdx];mmTaskAnswered=false;
+  $('mm-task-text').textContent='Aufgabe '+(mmTaskIdx+1)+'/'+MM_TASKS.length+': '+t.q;
+  $('mm-task-result').style.display='none';
+  $('mm-next-task').style.display='none';
+  $('mm-answer').value='';
+  // Switch to the right circuit
+  mmCircuitIdx=t.circ;mmRedNode=null;mmBlackNode=null;
+  mmDrawCircuit(MM_CIRCUITS[mmCircuitIdx]);
+  // Switch to sim tab
+  document.querySelectorAll('[data-sub="mm"]').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('#s-mess .sp').forEach(function(p){p.classList.remove('on');});
+  document.querySelector('[data-sp="mm-aufg"]').classList.add('on');
+  $('mm-aufg').classList.add('on');
+}
+$('mm-check-btn').addEventListener('click',function(){
+  if(mmTaskAnswered)return;
+  var val=parseFloat($('mm-answer').value);
+  if(isNaN(val))return;
+  mmTaskAnswered=true;
+  var t=MM_TASKS[mmTaskIdx];
+  var ok=Math.abs(val-t.ans)<=t.tol;
+  var res=$('mm-task-result');res.style.display='block';
+  res.className='mm-result '+(ok?'ok':'fail');
+  res.textContent=(ok?'✓ Richtig! ':'✕ Falsch. Richtig wäre: '+t.ans+' '+t.unit+'. ')+t.hint;
+  $('mm-next-task').style.display='block';
+});
+$('mm-next-task').addEventListener('click',function(){mmTaskIdx++;mmShowTask();});
+mmBuildTasks();
+
+// Init simulator
+mmDrawCircuit(MM_CIRCUITS[0]);
+
+// ══════════════════════════════════════════════════════════════════
+// VOKABEL-TRAINER
+// ══════════════════════════════════════════════════════════════════
+var VOKABELN=[
+  // Elektrotechnik Grundlagen
+  {de:'Widerstand',en:'resistor',cat:'Bauteile',ctx:'Das Bauteil begrenzt den Strom.',ex:'The resistor limits the current in the circuit.'},
+  {de:'Kondensator',en:'capacitor',cat:'Bauteile',ctx:'Speichert elektrische Energie.',ex:'The capacitor stores electrical energy.'},
+  {de:'Spule / Induktivität',en:'inductor / coil',cat:'Bauteile',ctx:'Erzeugt magnetisches Feld.',ex:'The inductor creates a magnetic field.'},
+  {de:'Diode',en:'diode',cat:'Bauteile',ctx:'Lässt Strom nur in eine Richtung.',ex:'The diode allows current flow in one direction only.'},
+  {de:'Transistor',en:'transistor',cat:'Bauteile',ctx:'Elektronischer Schalter/Verstärker.',ex:'The transistor acts as an electronic switch.'},
+  {de:'Schütz',en:'contactor',cat:'Bauteile',ctx:'Elektromagnetischer Schalter für Lasten.',ex:'The contactor switches high-power loads.'},
+  {de:'Relais',en:'relay',cat:'Bauteile',ctx:'Steuert großen Strom mit kleinem Signal.',ex:'The relay controls a high-current circuit with a low signal.'},
+  {de:'Sicherung',en:'fuse',cat:'Bauteile',ctx:'Schützt vor Überstrom.',ex:'The fuse protects against overcurrent.'},
+  {de:'Leitungsschutzschalter',en:'circuit breaker',cat:'Bauteile',ctx:'Automatische Sicherung, wiedereinschaltbar.',ex:'The circuit breaker trips on overload and can be reset.'},
+  {de:'FI-Schutzschalter',en:'residual current device (RCD)',cat:'Bauteile',ctx:'Personenschutz bei Erdschluss.',ex:'The RCD protects against electric shock.'},
+  // Messgrößen
+  {de:'Spannung',en:'voltage',cat:'Messgrößen',ctx:'Einheit: Volt (V).',ex:'The voltage across the resistor is 12 V.'},
+  {de:'Strom',en:'current',cat:'Messgrößen',ctx:'Einheit: Ampere (A).',ex:'The current through the circuit is 2 A.'},
+  {de:'Widerstand',en:'resistance',cat:'Messgrößen',ctx:'Einheit: Ohm (Ω).',ex:'The resistance of the conductor is 100 Ω.'},
+  {de:'Leistung',en:'power',cat:'Messgrößen',ctx:'Einheit: Watt (W).',ex:'The motor has a rated power of 7.5 kW.'},
+  {de:'Frequenz',en:'frequency',cat:'Messgrößen',ctx:'Einheit: Hertz (Hz).',ex:'The supply frequency is 50 Hz.'},
+  {de:'Impedanz',en:'impedance',cat:'Messgrößen',ctx:'Wechselstromwiderstand in Ohm.',ex:'The impedance of the coil is 31 Ω at 50 Hz.'},
+  {de:'Wirkungsgrad',en:'efficiency',cat:'Messgrößen',ctx:'Verhältnis Nutz- zu Eingangsleistung.',ex:'The motor efficiency is 92%.'},
+  {de:'Leistungsfaktor',en:'power factor',cat:'Messgrößen',ctx:'cos φ — Verhältnis Wirk- zu Scheinleistung.',ex:'The power factor of the motor is 0.85.'},
+  {de:'Nennstrom',en:'rated current',cat:'Messgrößen',ctx:'Dauerhaft zulässiger Betriebsstrom.',ex:'The rated current of the motor is 15.2 A.'},
+  {de:'Nennspannung',en:'rated voltage',cat:'Messgrößen',ctx:'Für Betrieb vorgesehene Spannung.',ex:'The rated voltage is 400 V three-phase.'},
+  // Antriebe & Motoren
+  {de:'Drehmoment',en:'torque',cat:'Antriebe',ctx:'Drehendes Moment, Einheit Nm.',ex:'The rated torque of the motor is 48 Nm.'},
+  {de:'Drehzahl',en:'rotational speed / RPM',cat:'Antriebe',ctx:'Umdrehungen pro Minute.',ex:'The motor runs at 1450 RPM.'},
+  {de:'Frequenzumrichter',en:'variable frequency drive (VFD)',cat:'Antriebe',ctx:'Regelt Drehzahl des Asynchronmotors.',ex:'The VFD controls the motor speed.'},
+  {de:'Anlaufstrom',en:'starting current / inrush current',cat:'Antriebe',ctx:'Erhöhter Strom beim Motorstart.',ex:'The inrush current is 7 times the rated current.'},
+  {de:'Nennleistung',en:'rated power',cat:'Antriebe',ctx:'Kontinuierlich abgebbare Leistung.',ex:'The motor has a rated power of 11 kW.'},
+  {de:'Asynchronmotor',en:'induction motor / asynchronous motor',cat:'Antriebe',ctx:'Häufigster Industriemotor.',ex:'The induction motor is the most common industrial motor.'},
+  {de:'Synchrondrehzahl',en:'synchronous speed',cat:'Antriebe',ctx:'Drehfeld-Drehzahl des Stators.',ex:'The synchronous speed at 50 Hz and 4 poles is 1500 RPM.'},
+  {de:'Schlupf',en:'slip',cat:'Antriebe',ctx:'Differenz zwischen Syn- und Rotordrehzahl.',ex:'The slip of the motor under load is 3%.'},
+  // Schutz & Sicherheit
+  {de:'Schutzleiter',en:'protective earth conductor (PE)',cat:'Schutz',ctx:'Grün-gelbe Leitung, Sicherheitserde.',ex:'The PE conductor must be connected before commissioning.'},
+  {de:'Isolationswiderstand',en:'insulation resistance',cat:'Schutz',ctx:'Messung gegen Erde, min. 1 MΩ.',ex:'The insulation resistance must be at least 1 MΩ.'},
+  {de:'Schutzklasse',en:'protection class',cat:'Schutz',ctx:'SK I, II, III — Art des Berührungsschutzes.',ex:'The device belongs to protection class II.'},
+  {de:'Inbetriebnahme',en:'commissioning',cat:'Schutz',ctx:'Erstmalige Inbetriebsetzung einer Anlage.',ex:'The commissioning of the system took two days.'},
+  {de:'Abnahme',en:'acceptance test / inspection',cat:'Schutz',ctx:'Prüfung und Freigabe der Anlage.',ex:'The acceptance test was carried out by the customer.'},
+  {de:'Wartung',en:'maintenance',cat:'Schutz',ctx:'Regelmäßige Instandhaltung.',ex:'The scheduled maintenance is due every six months.'},
+  {de:'Störung',en:'fault / malfunction',cat:'Schutz',ctx:'Unerwünschter Betriebszustand.',ex:'A fault in the control circuit caused a shutdown.'},
+  // SPS
+  {de:'Eingang',en:'input',cat:'SPS',ctx:'Sensor-Signal an die SPS.',ex:'The input signal from the sensor is connected to E0.0.'},
+  {de:'Ausgang',en:'output',cat:'SPS',ctx:'Steuerbefehl der SPS.',ex:'The output activates the contactor coil.'},
+  {de:'Merker',en:'flag / internal bit',cat:'SPS',ctx:'Interne Hilfsvariable der SPS.',ex:'The flag M0.0 stores the self-latching signal.'},
+  {de:'Schrittkette',en:'sequential function chart (SFC)',cat:'SPS',ctx:'Ablaufsteuerung, Schritte und Transitionen.',ex:'The SFC controls the sequential process steps.'},
+  {de:'Datenbaustein',en:'data block (DB)',cat:'SPS',ctx:'Strukturierter Datenspeicher in S7.',ex:'The data block DB1 stores the process values.'},
+  {de:'Funktionsbaustein',en:'function block (FB)',cat:'SPS',ctx:'FB mit eigenem Instanz-Datenbaustein.',ex:'The function block FB10 controls the motor.'},
+  {de:'Zykluszeit',en:'scan cycle time',cat:'SPS',ctx:'Zeit für einen Programmdurchlauf.',ex:'The scan cycle time is 5 ms.'},
+  // Mechanik
+  {de:'Getriebe',en:'gearbox / transmission',cat:'Mechanik',ctx:'Wandelt Drehzahl und Drehmoment.',ex:'The gearbox reduces speed from 1450 to 145 RPM.'},
+  {de:'Übersetzungsverhältnis',en:'gear ratio / transmission ratio',cat:'Mechanik',ctx:'i = n1/n2.',ex:'The gear ratio is 10:1.'},
+  {de:'Kupplung',en:'coupling / clutch',cat:'Mechanik',ctx:'Verbindet zwei Wellen.',ex:'The coupling connects the motor shaft to the gearbox.'},
+  {de:'Lager',en:'bearing',cat:'Mechanik',ctx:'Führt rotierende Wellen.',ex:'The bearing must be replaced after 20,000 operating hours.'},
+  {de:'Wellendichtring',en:'shaft seal / lip seal',cat:'Mechanik',ctx:'Verhindert Ölaustritt an der Welle.',ex:'The shaft seal prevents oil leakage.'},
+  {de:'Drehmomentschlüssel',en:'torque wrench',cat:'Mechanik',ctx:'Anziehendes mit definiertem Moment.',ex:'Use a torque wrench to tighten the bolts to 25 Nm.'},
+  // ── HYDRAULIK ──────────────────────────────────────────────────────
+  {de:'Hydraulikpumpe',en:'hydraulic pump',cat:'Hydraulik',ctx:'Wandelt mechanische in hydraulische Energie.',ex:'The hydraulic pump converts mechanical energy into hydraulic pressure.'},
+  {de:'Hydraulikzylinder',en:'hydraulic cylinder',cat:'Hydraulik',ctx:'Linearer Krafterzeuger durch Drucköl.',ex:'The hydraulic cylinder extends when oil pressure is applied.'},
+  {de:'Hydrauliköl',en:'hydraulic fluid / hydraulic oil',cat:'Hydraulik',ctx:'Druckmedium im Hydrauliksystem.',ex:'The hydraulic fluid must be changed every 2000 operating hours.'},
+  {de:'Steuerventil',en:'control valve / directional valve',cat:'Hydraulik',ctx:'Steuert Richtung des Ölstroms.',ex:'The directional valve controls the flow direction of the hydraulic fluid.'},
+  {de:'Druckbegrenzungsventil',en:'pressure relief valve',cat:'Hydraulik',ctx:'Schützt System vor Überdruck.',ex:'The pressure relief valve opens when the system pressure exceeds the set limit.'},
+  {de:'Volumenstrom',en:'flow rate',cat:'Hydraulik',ctx:'Menge Öl pro Zeit [l/min].',ex:'The flow rate of the hydraulic system is 20 litres per minute.'},
+  {de:'Systemdruck',en:'system pressure',cat:'Hydraulik',ctx:'Betriebsdruck im Hydraulikkreis [bar].',ex:'The system pressure is set to 200 bar.'},
+  {de:'Hydraulikspeicher',en:'hydraulic accumulator',cat:'Hydraulik',ctx:'Speichert Druckenergie für Spitzenlasten.',ex:'The hydraulic accumulator stores energy for peak load demands.'},
+  {de:'Drossel',en:'throttle / flow restrictor',cat:'Hydraulik',ctx:'Begrenzt Volumenstrom, regelt Geschwindigkeit.',ex:'The flow restrictor reduces the cylinder speed.'},
+  {de:'Filter (Hydraulik)',en:'hydraulic filter',cat:'Hydraulik',ctx:'Entfernt Partikel aus dem Hydrauliköl.',ex:'The hydraulic filter must be replaced at regular service intervals.'},
+  // ── PNEUMATIK ──────────────────────────────────────────────────────
+  {de:'Druckluft',en:'compressed air',cat:'Pneumatik',ctx:'Druckmedium in pneumatischen Systemen.',ex:'Compressed air is supplied at 6 bar in most industrial systems.'},
+  {de:'Pneumatikzylinder',en:'pneumatic cylinder / air cylinder',cat:'Pneumatik',ctx:'Linearer Antrieb durch Druckluft.',ex:'The pneumatic cylinder extends when compressed air is applied to port A.'},
+  {de:'Kompressor',en:'compressor',cat:'Pneumatik',ctx:'Verdichtet Luft auf Betriebsdruck.',ex:'The compressor supplies the pneumatic system with 8 bar compressed air.'},
+  {de:'Magnetventil (Pneumatik)',en:'solenoid valve',cat:'Pneumatik',ctx:'Schaltet Druckluft elektrisch.',ex:'The solenoid valve is activated by the PLC output signal.'},
+  {de:'Wartungseinheit',en:'service unit / FRL unit',cat:'Pneumatik',ctx:'Filter, Regler, Öler — Druckluftaufbereitung.',ex:'The FRL unit (filter, regulator, lubricator) conditions the compressed air.'},
+  {de:'Lufttrockner',en:'air dryer',cat:'Pneumatik',ctx:'Entfernt Feuchtigkeit aus Druckluft.',ex:'The air dryer prevents condensation in the pneumatic lines.'},
+  {de:'Schalldämpfer',en:'silencer / muffler',cat:'Pneumatik',ctx:'Reduziert Abluftgeräusch an Ventilauslass.',ex:'The silencer reduces the exhaust noise of the pneumatic valve.'},
+  {de:'Wegeventil',en:'directional control valve',cat:'Pneumatik',ctx:'z.B. 5/2-Wegeventil: 5 Anschlüsse, 2 Stellungen.',ex:'The 5/2-way directional control valve switches the cylinder direction.'},
+  {de:'Betriebsdruck (Pneumatik)',en:'operating pressure / working pressure',cat:'Pneumatik',ctx:'Typisch 6–8 bar in der Industrie.',ex:'The working pressure of the pneumatic system is 6 bar.'},
+  {de:'Druckregler',en:'pressure regulator',cat:'Pneumatik',ctx:'Hält Ausgangsdruck konstant.',ex:'The pressure regulator maintains a constant output pressure of 6 bar.'},
+  // ── NORMEN ────────────────────────────────────────────────────────
+  {de:'DIN VDE 0100',en:'DIN VDE 0100',cat:'Normen',ctx:'Errichtung von Niederspannungsanlagen.',ex:'DIN VDE 0100 covers the installation of low-voltage electrical systems.'},
+  {de:'IEC 60204-1',en:'IEC 60204-1',cat:'Normen',ctx:'Elektrische Ausrüstung von Maschinen.',ex:'IEC 60204-1 specifies requirements for electrical equipment of machines.'},
+  {de:'DIN VDE 0298',en:'DIN VDE 0298',cat:'Normen',ctx:'Kabelquerschnitte und Belastbarkeit.',ex:'DIN VDE 0298 defines cable cross-sections and current-carrying capacity.'},
+  {de:'IEC 61131-3',en:'IEC 61131-3',cat:'Normen',ctx:'Programmiersprachen für SPS (KOP, FUP, ST).',ex:'IEC 61131-3 standardises PLC programming languages such as LAD and ST.'},
+  {de:'EN 60529 / IP-Code',en:'EN 60529 / IP rating',cat:'Normen',ctx:'Schutzarten für Gehäuse (IP 54 etc.).',ex:'The IP rating according to EN 60529 defines the enclosure protection class.'},
+  {de:'DIN EN ISO 13849',en:'DIN EN ISO 13849',cat:'Normen',ctx:'Sicherheit von Steuerungen — Performance Level.',ex:'ISO 13849 defines performance levels for safety-related control systems.'},
+  {de:'VDE 0701-0702',en:'VDE 0701-0702',cat:'Normen',ctx:'Prüfung nach Reparatur ortsveränderlicher Geräte.',ex:'VDE 0701-0702 covers testing of portable appliances after repair.'},
+  {de:'DGUV Vorschrift 3',en:'DGUV Regulation 3',cat:'Normen',ctx:'Unfallverhütung bei elektrischen Anlagen.',ex:'DGUV Regulation 3 defines inspection intervals for electrical equipment.'},
+  {de:'DIN ISO 1219',en:'DIN ISO 1219',cat:'Normen',ctx:'Schaltzeichen für Hydraulik und Pneumatik.',ex:'DIN ISO 1219 defines graphical symbols for fluid power systems.'},
+  {de:'IEC 60034',en:'IEC 60034',cat:'Normen',ctx:'Normenreihe für rotierende elektrische Maschinen.',ex:'IEC 60034 covers standards for rotating electrical machines.'},
+  {de:'Prüfzeichen CE',en:'CE marking',cat:'Normen',ctx:'Konformität mit EU-Richtlinien.',ex:'The CE marking confirms conformity with applicable EU directives.'},
+  {de:'Niederspannungsrichtlinie',en:'Low Voltage Directive (LVD)',cat:'Normen',ctx:'EU-Richtlinie 2014/35/EU für elektr. Betriebsmittel.',ex:'The Low Voltage Directive applies to electrical equipment between 50 V and 1000 V AC.'},
+  // ── MASCHINENELEMENTE ─────────────────────────────────────────────
+  {de:'Keilriemen',en:'V-belt',cat:'Maschinenelemente',ctx:'Kraftübertragung zwischen Wellen durch Reibung.',ex:'The V-belt transmits power between the motor shaft and the gearbox.'},
+  {de:'Zahnrad',en:'gear / cogwheel',cat:'Maschinenelemente',ctx:'Formschlüssige Kraftübertragung.',ex:'The gear transmits torque with a fixed ratio between the shafts.'},
+  {de:'Zahnriemen',en:'timing belt / toothed belt',cat:'Maschinenelemente',ctx:'Schlupffreie Kraftübertragung.',ex:'The timing belt ensures a synchronised drive without slip.'},
+  {de:'Wälzlager',en:'rolling bearing',cat:'Maschinenelemente',ctx:'Rillenkugellager, Zylinderrollenlager etc.',ex:'The rolling bearing supports the shaft with low friction.'},
+  {de:'Gleitlager',en:'plain bearing / sleeve bearing',cat:'Maschinenelemente',ctx:'Reibungslager ohne Wälzkörper.',ex:'The plain bearing is suitable for low speeds and high loads.'},
+  {de:'Passfeder',en:'key / parallel key',cat:'Maschinenelemente',ctx:'Verdrehsichere Welle-Nabe-Verbindung.',ex:'The parallel key prevents rotation between the shaft and the hub.'},
+  {de:'Flansch',en:'flange',cat:'Maschinenelemente',ctx:'Verbindungselement zwischen Rohren oder Bauteilen.',ex:'The flange connects the motor to the gearbox housing.'},
+  {de:'Dichtung',en:'seal / gasket',cat:'Maschinenelemente',ctx:'Verhindert Leckage von Fluiden.',ex:'The gasket seals the joint between the two housing parts.'},
+  {de:'Feder',en:'spring',cat:'Maschinenelemente',ctx:'Speichert mechanische Energie, erzeugt Rückstellkraft.',ex:'The spring returns the valve to its rest position when pressure is released.'},
+  {de:'Schraubenverbindung',en:'bolted joint / screw connection',cat:'Maschinenelemente',ctx:'Lösbare formschlüssige Verbindung.',ex:'The bolted joint must be tightened to the specified torque value.'},
+  {de:'Schweißnaht',en:'weld seam',cat:'Maschinenelemente',ctx:'Stoffschlüssige, unlösbare Verbindung.',ex:'The weld seam must be inspected for cracks after fabrication.'},
+  {de:'Kettenantrieb',en:'chain drive',cat:'Maschinenelemente',ctx:'Formschlüssige Kraftübertragung mit Rollenkette.',ex:'The chain drive transmits high torque at low speed.'},
+  {de:'Linearführung',en:'linear guide / linear rail',cat:'Maschinenelemente',ctx:'Führt Schlitten geradlinig ohne Spiel.',ex:'The linear guide ensures precise straight-line motion of the carriage.'},
+  {de:'Kugelgewindetrieb',en:'ball screw',cat:'Maschinenelemente',ctx:'Wandelt Rotation in lineare Bewegung (CNC).',ex:'The ball screw converts rotary motion into precise linear displacement.'},
+  {de:'Nut',en:'groove / slot / keyway',cat:'Maschinenelemente',ctx:'Vertiefung zur Aufnahme von Passfedern oder Dichtungen.',ex:'The keyway in the shaft accepts the parallel key to transmit torque.'},
+];
+
+var vkDeck=VOKABELN.slice(),vkIdx=0,vkKnown=[],vkReverse=false;
+var vkKnownSet=new Set(JSON.parse(localStorage.getItem('vt_vk_known')||'[]'));
+
+// Categories
+var vkCats=['Alle'].concat([...new Set(VOKABELN.map(function(v){return v.cat;}))]);
+var vkActiveCat='Alle';
+
+function vkBuildCats(){
+  var bar=$('vk-cats');bar.innerHTML='';
+  vkCats.forEach(function(cat){
+    var btn=document.createElement('button');
+    btn.className='vk-cat'+(cat===vkActiveCat?' on':'');
+    btn.textContent=cat;
+    btn.addEventListener('click',function(){
+      vkActiveCat=cat;vkBuildCats();vkInitDeck();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+function vkInitDeck(cat){
+  var base=vkActiveCat==='Alle'?VOKABELN:VOKABELN.filter(function(v){return v.cat===vkActiveCat;});
+  vkDeck=shuffle(base);vkIdx=0;
+  vkShowCard();
+}
+
+function vkShowCard(){
+  var card=vkDeck[vkIdx];
+  var pct=vkDeck.length?Math.round(vkIdx/vkDeck.length*100):0;
+  $('vk-prog').style.width=pct+'%';
+  $('vk-counter').textContent=(vkIdx+1)+'/'+vkDeck.length;
+  $('vk-stats').textContent=vkKnownSet.size+' gewusst';
+  $('vk-card').classList.remove('flip');
+  if(!vkReverse){
+    $('vk-from-lang').textContent='DEUTSCH';
+    $('vk-term').textContent=card.de;
+    $('vk-context').textContent=card.ctx||'';
+    $('vk-trans').textContent=card.en;
+    $('vk-example').textContent=card.ex||'';
+  } else {
+    $('vk-from-lang').textContent='ENGLISH';
+    $('vk-term').textContent=card.en;
+    $('vk-context').textContent=card.ex||'';
+    $('vk-trans').textContent=card.de;
+    $('vk-example').textContent=card.ctx||'';
+  }
+}
+
+$('vk-wrap').addEventListener('click',function(){$('vk-card').classList.toggle('flip');});
+function vkNext(known){
+  if(known){vkKnownSet.add(vkDeck[vkIdx].de);localStorage.setItem('vt_vk_known',JSON.stringify([...vkKnownSet]));}
+  vkIdx=(vkIdx+1)%vkDeck.length;vkShowCard();
+}
+$('vk-yes').addEventListener('click',function(){vkNext(true);toast('✓ Gewusst!');});
+$('vk-no').addEventListener('click',function(){vkNext(false);});
+$('vk-skip').addEventListener('click',function(){vkNext(false);});
+$('vk-shuffle').addEventListener('click',function(){vkDeck=shuffle(vkDeck);vkIdx=0;vkShowCard();toast('🔀 Gemischt!');});
+$('vk-flip-dir').addEventListener('click',function(){
+  vkReverse=!vkReverse;
+  this.textContent=vkReverse?'⇄ DE→EN':'⇄ EN→DE';
+  vkIdx=0;vkShowCard();toast(vkReverse?'EN → DE Modus':'DE → EN Modus');
+});
+
+// Wörterbuch
+function renderVkList(q){
+  var filtered=VOKABELN.filter(function(v){
+    return !q||v.de.toLowerCase().indexOf(q.toLowerCase())>=0||v.en.toLowerCase().indexOf(q.toLowerCase())>=0;
+  });
+  var byCat={};
+  filtered.forEach(function(v){if(!byCat[v.cat])byCat[v.cat]=[];byCat[v.cat].push(v);});
+  var html='';
+  Object.keys(byCat).forEach(function(cat){
+    html+='<div style="font-family:var(--mo);font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:.06em;text-transform:uppercase;margin:.85rem 0 .4rem;">'+cat+'</div>';
+    byCat[cat].forEach(function(v){
+      html+='<div class="vk-list-item"><div class="vk-de">'+v.de+'</div><div><div class="vk-en">'+v.en+'</div><span class="vk-ctx">'+v.ctx+'</span></div></div>';
+    });
+  });
+  $('vk-list-content').innerHTML=html||'<div style="font-family:var(--mo);font-size:12px;color:var(--tx3);padding:1rem 0;">Kein Treffer</div>';
+}
+$('vk-search').addEventListener('input',function(){renderVkList(this.value);});
+
+// Vokabel-Quiz
+var vkqDeck=[],vkqIdx=0,vkqScore=0,vkqAnswered=false;
+function vkqStart(){
+  vkqDeck=shuffle(VOKABELN).slice(0,15);
+  vkqIdx=0;vkqScore=0;vkqAnswered=false;
+  $('vkq-start').style.display='none';$('vkq-game').style.display='block';$('vkq-end').style.display='none';
+  vkqShow();
+}
+function vkqShow(){
+  if(vkqIdx>=vkqDeck.length){
+    $('vkq-game').style.display='none';$('vkq-end').style.display='block';
+    var pct=Math.round(vkqScore/vkqDeck.length*100);
+    $('vkq-final').textContent=vkqScore+'/'+vkqDeck.length+' ('+pct+'%)';
+    $('vkq-final').style.color=pct>=70?'var(--ok)':pct>=50?'var(--warn)':'var(--err)';
+    return;
+  }
+  var q=vkqDeck[vkqIdx];vkqAnswered=false;
+  $('vkq-num').textContent=(vkqIdx+1)+'/'+vkqDeck.length;
+  $('vkq-live').textContent=vkqScore+' ✓';
+  $('vkq-prog').style.width=Math.round(vkqIdx/vkqDeck.length*100)+'%';
+  $('vkq-en').textContent=q.en;$('vkq-ctx').textContent=q.ex||'';
+  $('vkq-fb').style.display='none';$('vkq-next').style.display='none';
+  // 4 options: 1 correct + 3 random
+  var others=VOKABELN.filter(function(v){return v.de!==q.de;});
+  var opts=shuffle(others).slice(0,3).map(function(v){return{de:v.de,ok:false};});
+  opts.push({de:q.de,ok:true});opts=shuffle(opts);
+  var container=$('vkq-opts');container.innerHTML='';
+  opts.forEach(function(opt){
+    var btn=document.createElement('button');
+    btn.className='lt-ans';btn.textContent=opt.de;
+    btn.addEventListener('click',function(){
+      if(vkqAnswered)return;vkqAnswered=true;
+      if(opt.ok)vkqScore++;
+      container.querySelectorAll('.lt-ans').forEach(function(b){
+        if(b===btn)b.classList.add(opt.ok?'a1':'a0');
+        else if(b.textContent===q.de)b.classList.add('a1');
+        b.disabled=true;
+      });
+      var fb=$('vkq-fb');fb.style.display='block';fb.className='lt-feedback '+(opt.ok?'ok':'fail');
+      fb.textContent=(opt.ok?'✓ Richtig! ':'✕ Falsch. Richtig: '+q.de+'. ')+q.ctx;
+      $('vkq-next').style.display='block';
+    });
+    container.appendChild(btn);
+  });
+}
+$('vkq-start-btn').addEventListener('click',vkqStart);
+$('vkq-next').addEventListener('click',function(){vkqIdx++;vkqShow();});
+$('vkq-again').addEventListener('click',function(){$('vkq-end').style.display='none';vkqStart();});
+$('vkq-back').addEventListener('click',function(){$('vkq-end').style.display='none';$('vkq-start').style.display='block';});
+
+// Init
+vkBuildCats();vkInitDeck();
+renderVkList('');
+
+function swOpen(){
+  document.getElementById('sw-backdrop').classList.add('open');
+  document.getElementById('sw-drawer').classList.add('open');
+}
+function swClose(){
+  document.getElementById('sw-backdrop').classList.remove('open');
+  document.getElementById('sw-drawer').classList.remove('open');
+}
+var _swBtn = document.getElementById('sw-open-btn');
+if(_swBtn) _swBtn.addEventListener('click', swOpen);
+// Swipe down to close
+(function(){
+  var drawer = document.getElementById('sw-drawer');
+  var startY = 0;
+  drawer.addEventListener('touchstart', function(e){startY = e.touches[0].clientY;}, {passive:true});
+  drawer.addEventListener('touchend', function(e){
+    if(e.changedTouches[0].clientY - startY > 60) swClose();
+  }, {passive:true});
+})();
+
+
+// ── APP SWITCHER ─────────────────────────
+function swOpen(){
+  document.getElementById('sw-backdrop').classList.add('open');
+  document.getElementById('sw-drawer').classList.add('open');
+}
+function swClose(){
+  document.getElementById('sw-backdrop').classList.remove('open');
+  document.getElementById('sw-drawer').classList.remove('open');
+}
+(function(){
+  var btn=document.getElementById('sw-open-btn');
+  if(btn)btn.addEventListener('click',swOpen);
+  var drawer=document.getElementById('sw-drawer');
+  if(drawer){
+    var sy=0;
+    drawer.addEventListener('touchstart',function(e){sy=e.touches[0].clientY;},{passive:true});
+    drawer.addEventListener('touchend',function(e){if(e.changedTouches[0].clientY-sy>50)swClose();},{passive:true});
+  }
+})();
+// ─────────────────────────────────────────
+
+// ── THEME TOGGLE ─────────────────────────
+(function(){
+  var KEY='voltiq_theme_tools';
+  var isLight=localStorage.getItem(KEY)==='light';
+  function apply(l){
+    document.documentElement.classList.toggle('lm',l);
+    var b=document.getElementById('thm-btn');
+    if(b)b.textContent=l?'☀️':'🌙';
+  }
+  if(isLight)document.documentElement.classList.add('lm');
+  window.thmToggle=function(){
+    isLight=!isLight;
+    localStorage.setItem(KEY,isLight?'light':'dark');
+    apply(isLight);
+  };
+  apply(isLight);
+})();
+
+</script>
+
+<script>
+// Service Worker — nur aktiv wenn lokal vom eigenen Server geladen
+// (nicht in Vorschau-Umgebungen wie claudeusercontent.com)
+if('serviceWorker' in navigator){
+  var isLocal = ['localhost','127.0.0.1','0.0.0.0'].includes(location.hostname)
+             || location.protocol === 'file:'
+             || location.hostname.endsWith('.local')
+             || location.hostname.endsWith('.github.io');
+  if(isLocal){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./pwa/sw.js', {scope: './'})
+        .then(function(reg){ console.log('[VOLTIQ] Offline-Modus aktiv:', reg.scope); })
+        .catch(function(err){ console.warn('[VOLTIQ] SW nicht geladen:', err.message); });
+    });
+  }
+}
+
+// ── MICRO INTERACTIONS ───────────────────────────────────────────────
+(function(){
+  // Ripple on buttons
+  document.querySelectorAll('.btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      var r = document.createElement('span');
+      var rect = btn.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      r.style.cssText = 'position:absolute;border-radius:50%;background:rgba(255,255,255,.25);'+
+        'width:'+size+'px;height:'+size+'px;'+
+        'left:'+(e.clientX-rect.left-size/2)+'px;'+
+        'top:'+(e.clientY-rect.top-size/2)+'px;'+
+        'transform:scale(0);animation:ripple .5s ease-out;pointer-events:none;';
+      btn.style.position = btn.style.position || 'relative';
+      btn.style.overflow = 'hidden';
+      btn.appendChild(r);
+      setTimeout(function(){ r.remove(); }, 520);
+    });
+  });
+  // Add ripple keyframe if missing
+  if(!document.getElementById('ripple-style')){
+    var s = document.createElement('style');
+    s.id = 'ripple-style';
+    s.textContent = '@keyframes ripple{to{transform:scale(2.5);opacity:0;}}';
+    document.head.appendChild(s);
+  }
+  // Stagger cards on screen change
+  function staggerCards(container){
+    if(!container) return;
+    container.querySelectorAll('.card,.mc,.week-item,.app-tile').forEach(function(el,i){
+      el.style.animation = 'none';
+      el.offsetHeight; // reflow
+      el.style.animation = 'fadeUp .22s cubic-bezier(.33,1,.68,1) '+( i*0.05)+'s both';
+    });
+  }
+  // Hook into showScreen / switchPanel
+  var origShow = window.showScreen;
+  window.showScreen = function(id){
+    if(origShow) origShow(id);
+    setTimeout(function(){
+      var el = document.getElementById('s-'+id);
+      if(el) staggerCards(el);
+    }, 30);
+  };
+})();
+// ─────────────────────────────────────────────────────────────────────
+
+</script>
+</body>
+</html>
