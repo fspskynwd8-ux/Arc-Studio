@@ -6,8 +6,8 @@
 var CACHE_NAME = 'voltiq-v2';
 
 var FILES_TO_CACHE = [
+  '../voltiq.html',
   '../index.html',
-  '../arc-studio.html',
   '../VOLTECH-lern-basis.html',
   '../VOLTECH-lern-extra.html',
   '../VOLTECH-mechatronik-pro.html',
@@ -103,7 +103,7 @@ self.addEventListener('fetch', function(event) {
         return networkResponse;
       }).catch(function() {
         // Offline + nicht gecacht → index.html als Fallback
-        return caches.match('../index.html');
+        return caches.match('../voltiq.html');
       });
     })
   );
