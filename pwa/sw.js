@@ -3,11 +3,13 @@
 // Version: wird bei Änderungen hochgezählt → Cache wird erneuert
 // ══════════════════════════════════════════════════════════════
 
-var CACHE_NAME = 'voltiq-v2';
+var CACHE_NAME = 'voltiq-v3';
 
 var FILES_TO_CACHE = [
   '../voltiq.html',
   '../index.html',
+  '../impressum.html',
+  '../datenschutz.html',
   '../VOLTECH-lern-basis.html',
   '../VOLTECH-lern-extra.html',
   '../VOLTECH-mechatronik-pro.html',
