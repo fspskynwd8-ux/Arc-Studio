@@ -663,6 +663,13 @@ input:focus,select:focus,textarea:focus{
     </a>
   </div>
   <a class="sw-home-link" href="voltiq.html">⌂ VOLTIQ · Start</a>
+  <div style="padding:.5rem 1rem .75rem;border-top:1px solid rgba(255,255,255,.07);margin-top:.25rem;">
+    <a href="index.html" style="display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;border-radius:10px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);text-decoration:none;color:#a0a0b0;font-size:12px;font-weight:500;">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M9 2L4 9H7L5.5 14L12 7H9L11 2Z" fill="#6366f1"/></svg>
+      Arc Studio
+      <span style="margin-left:auto;font-size:10px;opacity:.5;">Website ↗</span>
+    </a>
+  </div>
 </div>
 
 <!-- LERNBEREICH -->
@@ -1061,7 +1068,10 @@ function showScreen(id){
   window.scrollTo(0,0);
 }
 document.querySelectorAll('.bnav-btn').forEach(function(btn){
-  btn.addEventListener('click',function(){showScreen(this.dataset.screen);});
+  btn.addEventListener('click',function(){
+    var screen = btn.dataset.screen || btn.dataset.go || btn.getAttribute('data-screen');
+    if(screen) showScreen(screen);
+  });
 });
 
 // Sub-tabs (delegated)
@@ -1353,6 +1363,16 @@ var QUIZ=[
   {q:'Was ist ein OB 35 in SIMATIC S7?',kat:'Grundlagen',opts:['Zeitgesteuerter Interrupt-OB, läuft in festen Zeitabständen','Hauptprogramm','Anlauf-OB','Fehler-OB'],c:'Zeitgesteuerter Interrupt-OB, läuft in festen Zeitabständen',e:'OB 35: Wecker-OB mit konfigurierbarer Zeit (z.B. 10 ms). Unterbricht OB1, führt Inhalt aus, kehrt zurück. Ideal für Regelaufgaben mit fester Abtastzeit.'},
   {q:'Was ist STEP 7 Structured Control Language (SCL)?',kat:'Grundlagen',opts:['Hochsprache ähnlich Pascal/C für komplexe Algorithmen in S7','Schrittsteuerungssprache','Grafikprogrammierung','Nur für Datenbaustein-Erstellung'],c:'Hochsprache ähnlich Pascal/C für komplexe Algorithmen in S7',e:'SCL (Structured Control Language) = Textbasierte Hochsprache nach IEC 61131-3 (= Structured Text). Gut für mathematische Berechnungen, Schleifen, Bedingungslogik. Ergänzt KOP/FUP.'},
   {q:'Was versteht man unter zyklischer Datenübertragung bei PROFINET?',kat:'Kommunikation',opts:['Daten werden in festen Zeitabständen (Zykluszeit) automatisch übertragen','Nur bei Anfrage übertragen','Einmalig beim Start','Nur bei Änderung'],c:'Daten werden in festen Zeitabständen (Zykluszeit) automatisch übertragen',e:'Zyklisch: Controller (SPS) und Device (Antrieb, I/O) tauschen Prozessdaten automatisch in jeder PROFINET-Zykluszeit aus. RT: typisch 1–4 ms. IRT: < 1 ms für Antriebsregelung.'},
+  {q:'Was beschreibt das FIFO-Speicherprinzip in der SPS-Technik?',kat:'Grundlagen',opts:['First In, First Out – das zuerst gespeicherte Element wird zuerst ausgelesen','Last In, First Out – das zuletzt gespeicherte wird zuerst gelesen','Zufälliger Zugriff auf beliebige Elemente','Nur der neueste Wert wird gespeichert'],c:'First In, First Out – das zuerst gespeicherte Element wird zuerst ausgelesen',e:'FIFO = First In, First Out. Wie eine Warteschlange: Das erste Element, das eingefügt wurde, wird auch als erstes wieder entnommen. Anwendung in SPS: Datenpuffer, Rezepturverwaltung, Reihenfolgesteuerung.'},
+  {q:'Was versteht man unter Totzeit in einem SPS-Programm?',kat:'Grundlagen',opts:['Die Verzögerung zwischen Eingangssignal und Reaktion des Ausgangs','Die Zeit in der die SPS ausgeschaltet ist','Die maximale Zykluszeit','Die Zeit für einen Kaltstart'],c:'Die Verzögerung zwischen Eingangssignal und Reaktion des Ausgangs',e:'Totzeit = Zeitverzögerung zwischen Ereignis und Reaktion. Entsteht durch Zykluszeit, Kommunikationslatenzen oder Verarbeitungszeit. Bei Regelaufgaben kritisch: große Totzeit erschwert stabile Regelung.'},
+  {q:'Was ist der Hauptunterschied zwischen SPS und klassischer Relaissteuerung?',kat:'Grundlagen',opts:['SPS ist frei programmierbar; Relaissteuerung ist fest verdrahtet','Relaissteuerung ist schneller','SPS kann keine Sicherheitsfunktionen übernehmen','Kein wesentlicher Unterschied'],c:'SPS ist frei programmierbar; Relaissteuerung ist fest verdrahtet',e:'Relaissteuerung: Logik durch Verdrahtung. Änderung = Umverdrahten. SPS: Logik im Programm, Änderung = neues Programm laden. SPS ist flexibler, wartungsfreundlicher, diagnosefähig. Relais: einfach, robust, ohne Programmierung.'},
+  {q:'Welche 5 Programmiersprachen definiert der Standard IEC 61131-3?',kat:'Grundlagen',opts:['KOP, FUP, AWL, ST (SCL), AS (SFC)','Python, C++, Java, Ruby, Go','Nur KOP und FUP sind standardisiert','KOP, FUP, AWL, HTML, SQL'],c:'KOP, FUP, AWL, ST (SCL), AS (SFC)',e:'IEC 61131-3 definiert: KOP (Kontaktplan/LAD), FUP (Funktionsplan/FBD), AWL (Anweisungsliste/IL), ST (Strukturierter Text/SCL), AS (Ablaufsprache/SFC). Alle sind herstellerübergreifend standardisiert.'},
+  {q:'Wofür wird ein Merker (M-Bereich) in der SPS verwendet?',kat:'Grundlagen',opts:['Als interne Hilfsvariable ohne physische Ein- oder Ausgangsklemme','Zum Speichern von Analogwerten','Als Ersatz für Datenbaustein-Variablen','Nur für Sicherheitsfunktionen'],c:'Als interne Hilfsvariable ohne physische Ein- oder Ausgangsklemme',e:'Merker (M) = interne Bool-Variable. Kein Hardwareanschluss. Nützlich für Zwischenergebnisse, Statusflags, Selbsthaltung. Beispiel: M0.0 als "Motorlauf-Flag". Merker gehen bei Spannungsausfall verloren (außer remanente Merker).'},
+  {q:'Was ist der grundlegende Unterschied zwischen einem Zähler (CTU) und einem Timer (TON) in der SPS?',kat:'Grundlagen',opts:['Zähler zählt Ereignisse (Flanken), Timer misst die vergangene Zeit','Zähler und Timer sind identisch','Timer zählt auch Flanken','Zähler misst Zeit in Sekunden'],c:'Zähler zählt Ereignisse (Flanken), Timer misst die vergangene Zeit',e:'CTU (Count Up): Zählt steigende Flanken am CU-Eingang → CV steigt. TON: Misst Zeit ab IN=1 → ET steigt. Zähler = diskret (Stückzahl). Timer = kontinuierlich (Dauer). Beide haben Preset-Wert (PV/PT) und Ausgang Q.'},
+  {q:'Was ist ein Funktionsbaustein (FB) und worin unterscheidet er sich von einer Funktion (FC)?',kat:'Grundlagen',opts:['FB hat eigenen Instanz-DB und kann Werte über Zyklen hinweg speichern; FC hat kein Gedächtnis','FC hat einen Instanz-DB, FB nicht','FB ist schneller als FC','FC kann mehrfach aufgerufen werden, FB nicht'],c:'FB hat eigenen Instanz-DB und kann Werte über Zyklen hinweg speichern; FC hat kein Gedächtnis',e:'FB = Funktionsbaustein mit Instanz-Datenbaustein. Static-Variablen bleiben zwischen Zyklen erhalten → für Timer, Zähler, Zustandsmaschinen. FC = Funktion ohne Gedächtnis, nur Eingabe/Ausgabe. Für Berechnungen ohne Zustand geeignet.'},
+  {q:'Was ist der praktische Unterschied zwischen einem 0–10V und einem 4–20mA Analogeingang an der SPS?',kat:'Grundlagen',opts:['4–20mA ist störsicherer und erkennt Leitungsbruch (0 mA); 0–10V kann nicht zwischen 0V-Signal und Kabelbruch unterscheiden','Kein Unterschied, beide sind gleichwertig','0–10V ist immer genauer','4–20mA kann nur 2 Zustände darstellen'],c:'4–20mA ist störsicherer und erkennt Leitungsbruch (0 mA); 0–10V kann nicht zwischen 0V-Signal und Kabelbruch unterscheiden',e:'0–10V: Spannungssignal, empfindlich gegen EMV-Störungen auf langen Leitungen. 4–20mA: Stromsignal, störsicherer. Leitungsbruch → 0 mA erkennbar (Untergrenze 4 mA). Daher bevorzugt in Industrie bei langen Kabelwegen.'},
+  {q:'Was bedeutet zyklische Programmbearbeitung in einer SPS?',kat:'Grundlagen',opts:['Das Programm wird ständig von oben nach unten wiederholt – Eingänge lesen, Programm ausführen, Ausgänge setzen','Das Programm läuft nur einmal beim Start','Jede Funktion wird in einem eigenen Thread ausgeführt','Das Programm wartet auf externe Ereignisse'],c:'Das Programm wird ständig von oben nach unten wiederholt – Eingänge lesen, Programm ausführen, Ausgänge setzen',e:'Zyklus: 1) Eingänge einlesen (Prozessabbild Eingänge). 2) Programm abarbeiten (OB1 und aufgerufene Bausteine). 3) Ausgänge setzen (Prozessabbild Ausgänge). Typische Zykluszeit: 1–50 ms. Danach beginnt der nächste Zyklus.'},
+  {q:'Wann wird eine Fail-Safe SPS (F-SPS) eingesetzt?',kat:'Grundlagen',opts:['Bei sicherheitskritischen Anlagen, wo ein Ausfall zu Personenschäden führen kann (SIL/PL-Anforderung)','Nur in der Lebensmittelindustrie','Wenn die Standard-SPS zu langsam ist','Bei einfachen Ein/Aus-Steuerungen'],c:'Bei sicherheitskritischen Anlagen, wo ein Ausfall zu Personenschäden führen kann (SIL/PL-Anforderung)',e:'F-SPS (Fail-Safe): Zertifizierte Sicherheits-SPS für Anlagen mit Personengefährdung. Führt Selbsttest durch, geht bei Fehler in sicheren Zustand (= Abschalten). Einsatz: Pressen, Roboter, chemische Anlagen. Normen: IEC 62061 (SIL), EN ISO 13849 (PL).'},
 ];
 
 var qzDeck=[],qzIdx=0,qzScore=0,qzAnswered=false;
@@ -1542,29 +1562,6 @@ $('sim-clr-btn').addEventListener('click',function(){$('sim-network-list').inner
 // Init
 simBuildIO();
 simAddNetwork('A0.0 = E0.0 AND NOT E0.1');
-
-// Add landing page link + to index
-
-function swOpen(){
-  document.getElementById('sw-backdrop').classList.add('open');
-  document.getElementById('sw-drawer').classList.add('open');
-}
-function swClose(){
-  document.getElementById('sw-backdrop').classList.remove('open');
-  document.getElementById('sw-drawer').classList.remove('open');
-}
-var _swBtn = document.getElementById('sw-open-btn');
-if(_swBtn) _swBtn.addEventListener('click', swOpen);
-// Swipe down to close
-(function(){
-  var drawer = document.getElementById('sw-drawer');
-  var startY = 0;
-  drawer.addEventListener('touchstart', function(e){startY = e.touches[0].clientY;}, {passive:true});
-  drawer.addEventListener('touchend', function(e){
-    if(e.changedTouches[0].clientY - startY > 60) swClose();
-  }, {passive:true});
-})();
-
 
 // ── APP SWITCHER ─────────────────────────
 function swOpen(){

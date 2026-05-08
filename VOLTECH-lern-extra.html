@@ -878,6 +878,13 @@ input:focus,select:focus,textarea:focus{
     </a>
   </div>
   <a class="sw-home" href="voltiq.html">⌂ VOLTIQ · Start</a>
+  <div style="padding:.5rem 1rem .75rem;border-top:1px solid rgba(255,255,255,.07);margin-top:.25rem;">
+    <a href="index.html" style="display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;border-radius:10px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);text-decoration:none;color:#a0a0b0;font-size:12px;font-weight:500;">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M9 2L4 9H7L5.5 14L12 7H9L11 2Z" fill="#6366f1"/></svg>
+      Arc Studio
+      <span style="margin-left:auto;font-size:10px;opacity:.5;">Website ↗</span>
+    </a>
+  </div>
 </div>
 
 
@@ -2787,9 +2794,18 @@ function ap2Start(){
 }
 
 function ap2ShowQ(idx){
-  if(idx<0||idx>=ap2State.deck.length) return;
-  ap2State.idx = idx;
+  if(!ap2State || !ap2State.deck || ap2State.deck.length === 0) return;
+  if(idx < 0) return;
+  if(idx >= ap2State.deck.length){
+    document.getElementById('ap2-question-card').style.display='none';
+    document.getElementById('ap2-nav').style.display='none';
+    document.getElementById('ap2-start').style.display='block';
+    ap2BuildStats();
+    return;
+  }
   var q = ap2State.deck[idx];
+  if(!q) return;
+  ap2State.idx = idx;
   document.getElementById('ap2-q-topic').textContent = q.topic;
   document.getElementById('ap2-q-num').textContent = 'Frage '+(idx+1)+'/'+ap2State.deck.length;
   document.getElementById('ap2-q-text').textContent = q.q;

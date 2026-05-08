@@ -895,6 +895,13 @@ input:focus,select:focus,textarea:focus{
     </a>
   </div>
   <a class="sw-home-link" href="voltiq.html">⌂ VOLTIQ · Startseite</a>
+  <div style="padding:.5rem 1rem .75rem;border-top:1px solid rgba(255,255,255,.07);margin-top:.25rem;">
+    <a href="index.html" style="display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;border-radius:10px;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);text-decoration:none;color:#a0a0b0;font-size:12px;font-weight:500;">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M9 2L4 9H7L5.5 14L12 7H9L11 2Z" fill="#6366f1"/></svg>
+      Arc Studio
+      <span style="margin-left:auto;font-size:10px;opacity:.5;">Website ↗</span>
+    </a>
+  </div>
 </div>
 
 
@@ -2003,7 +2010,7 @@ document.addEventListener('click',function(e){
   var card=btn.closest('.card');
   if(card)card.querySelectorAll('.sp').forEach(function(p){p.classList.remove('on');});
   btn.classList.add('on');
-  var target=document.getElementById(prefix+'-'+sp);
+  var target=document.getElementById(sp);
   if(target)target.classList.add('on');
 });
 
@@ -2351,9 +2358,9 @@ var aiLastAnswer='';
 function aiCollectContext(){
   var ctx=[];
   var map={
-    'DC Rechner':['dc-out'],
-    'AC Rechner':['ac-out'],
-    'Kabelquerschnitt':['kabel-out'],
+    'DC Rechner':['or2','lr','mr'],
+    'AC Rechner':['imp-r','pf-r','t-r'],
+    'Kabelquerschnitt':['kb-r'],
     'Motorthermik':['th-out'],
     'Kurzschluss':['ksc-out'],
     'FU-Assistent':['fu-out'],
@@ -3610,6 +3617,248 @@ function normenFilter(q){ normenRender(q); }
     }
   });
 })();
+// ══════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════════
+// MOTORTHERMIK
+// ══════════════════════════════════════════════════════════════════
+function doTherm(){
+  var In = parseFloat(document.getElementById('th-In').value);
+  var ka = parseFloat(document.getElementById('th-ka').value)||7;
+  var Pn = parseFloat(document.getElementById('th-Pn').value);
+  var tau= parseFloat(document.getElementById('th-tau').value)||20;
+  var ed = parseFloat(document.getElementById('th-ed').value)||100;
+  var alpha = parseFloat(document.getElementById('th-alpha').value)||1.15;
+  var out = document.getElementById('th-out');
+  if(isNaN(In)||In<=0){
+    out.innerHTML='<p style="color:var(--err);font-family:var(--mo);font-size:12px;margin-top:.75rem;">\u26a0 Nennstrom I_N eingeben</p>';
+    return;
+  }
+  var mssReihe = [1,1.25,1.6,2,2.5,3.15,4,5,6.3,8,10,12.5,16,20,25,32];
+  var I_einst = In * alpha;
+  var I_anlauf = In * ka;
+  var mss = mssReihe.find(function(v){ return v >= I_einst; }) || mssReihe[mssReihe.length-1];
+  var mssOK = mss < I_anlauf;
+  var ratio = I_anlauf / I_einst;
+  var t_aus = (ratio > 1) ? tau * Math.log((ratio*ratio) / (ratio*ratio - 1)) : 9999;
+  out.innerHTML =
+    '<div class="g2" style="margin-top:.85rem;">'+
+      '<div class="mc a"><div class="ml">Einstellstrom I_einst</div><div class="mv">'+I_einst.toFixed(2)+' A</div><div class="ms">= '+alpha+' \u00d7 '+In+' A</div></div>'+
+      '<div class="mc r"><div class="ml">Anlaufstrom I_A</div><div class="mv">'+I_anlauf.toFixed(1)+' A</div><div class="ms">= '+ka+'\u00d7 I_N</div></div>'+
+      '<div class="mc b"><div class="ml">Empfohlener MSS</div><div class="mv">'+mss+' A</div><div class="ms">n\u00e4chste Stufe \u00fcber I_einst</div></div>'+
+      '<div class="mc '+(mssOK?'g':'r')+'"><div class="ml">Anlaufeignung</div><div class="mv" style="font-size:13px;">'+(mssOK?'\u2713 MSS l\u00f6st nicht aus':'\u26a0 Ausl\u00f6sung m\u00f6glich')+'</div><div class="ms">I_A / I_einst = '+ratio.toFixed(2)+'\u00d7</div></div>'+
+      '<div class="mc b full"><div class="ml">Thermische Ausl\u00f6sezeit bei I_A</div><div class="mv" style="font-size:15px;">'+(t_aus>600?'> 600':t_aus.toFixed(1))+' s</div><div class="ms">\u03c4 = '+tau+' min \u00b7 ED = '+ed+'%</div></div>'+
+    '</div>'+
+    '<div class="hint" style="margin-top:.6rem;">'+
+      '<b>Empfehlung:</b> MSS auf <b>'+I_einst.toFixed(2)+' A</b> einstellen (\u03b1 = '+alpha+')'+
+      (!isNaN(Pn) ? ' \u00b7 P_N = '+Pn+' kW' : '')+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// KURZSCHLUSSRECHNER
+// ══════════════════════════════════════════════════════════════════
+function doKsc(){
+  var UN  = parseFloat(document.getElementById('ksc-U').value)||400;
+  var Zn  = parseFloat(document.getElementById('ksc-Zn').value)||50;
+  var q   = parseFloat(document.getElementById('ksc-q').value)||4;
+  var l   = parseFloat(document.getElementById('ksc-l').value);
+  var kap = parseFloat(document.getElementById('ksc-mat').value)||56;
+  var c   = parseFloat(document.getElementById('ksc-c').value)||1.1;
+  var out = document.getElementById('ksc-out');
+  if(isNaN(l)||l<=0){
+    out.innerHTML='<p style="color:var(--err);font-family:var(--mo);font-size:12px;margin-top:.75rem;">\u26a0 Leitungsl\u00e4nge eingeben</p>';
+    return;
+  }
+  var Z_lei = (2 * l) / (kap * q) * 1000;
+  var Z_ges = Zn + Z_lei;
+  var drehstrom = (UN >= 380);
+  var Ik = drehstrom
+    ? (c * UN) / (Math.sqrt(3) * Z_ges / 1000)
+    : (c * UN) / (2 * Z_ges / 1000);
+  var IkKA = Ik / 1000;
+  out.innerHTML =
+    '<div class="g2" style="margin-top:.85rem;">'+
+      '<div class="mc r"><div class="ml">Kurzschlussstrom I_k</div><div class="mv">'+IkKA.toFixed(3)+' kA</div><div class="ms">= '+Ik.toFixed(0)+' A</div></div>'+
+      '<div class="mc a"><div class="ml">Z_gesamt</div><div class="mv">'+Z_ges.toFixed(2)+' m\u03a9</div><div class="ms">Z_Netz + Z_Leitung</div></div>'+
+      '<div class="mc b"><div class="ml">Z_Leitung</div><div class="mv">'+Z_lei.toFixed(2)+' m\u03a9</div><div class="ms">2\u00d7'+l+'m / ('+kap+'\u00d7'+q+'mm\u00b2)</div></div>'+
+      '<div class="mc b"><div class="ml">Z_Netz</div><div class="mv">'+Zn+' m\u03a9</div><div class="ms">Netzeingabe</div></div>'+
+      '<div class="mc g full"><div class="ml">Schaltung / Spannungsfaktor</div><div class="mv" style="font-size:13px;">'+(drehstrom?'Drehstrom 3~':'Wechselstrom 1~')+' \u00b7 c = '+c+' \u00b7 U_N = '+UN+' V</div></div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SICHERUNGSAUSWAHL
+// ══════════════════════════════════════════════════════════════════
+function doSicherung(){
+  var Ik = parseFloat(document.getElementById('ksc-ik-in').value);
+  var out = document.getElementById('ksc-sig-out');
+  if(isNaN(Ik)||Ik<=0){
+    out.innerHTML='<p style="color:var(--err);font-family:var(--mo);font-size:12px;margin-top:.75rem;">\u26a0 Berechneten I_k eingeben</p>';
+    return;
+  }
+  var stufen = [6,10,13,16,20,25,32,40,50,63,80,100];
+  var empB  = stufen.filter(function(s){ return s * 5  <= Ik; });
+  var empC  = stufen.filter(function(s){ return s * 10 <= Ik; });
+  var empD  = stufen.filter(function(s){ return s * 20 <= Ik; });
+  var empGG = stufen.filter(function(s){ return s * 8  <= Ik; });
+  function lastOrNone(arr){ return arr.length ? 'bis <b>'+arr[arr.length-1]+' A</b>' : '\u26a0 zu gering'; }
+  out.innerHTML =
+    '<div style="font-size:13px;color:var(--tx2);margin-top:.85rem;">'+
+      '<div style="font-size:18px;font-weight:700;color:var(--ok);margin-bottom:.5rem;">Sicherungsauswahl f\u00fcr I_k = '+(Ik/1000).toFixed(2)+' kA</div>'+
+      '<div class="g2">'+
+        '<div class="mc b"><div class="ml">B-Charakteristik (5\u00d7)</div><div class="mv" style="font-size:13px;">'+lastOrNone(empB)+'</div></div>'+
+        '<div class="mc a"><div class="ml">C-Charakteristik (10\u00d7)</div><div class="mv" style="font-size:13px;">'+lastOrNone(empC)+'</div></div>'+
+        '<div class="mc r"><div class="ml">D-Charakteristik (20\u00d7)</div><div class="mv" style="font-size:13px;">'+lastOrNone(empD)+'</div></div>'+
+        '<div class="mc g"><div class="ml">gG-Sicherung (~8\u00d7)</div><div class="mv" style="font-size:13px;">'+lastOrNone(empGG)+'</div></div>'+
+      '</div>'+
+      '<div class="hint" style="margin-top:.6rem;">Ausl\u00f6sebedingung VDE 0100-410: I_k \u2265 n \u00d7 I_N der Schutzeinrichtung</div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// FREQUENZUMRICHTER-ASSISTENT
+// ══════════════════════════════════════════════════════════════════
+function doFU(){
+  var P   = parseFloat(document.getElementById('fu-P').value);
+  var UN  = parseFloat(document.getElementById('fu-U').value)||400;
+  var In  = parseFloat(document.getElementById('fu-In').value);
+  var cos = parseFloat(document.getElementById('fu-cosphi').value)||0.85;
+  var fN  = parseFloat(document.getElementById('fu-fn').value)||50;
+  var nN  = parseFloat(document.getElementById('fu-n').value);
+  var p   = parseFloat(document.getElementById('fu-p').value)||2;
+  var anlauf = document.getElementById('fu-anlauf').value;
+  var out = document.getElementById('fu-out');
+  if(isNaN(P)||P<=0){
+    out.innerHTML='<p style="color:var(--err);font-family:var(--mo);font-size:12px;margin-top:.75rem;">\u26a0 Nennleistung P_N eingeben</p>';
+    return;
+  }
+  var k = UN / fN;
+  var n_sync = (fN * 60) / p;
+  var schlupf = (!isNaN(nN) && nN > 0) ? ((n_sync - nN) / n_sync * 100) : null;
+  var I_fu = (!isNaN(In) && In > 0) ? In : (P * 1000) / (Math.sqrt(3) * UN * cos);
+  var anlaufFaktor = {leicht:1.0, mittel:1.2, schwer:1.5}[anlauf]||1.2;
+  var I_anlauf = I_fu * anlaufFaktor;
+  var fuStufen = [1.5,2.5,4,6,8,10,12,16,20,25,32,40,50,63];
+  var fuGr = fuStufen.find(function(s){ return s >= I_fu; }) || I_fu.toFixed(1);
+  var U_out_25 = Math.min(k * 25, UN);
+  out.innerHTML =
+    '<div class="g2" style="margin-top:.85rem;">'+
+      '<div class="mc b"><div class="ml">U/f-Verh\u00e4ltnis k</div><div class="mv">'+k.toFixed(2)+' V/Hz</div><div class="ms">= '+UN+'V / '+fN+'Hz</div></div>'+
+      '<div class="mc g"><div class="ml">Synchrondrehzahl n_sync</div><div class="mv">'+n_sync.toFixed(0)+' U/min</div><div class="ms">= f_N \u00d7 60 / p ('+p+' Polpaare)</div></div>'+
+      '<div class="mc a"><div class="ml">Motorstrom I_N</div><div class="mv">'+I_fu.toFixed(2)+' A</div><div class="ms">= P / (\u221a3 \u00d7 U \u00d7 cos\u03c6)</div></div>'+
+      '<div class="mc r"><div class="ml">Anlaufstrom ('+anlauf+')</div><div class="mv">'+I_anlauf.toFixed(2)+' A</div><div class="ms">'+anlaufFaktor+'\u00d7 I_N</div></div>'+
+      (schlupf!==null ? '<div class="mc p"><div class="ml">Schlupf</div><div class="mv">'+schlupf.toFixed(1)+' %</div><div class="ms">n_N = '+nN+' U/min</div></div>' : '')+
+      '<div class="mc b full"><div class="ml">Empfohlene FU-Baugr\u00f6\u00dfe</div><div class="mv" style="font-size:15px;">\u2265 '+fuGr+' A Dauerstrom</div><div class="ms">P_N = '+P+' kW \u00b7 U_N = '+UN+' V</div></div>'+
+    '</div>'+
+    '<div class="hint" style="margin-top:.6rem;">'+
+      '<b>U/f-Kennlinie:</b> Bei f = 25 Hz \u2192 U_out \u2248 '+U_out_25.toFixed(0)+' V'+
+      ' \u00b7 Bei \u2265 '+fN+' Hz: Feldschwächung, U_out = '+UN+' V'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// STERN / DREIECK
+// ══════════════════════════════════════════════════════════════════
+function sdTypeChange(){
+  var typ = document.getElementById('sd-typ').value;
+  var uLbl = document.getElementById('sd-u-lbl');
+  var iLbl = document.getElementById('sd-i-lbl');
+  var uInp = document.getElementById('sd-U');
+  var iInp = document.getElementById('sd-I');
+  if(typ === 'Y_to_D'){
+    uLbl.textContent = 'Strangspannung U_S (V)';
+    iLbl.textContent = 'Strangstrom I_S (A)';
+    uInp.placeholder = 'z.B. 231';
+    iInp.placeholder = 'z.B. 8.0';
+  } else {
+    uLbl.textContent = 'Strangspannung U_D (V)';
+    iLbl.textContent = 'Strangstrom I_D (A)';
+    uInp.placeholder = 'z.B. 400';
+    iInp.placeholder = 'z.B. 4.6';
+  }
+  document.getElementById('sd-out').innerHTML = '';
+}
+
+function doSD(){
+  var typ    = document.getElementById('sd-typ').value;
+  var U      = parseFloat(document.getElementById('sd-U').value);
+  var I      = parseFloat(document.getElementById('sd-I').value);
+  var cosphi = parseFloat(document.getElementById('sd-cosphi').value)||0.85;
+  var P_kw   = parseFloat(document.getElementById('sd-P').value);
+  var out    = document.getElementById('sd-out');
+  if(isNaN(U)||isNaN(I)){
+    out.innerHTML='<p style="color:var(--err);font-family:var(--mo);font-size:12px;margin-top:.75rem;">\u26a0 Spannung und Strom eingeben</p>';
+    return;
+  }
+  var sq3 = Math.sqrt(3);
+  var U_Y, I_Y, U_D, I_D;
+  if(typ === 'Y_to_D'){
+    U_Y = U; I_Y = I;
+    U_D = U_Y * sq3;
+    I_D = I_Y / sq3;
+  } else {
+    U_D = U; I_D = I;
+    U_Y = U_D / sq3;
+    I_Y = I_D * sq3;
+  }
+  var P_W = 3 * U_Y * I_Y * cosphi;
+  var P_display = (!isNaN(P_kw) && P_kw > 0) ? P_kw * 1000 : P_W;
+  out.innerHTML =
+    '<div class="g2" style="margin-top:.85rem;">'+
+      '<div class="mc b"><div class="ml">Stern U_S (Strang)</div><div class="mv">'+U_Y.toFixed(2)+' V</div><div class="ms">= U_D / \u221a3</div></div>'+
+      '<div class="mc b"><div class="ml">Stern I_S (Strang)</div><div class="mv">'+I_Y.toFixed(3)+' A</div><div class="ms">= I_D \u00d7 \u221a3</div></div>'+
+      '<div class="mc g"><div class="ml">Dreieck U_D (Strang)</div><div class="mv">'+U_D.toFixed(2)+' V</div><div class="ms">= U_S \u00d7 \u221a3</div></div>'+
+      '<div class="mc g"><div class="ml">Dreieck I_D (Strang)</div><div class="mv">'+I_D.toFixed(3)+' A</div><div class="ms">= I_S / \u221a3</div></div>'+
+      '<div class="mc a full"><div class="ml">Wirkleistung P (cos\u03c6 = '+cosphi+')</div><div class="mv">'+( P_display/1000).toFixed(3)+' kW</div><div class="ms">= 3 \u00d7 U_S \u00d7 I_S \u00d7 cos\u03c6</div></div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// KABELQUERSCHNITT
+// ══════════════════════════════════════════════════════════════════
+function doKabel(){
+  var I    = parseFloat(document.getElementById('kb-I').value);
+  var L    = parseFloat(document.getElementById('kb-L').value);
+  var mat  = document.getElementById('kb-mat').value;
+  var UN   = parseFloat(document.getElementById('kb-U').value)||400;
+  var verl = parseFloat(document.getElementById('kb-verl').value)||0.8;
+  var dU   = parseFloat(document.getElementById('kb-uf').value)||3;
+  var errEl= document.getElementById('kb-e');
+  var outEl= document.getElementById('kb-r');
+  errEl.style.display='none'; outEl.style.display='none';
+  if(isNaN(I)||I<=0||isNaN(L)||L<=0){
+    errEl.textContent='Betriebsstrom und Leitungsl\u00e4nge eingeben!';
+    errEl.style.display='block'; return;
+  }
+  var kappa = (parseFloat(mat) >= 50) ? 56 : 34;
+  var phase = (UN >= 380) ? Math.sqrt(3) : 2;
+  var tabelle = [
+    {q:1.5,Imax:16},{q:2.5,Imax:20},{q:4,Imax:25},{q:6,Imax:32},
+    {q:10,Imax:40},{q:16,Imax:63},{q:25,Imax:80},{q:35,Imax:100},
+    {q:50,Imax:125},{q:70,Imax:160},{q:95,Imax:200}
+  ];
+  var I_zul_erf = I / verl;
+  var qBelast = tabelle.find(function(r){ return r.Imax >= I_zul_erf; });
+  var q_du = (phase * I * L) / (kappa * (dU/100) * UN);
+  var qDelta = tabelle.find(function(r){ return r.q >= q_du; });
+  var qEmpf = (!qBelast && !qDelta) ? tabelle[tabelle.length-1] :
+              (!qBelast) ? qDelta :
+              (!qDelta)  ? qBelast :
+              (qBelast.q >= qDelta.q) ? qBelast : qDelta;
+  var dU_ist = (phase * I * L) / (kappa * qEmpf.q * UN) * 100;
+  var Imax_korr = qEmpf.Imax * verl;
+  outEl.innerHTML =
+    '<div class="g2">'+
+      '<div class="mc g"><div class="ml">Empfohlener Querschnitt</div><div class="mv">'+qEmpf.q+' mm\u00b2</div><div class="ms">'+(kappa===56?'Kupfer':'Aluminium')+'</div></div>'+
+      '<div class="mc b"><div class="ml">Max. Belastbarkeit (korr.)</div><div class="mv">'+Imax_korr.toFixed(0)+' A</div><div class="ms">Verl.faktor '+verl+'</div></div>'+
+      '<div class="mc '+(dU_ist>dU?'r':'g')+'"><div class="ml">Tats\u00e4chl. Spannungsfall</div><div class="mv">'+dU_ist.toFixed(2)+' %</div><div class="ms">Grenze: '+dU+' %</div></div>'+
+      '<div class="mc a"><div class="ml">Q nach Spannungsfall</div><div class="mv">'+q_du.toFixed(2)+' mm\u00b2</div><div class="ms">\u2192 n\u00e4chste Stufe: '+(qDelta?qDelta.q:'> 95')+' mm\u00b2</div></div>'+
+      '<div class="mc b full"><div class="ml">Querschnitt nach Belastbarkeit</div><div class="mv" style="font-size:13px;">Mindest I_zul = '+I_zul_erf.toFixed(1)+' A \u2192 '+(qBelast?qBelast.q:'> 95')+' mm\u00b2</div></div>'+
+    '</div>';
+  outEl.style.display = 'block';
+}
+
 // ══════════════════════════════════════════════════════════════════
 
 </script>
