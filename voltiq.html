@@ -215,6 +215,27 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
 .lm .hdr{background:rgba(242,242,247,.85);}
 .lm .hero-title .hl{color:var(--ac);}
 @media print{.thm-btn{display:none!important;}}
+
+/* ── Drawer (Arc Studio App-Switcher) ─────────── */
+.drawer-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .2s;}
+.drawer-overlay.on{opacity:1;pointer-events:all;}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:201;width:min(300px,85vw);background:var(--bg2);border-left:1px solid var(--br);transform:translateX(100%);transition:transform .22s cubic-bezier(.22,.61,.36,1);display:flex;flex-direction:column;overflow-y:auto;}
+.drawer.on{transform:translateX(0);}
+.drawer-hdr{padding:1rem;border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:space-between;}
+.drawer-title{font-size:14px;font-weight:700;color:var(--tx);}
+.drawer-close{width:32px;height:32px;border-radius:8px;background:var(--bg3);border:none;color:var(--tx2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.drawer-apps{padding:.5rem 0;flex:1;}
+.drawer-app{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;text-decoration:none;color:var(--tx);transition:background .15s;}
+.drawer-app:hover{background:var(--bg3);}
+.drawer-app.active{color:var(--ac);}
+.drawer-app-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
+.drawer-app-name{font-size:14px;font-weight:500;}
+.drawer-app-sub{font-size:11px;color:var(--tx3);}
+.drawer-app-badge{margin-left:auto;background:var(--ac);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;}
+.drawer-footer{padding:.5rem 1rem .75rem;border-top:1px solid var(--br);margin-top:.25rem;}
+.drawer-footer a{color:var(--ac);text-decoration:none;font-size:13px;font-weight:500;display:flex;align-items:center;gap:.3rem;}
+.drawer-footer a:hover{color:var(--acd);}
+
 </style>
 </head>
 <body>
@@ -228,7 +249,62 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
     <div class="logo-text">VOLT<span>IQ</span></div>
   </div>
   <button class="thm-btn" id="thm-btn" onclick="thmToggle()" title="Hell/Dunkel" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;">🌙</button>
+  <button onclick="drawerOpen()" title="Apps wechseln" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;color:var(--tx2);">⊞</button>
 </header>
+
+<div class="drawer-overlay" id="drawer-overlay" onclick="drawerClose()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hdr">
+    <span class="drawer-title">⊞ Arc Studio</span>
+    <button class="drawer-close" onclick="drawerClose()">✕</button>
+  </div>
+  <div class="drawer-apps">
+    <a class="drawer-app active" href="voltiq.html">
+      <span class="drawer-app-icon">⚡</span>
+      <div><div class="drawer-app-name">VOLTIQ</div><div class="drawer-app-sub">Mechatroniker-Ausbildung</div></div>
+      <span class="drawer-app-badge">Aktiv</span>
+    </a>
+    <a class="drawer-app" href="VOLTECH-mechatronik-pro.html">
+      <span class="drawer-app-icon">⚙️</span>
+      <div><div class="drawer-app-name">Mechatronik Pro</div><div class="drawer-app-sub">Rechner & Module</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-lern-basis.html">
+      <span class="drawer-app-icon">📚</span>
+      <div><div class="drawer-app-name">Lernmodus</div><div class="drawer-app-sub">Karteikarten & Grundlagen</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-lern-extra.html">
+      <span class="drawer-app-icon">🎤</span>
+      <div><div class="drawer-app-name">AP2-Extra</div><div class="drawer-app-sub">Mündliche Prüfungsvorbereitung</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-sps.html">
+      <span class="drawer-app-icon">🔌</span>
+      <div><div class="drawer-app-name">SPS-Trainer</div><div class="drawer-app-sub">Speicherprogrammierbare Steuerung</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-berichtsheft.html">
+      <span class="drawer-app-icon">📓</span>
+      <div><div class="drawer-app-name">Berichtsheft</div><div class="drawer-app-sub">Ausbildungsnachweise</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-tools2.html">
+      <span class="drawer-app-icon">🧰</span>
+      <div><div class="drawer-app-name">Lerntools</div><div class="drawer-app-sub">Rechner & Hilfsmittel</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-ampere.html">
+      <span class="drawer-app-icon">🔶</span>
+      <div><div class="drawer-app-name">AMPERE</div><div class="drawer-app-sub">Elektroniker Betriebstechnik</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-torque.html">
+      <span class="drawer-app-icon">🔩</span>
+      <div><div class="drawer-app-name">TORQUE</div><div class="drawer-app-sub">Industriemechaniker AP1/AP2</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-ki.html">
+      <span class="drawer-app-icon">🧠</span>
+      <div><div class="drawer-app-name">KI-Assistent</div><div class="drawer-app-sub">Offline Wissensdatenbank</div></div>
+    </a>
+  </div>
+  <div class="drawer-footer">
+    <a href="index.html">Arc Studio Website ↗</a>
+  </div>
+</div>
 
 <section class="hero">
   <h1 class="hero-title">Dein digitaler<br><span class="hl">Azubi-Begleiter</span></h1>
@@ -756,6 +832,8 @@ function backupStatus(msg, cls){
   }else{apply(isLight);}
 })();
 // ─────────────────────────────────────────────────────────────────────
+function drawerOpen(){document.getElementById('drawer').classList.add('on');document.getElementById('drawer-overlay').classList.add('on');}
+function drawerClose(){document.getElementById('drawer').classList.remove('on');document.getElementById('drawer-overlay').classList.remove('on');}
 
 </script>
 </body>
