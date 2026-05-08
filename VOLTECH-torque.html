@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#040608">
+<meta name="apple-mobile-web-app-title" content="TORQUE">
+<title>TORQUE — Industriemechaniker Betriebstechnik</title>
+<link rel="manifest" href="pwa/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #040608;
+  --bg2: #0c0e12;
+  --bg3: #141720;
+  --bg4: #1c2028;
+  --sep: rgba(255,255,255,.06);
+  --br: rgba(255,255,255,.07);
+  --tx: #eef0f5;
+  --tx2: #9aa0b0;
+  --tx3: #4a5060;
+  --ac: #14b8a6;
+  --acd: #0d9488;
+  --acg: rgba(20,184,166,.12);
+  --ok: #34d399;
+  --err: #f87171;
+  --warn: #fbbf24;
+  --r: 10px;
+  --r2: 14px;
+  --r3: 18px;
+  --sa: 'Inter', system-ui, sans-serif;
+  --mo: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); color: var(--tx); font-family: var(--sa); }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
+  color: var(--tx);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Light Mode */
+.lm { --bg:#f4f6f8; --bg2:#ffffff; --bg3:#e6eaee; --bg4:#d8dde3;
+      --tx:#1a1e25; --tx2:#3a4050; --tx3:#7a8090; }
+.lm .hdr { background: rgba(244,246,248,.9); }
+.lm .tabs { background: rgba(244,246,248,.95); }
+.lm .drawer-overlay { background: rgba(0,0,0,.4); }
+.lm .drawer { background: var(--bg2); }
+
+/* Header */
+.hdr {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(4,6,8,.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--sep);
+  padding: .75rem 1rem;
+  display: flex; align-items: center; gap: .65rem;
+}
+.hdr-mark {
+  width: 32px; height: 32px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.hdr-wordmark { flex: 1; }
+.hdr-wordmark h1 { font-size: 17px; font-weight: 700; letter-spacing: -.3px; line-height: 1.1; }
+.hdr-wordmark p { font-size: 10px; color: var(--tx3); font-weight: 500; letter-spacing: .2px; margin-top: 1px; }
+.hdr-actions { display: flex; gap: .4rem; }
+.hdr-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--bg3); border: 1px solid var(--br);
+  color: var(--tx2); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.hdr-btn:hover { background: var(--bg4); color: var(--tx); }
+
+/* Tab Bar */
+.tabs {
+  position: sticky; top: 57px; z-index: 90;
+  background: rgba(4,6,8,.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--sep);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 .5rem;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  font-size: 12px; font-weight: 600;
+  padding: .65rem .85rem;
+  border: none; background: transparent;
+  color: var(--tx3); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+  display: flex; align-items: center; gap: .4rem;
+  white-space: nowrap; min-height: 44px;
+  font-family: var(--sa);
+}
+.tab-btn.on { color: var(--ac); border-bottom-color: var(--ac); }
+.tab-btn:hover:not(.on) { color: var(--tx2); }
+
+/* Screens */
+.screen { display: none; padding: 1rem; max-width: 640px; margin: 0 auto; padding-bottom: 2rem; }
+.screen.on { display: block; }
+
+/* Cards */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--br);
+  border-radius: var(--r2);
+  padding: 1rem;
+  margin-bottom: .75rem;
+}
+
+/* Section titles */
+.sec-title {
+  font-size: 11px; font-weight: 700; color: var(--tx3);
+  text-transform: uppercase; letter-spacing: .8px;
+  margin: 1.25rem 0 .6rem;
+}
+.sec-title:first-child { margin-top: 0; }
+
+/* Daily Question */
+.dq-card {
+  background: var(--bg2);
+  border: 1px solid var(--br);
+  border-left: 3px solid var(--ac);
+  border-radius: var(--r2);
+  padding: 1rem;
+  margin-bottom: .75rem;
+}
+.dq-label {
+  font-size: 10px; font-weight: 700; color: var(--ac);
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: .5rem;
+}
+.dq-question {
+  font-size: 15px; font-weight: 600; color: var(--tx);
+  line-height: 1.4; margin-bottom: .75rem;
+}
+.dq-toggle {
+  background: var(--acg); color: var(--ac);
+  border: 1px solid rgba(20,184,166,.3);
+  border-radius: 8px; padding: .5rem .85rem;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: var(--sa); min-height: 36px;
+  transition: all .15s;
+}
+.dq-toggle:hover { background: rgba(20,184,166,.2); }
+.dq-answer {
+  background: var(--bg3); border-radius: 8px;
+  padding: .75rem; margin-top: .75rem;
+  font-size: 13px; line-height: 1.5; color: var(--tx2);
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: .5rem; margin-bottom: .75rem;
+}
+.stat-card {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .75rem;
+}
+.stat-value {
+  font-size: 24px; font-weight: 700; color: var(--ac);
+  font-family: var(--mo); line-height: 1.2;
+}
+.stat-label { font-size: 11px; color: var(--tx3); margin-top: 2px; font-weight: 500; }
+
+/* Quick LF Grid */
+.lf-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: .5rem;
+}
+.lf-quick-card {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .75rem;
+  cursor: pointer; transition: all .15s;
+  text-align: left;
+}
+.lf-quick-card:hover { background: var(--bg3); border-color: rgba(20,184,166,.3); }
+.lf-quick-icon { font-size: 18px; margin-bottom: .3rem; display: block; }
+.lf-quick-name { font-size: 12px; font-weight: 600; color: var(--tx); line-height: 1.3; }
+.lf-quick-sub { font-size: 10px; color: var(--tx3); margin-top: 2px; }
+
+/* Accordion */
+.lf-accordion {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r2); margin-bottom: .5rem;
+  overflow: hidden;
+}
+.lf-summary {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .9rem 1rem; cursor: pointer;
+  list-style: none; user-select: none;
+  transition: color .15s;
+}
+.lf-summary::-webkit-details-marker { display: none; }
+details[open] > .lf-summary { color: var(--ac); }
+.lf-icon { font-size: 20px; flex-shrink: 0; }
+.lf-meta { flex: 1; }
+.lf-title { font-size: 14px; font-weight: 600; display: block; line-height: 1.3; }
+.lf-count { font-size: 11px; color: var(--tx3); margin-top: 2px; display: block; }
+.lf-arrow {
+  font-size: 16px; color: var(--tx3); font-weight: 700;
+  transition: transform .2s; flex-shrink: 0;
+}
+details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
+.lf-body {
+  border-top: 1px solid var(--sep);
+  padding: .75rem 1rem 1rem;
+}
+.lf-body ul { list-style: none; }
+.lf-body ul li {
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--sep);
+  font-size: 13px; line-height: 1.4; color: var(--tx2);
+  display: flex; gap: .5rem; align-items: flex-start;
+}
+.lf-body ul li:last-child { border-bottom: none; padding-bottom: 0; }
+.lf-body ul li::before {
+  content: '›'; color: var(--ac); font-weight: 700;
+  flex-shrink: 0; margin-top: 0;
+}
+
+/* Quiz */
+.quiz-hero {
+  text-align: center; padding: 2rem 1rem;
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r2); margin-bottom: 1rem;
+}
+.quiz-hero-icon { font-size: 48px; display: block; margin-bottom: .75rem; }
+.quiz-hero h2 { font-size: 22px; font-weight: 700; margin-bottom: .35rem; }
+.quiz-hero p { font-size: 14px; color: var(--tx2); margin-bottom: 1.5rem; }
+.quiz-hs-badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: var(--acg); color: var(--ac);
+  border: 1px solid rgba(20,184,166,.2);
+  border-radius: 20px; padding: .3rem .8rem;
+  font-size: 12px; font-weight: 600; margin-bottom: 1.25rem;
+}
+
+.btn-primary {
+  background: var(--ac); color: #fff;
+  border: none; border-radius: 12px;
+  padding: .75rem 1.5rem; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: var(--sa);
+  min-height: 48px; width: 100%; max-width: 300px;
+  transition: background .15s; display: block; margin: 0 auto;
+}
+.btn-primary:hover { background: var(--acd); }
+
+.quiz-progress-wrap {
+  background: var(--bg3); border-radius: 4px;
+  height: 4px; margin-bottom: .75rem; overflow: hidden;
+}
+.quiz-progress-bar {
+  height: 4px; background: var(--ac);
+  border-radius: 4px; transition: width .3s;
+}
+.quiz-counter {
+  font-size: 12px; color: var(--tx3); font-weight: 600;
+  text-align: right; margin-bottom: .75rem;
+}
+.quiz-card {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r2); padding: 1.25rem;
+}
+.quiz-question {
+  font-size: 16px; font-weight: 600; line-height: 1.45;
+  margin-bottom: 1rem; color: var(--tx);
+}
+.quiz-opts {
+  display: flex; flex-direction: column; gap: .5rem;
+  margin-bottom: .75rem;
+}
+.quiz-opt {
+  background: var(--bg3); border: 1px solid var(--br);
+  border-radius: 10px; padding: .75rem 1rem;
+  font-size: 14px; font-weight: 500; color: var(--tx);
+  cursor: pointer; text-align: left; font-family: var(--sa);
+  min-height: 44px; transition: all .15s; line-height: 1.3;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--ac); color: var(--tx); }
+.quiz-opt.chosen { border-color: var(--ac); background: var(--acg); color: var(--ac); }
+.quiz-opt.correct { border-color: var(--ok); background: rgba(52,211,153,.12); color: var(--ok); }
+.quiz-opt.wrong { border-color: var(--err); background: rgba(248,113,113,.1); color: var(--err); }
+.quiz-opt:disabled { cursor: default; }
+.quiz-explanation {
+  background: var(--bg3); border-radius: 10px;
+  padding: .85rem; margin-bottom: .75rem;
+  font-size: 13px; line-height: 1.5; color: var(--tx2);
+  border-left: 2px solid var(--ac);
+}
+.quiz-next-btn {
+  background: var(--ac); color: #fff;
+  border: none; border-radius: 10px;
+  padding: .7rem 1.25rem; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: var(--sa);
+  min-height: 44px; width: 100%;
+  transition: background .15s;
+}
+.quiz-next-btn:hover { background: var(--acd); }
+
+.quiz-end-card {
+  text-align: center; background: var(--bg2);
+  border: 1px solid var(--br); border-radius: var(--r2);
+  padding: 2rem 1.25rem;
+}
+.quiz-score-big {
+  font-size: 56px; font-weight: 700; color: var(--ac);
+  font-family: var(--mo); line-height: 1;
+}
+.quiz-score-sub { font-size: 14px; color: var(--tx2); margin: .35rem 0 1rem; }
+.quiz-end-hs { font-size: 13px; color: var(--tx3); margin-bottom: 1.5rem; }
+
+/* Formulas */
+.formula-cat-title {
+  font-size: 13px; font-weight: 700; color: var(--ac);
+  margin: 1.25rem 0 .5rem; display: flex; align-items: center; gap: .4rem;
+}
+.formula-cat-title:first-child { margin-top: 0; }
+.formula-card {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .85rem 1rem;
+  margin-bottom: .4rem; position: relative;
+}
+.formula-cat-badge {
+  display: inline-block; background: var(--acg);
+  color: var(--ac); border-radius: 5px;
+  font-size: 10px; font-weight: 700; padding: 2px 6px;
+  margin-bottom: .35rem; letter-spacing: .3px;
+}
+.formula-name {
+  font-size: 13px; font-weight: 600; color: var(--tx);
+  margin-bottom: .3rem;
+}
+.formula-eq {
+  font-family: var(--mo); font-size: 15px; font-weight: 600;
+  color: var(--ac); margin-bottom: .35rem; line-height: 1.4;
+}
+.formula-desc { font-size: 12px; color: var(--tx3); line-height: 1.4; }
+.formula-copy {
+  position: absolute; top: .7rem; right: .7rem;
+  background: var(--bg3); border: 1px solid var(--br);
+  border-radius: 6px; width: 28px; height: 28px;
+  font-size: 12px; cursor: pointer; color: var(--tx3);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; font-family: var(--sa);
+}
+.formula-copy:hover { color: var(--ac); border-color: var(--ac); background: var(--acg); }
+
+/* AP Check */
+.inner-tabs {
+  display: flex; gap: .4rem; margin-bottom: 1rem;
+}
+.inner-tab {
+  padding: .55rem 1.1rem; border-radius: 20px;
+  border: 1px solid var(--br); background: var(--bg2);
+  color: var(--tx2); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: var(--sa); min-height: 36px;
+  transition: all .15s;
+}
+.inner-tab.on { background: var(--ac); color: #fff; border-color: var(--ac); }
+.inner-tab:hover:not(.on) { border-color: var(--ac); color: var(--ac); }
+
+.ap-panel { display: none; }
+.ap-panel.on { display: block; }
+
+.ap-progress-wrap {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .75rem;
+  margin-bottom: .75rem;
+}
+.ap-prog-label {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: .5rem;
+}
+.ap-prog-text { font-size: 13px; font-weight: 600; color: var(--tx2); }
+.ap-prog-val { font-size: 13px; font-weight: 700; color: var(--ac); }
+.ap-progress-bar-bg {
+  background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden;
+}
+.ap-progress-bar { height: 6px; background: var(--ac); border-radius: 4px; transition: width .3s; }
+
+.ap-list { display: flex; flex-direction: column; gap: .35rem; }
+.ap-item {
+  display: flex; align-items: flex-start; gap: .75rem;
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .75rem;
+  cursor: pointer; transition: border-color .15s;
+}
+.ap-item:hover { border-color: rgba(20,184,166,.3); }
+.ap-check {
+  width: 18px; height: 18px; accent-color: var(--ac);
+  cursor: pointer; flex-shrink: 0; margin-top: 1px;
+}
+.ap-item-text {
+  font-size: 13px; color: var(--tx2); line-height: 1.4;
+  flex: 1;
+}
+.ap-item-text.done { color: var(--tx3); text-decoration: line-through; }
+
+/* Drawer */
+.drawer-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.6);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+.drawer-overlay.on { opacity: 1; pointer-events: all; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 201;
+  width: min(300px, 85vw);
+  background: var(--bg2);
+  border-left: 1px solid var(--br);
+  transform: translateX(100%);
+  transition: transform .22s cubic-bezier(.22,.61,.36,1);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+}
+.drawer.on { transform: translateX(0); }
+.drawer-hdr {
+  padding: 1rem; border-bottom: 1px solid var(--sep);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.drawer-title { font-size: 14px; font-weight: 700; color: var(--tx); }
+.drawer-close {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg3); border: none; color: var(--tx2);
+  font-size: 16px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+}
+.drawer-apps { padding: .5rem 0; flex: 1; }
+.drawer-app {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .7rem 1rem; cursor: pointer;
+  text-decoration: none; color: var(--tx);
+  transition: background .15s;
+}
+.drawer-app:hover { background: var(--bg3); }
+.drawer-app.active { color: var(--ac); }
+.drawer-app-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+.drawer-app-name { font-size: 14px; font-weight: 500; }
+.drawer-app-sub { font-size: 11px; color: var(--tx3); }
+.drawer-app-badge {
+  margin-left: auto; background: var(--ac); color: #fff;
+  border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700;
+}
+.drawer-footer {
+  padding: .5rem 1rem .75rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+  margin-top: .25rem;
+}
+.drawer-footer a {
+  color: var(--ac); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: .3rem;
+}
+.drawer-footer a:hover { color: var(--acd); }
+
+/* Utility */
+.mt05 { margin-top: .5rem; }
+.mt1 { margin-top: 1rem; }
+.gap2 { gap: .2rem; }
+
+@media (max-width: 400px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .lf-grid { grid-template-columns: 1fr 1fr; }
+  .formula-eq { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="hdr">
+  <div class="hdr-mark" style="background:var(--ac);">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" fill="white"/>
+      <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="hdr-wordmark">
+    <h1>TOR<span style="color:var(--ac)">QUE</span></h1>
+    <p>Industriemechaniker · Betriebstechnik</p>
+  </div>
+  <div class="hdr-actions">
+    <button class="hdr-btn" id="thm-btn" onclick="thmToggle()" title="Theme wechseln">🌙</button>
+    <button class="hdr-btn" onclick="drawerOpen()" title="App-Switcher">⊞</button>
+  </div>
+</header>
+
+<!-- Tab Bar -->
+<nav class="tabs" id="tab-bar">
+  <button class="tab-btn on" data-screen="s-dash" onclick="showScreen(this.dataset.screen)">🏠 Dashboard</button>
+  <button class="tab-btn" data-screen="s-lern" onclick="showScreen(this.dataset.screen)">📐 Lernfelder</button>
+  <button class="tab-btn" data-screen="s-quiz" onclick="showScreen(this.dataset.screen)">❓ Quiz</button>
+  <button class="tab-btn" data-screen="s-form" onclick="showScreen(this.dataset.screen)">🔢 Formeln</button>
+  <button class="tab-btn" data-screen="s-ap" onclick="showScreen(this.dataset.screen)">✅ AP-Check</button>
+</nav>
+
+<!-- ===================== SCREEN 1: DASHBOARD ===================== -->
+<main id="s-dash" class="screen on">
+
+  <div class="dq-card">
+    <div class="dq-label">⚙️ Aufgabe des Tages</div>
+    <div class="dq-question" id="dq-q">Lade...</div>
+    <button class="dq-toggle" id="dq-toggle" onclick="dqReveal()">Antwort zeigen</button>
+    <div class="dq-answer" id="dq-answer" style="display:none"></div>
+  </div>
+
+  <div class="sec-title">📊 Dein Fortschritt</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-cards">0</div>
+      <div class="stat-label">Gelernte Themen</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-hs">—</div>
+      <div class="stat-label">Quiz Highscore</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-streak">0</div>
+      <div class="stat-label">Tages-Streak 🔥</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">35</div>
+      <div class="stat-label">Fragen gesamt</div>
+    </div>
+  </div>
+
+  <div class="sec-title">📚 Lernfelder Übersicht</div>
+  <div class="lf-grid">
+    <button class="lf-quick-card" onclick="openLf('lf1')">
+      <span class="lf-quick-icon">⚙️</span>
+      <div class="lf-quick-name">LF 1</div>
+      <div class="lf-quick-sub">Fertigungstechnik & Toleranzen</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf2')">
+      <span class="lf-quick-icon">🔩</span>
+      <div class="lf-quick-name">LF 2</div>
+      <div class="lf-quick-sub">Maschinenelemente</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf3')">
+      <span class="lf-quick-icon">💧</span>
+      <div class="lf-quick-name">LF 3</div>
+      <div class="lf-quick-sub">Hydraulik & Pneumatik</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf4')">
+      <span class="lf-quick-icon">📏</span>
+      <div class="lf-quick-name">LF 4</div>
+      <div class="lf-quick-sub">Mess- & Prüftechnik</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf5')">
+      <span class="lf-quick-icon">🔧</span>
+      <div class="lf-quick-name">LF 5</div>
+      <div class="lf-quick-sub">CNC & Zerspanung</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf6')">
+      <span class="lf-quick-icon">🏭</span>
+      <div class="lf-quick-name">LF 6</div>
+      <div class="lf-quick-sub">Instandhaltung & Wartung</div>
+    </button>
+  </div>
+
+</main>
+
+<!-- ===================== SCREEN 2: LERNFELDER ===================== -->
+<main id="s-lern" class="screen">
+
+  <details class="lf-accordion" id="lf1">
+    <summary class="lf-summary">
+      <span class="lf-icon">⚙️</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 1 — Fertigungstechnik & Toleranzen</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>ISO-Toleranzsystem: Grundtoleranz (IT), Toleranzlage (Buchstabe), Nennmaß — IT01 bis IT18</li>
+        <li>Toleranzklassen: je kleiner die IT-Zahl, desto enger die Toleranz (IT1–IT4: Lehren, IT5–IT7: Maschinenbau)</li>
+        <li>Passungen: Spielpassung (H/g, H/f), Übergangspassung (H/k, H/js), Presspassung (H/p, H/s, H/r)</li>
+        <li>Einheitsbohrung (H): Unterabmaß immer 0, Vorteil: weniger Reibahlen nötig — Einheitswelle (h): Oberabmaß immer 0</li>
+        <li>Oberflächen: Ra (arithmetischer Mittenrauwert), Rz (gemittelte Rautiefe) — Ra ≈ Rz / 4–7</li>
+        <li>Werkstoffe Stahl: Baustahl S235, Vergütungsstahl 42CrMo4, Einsatzstahl 16MnCr5</li>
+        <li>Werkstoffe Nichteisenmetalle: Aluminium (Al), Kupfer (Cu), Messing (CuZn)</li>
+        <li>Wärmebehandlung: Härten, Vergüten (Härten + Anlassen), Normalisieren, Einsatzhärten</li>
+        <li>Einsatzhärten: Randzone aufkohlen und härten — harte Oberfläche, zäher Kern (z.B. 16MnCr5)</li>
+        <li>Oberflächenangabe in Zeichnung: ✓-Zeichen mit Ra-Wert; Rauheitsklassen N1–N12</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf2">
+    <summary class="lf-summary">
+      <span class="lf-icon">🔩</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 2 — Maschinenelemente</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Schrauben-Festigkeitsklassen: 4.6, 8.8, 10.9, 12.9 — erste Zahl × 100 = Zugfestigkeit [N/mm²], zweite × 10% = Streckgrenzverhältnis</li>
+        <li>Anzugsmoment vereinfacht: M_A = K × F_V × d — K ≈ 0,2 bei trockenem Gewinde; Klasse 8.8: M_A [Nm] aus Tabelle</li>
+        <li>Wälzlager: Rillenkugellager (radial + axial), Zylinderrollenlager (nur radial), Kegelrollenlager (radial + axial), Axialkugellager (nur axial)</li>
+        <li>Lagerbezeichnung: z.B. 6205 → 6 = Rillenkugellager, 2 = Baureihe, 05 = Bohrung 25 mm (×5)</li>
+        <li>Lagerluft: Normal (CN), klein (C2), groß (C3/C4) — für Temperatur und Presspassung wählen</li>
+        <li>Kupplungen: Starre, elastische (Klauen-, Scheiben-), Ausgleichs-, Schaltkupplungen, Rutschkupplungen</li>
+        <li>Getriebe: Stirnrad, Kegelrad, Schneckengetriebe — Übersetzungsverhältnis i = n1/n2 = z2/z1</li>
+        <li>Wellen: Biegung, Torsion, Kerbwirkung — Passfederverbindung, Keilwelle, Polygonwelle</li>
+        <li>Dichtungen: Radialwellendichtring (RWDR), O-Ring, Flachdichtung, Labyrinthdichtung</li>
+        <li>Federn: Druckfeder, Zugfeder, Drehfeder — Federkonstante c = F / s [N/mm]; Reihe: 1/c_ges = ∑1/c; Parallel: c_ges = ∑c</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf3">
+    <summary class="lf-summary">
+      <span class="lf-icon">💧</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 3 — Hydraulik & Pneumatik</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Pascalsches Gesetz: p = F / A — Druck pflanzt sich in ruhenden Flüssigkeiten gleichmäßig in alle Richtungen fort</li>
+        <li>Hydraulik-Grundgleichung: F = p × A — p [bar], A [cm²]: F [N] = p × A × 10 (1 bar × 1 cm² = 100 N)</li>
+        <li>Hydraulik-Komponenten: Pumpe (Zahnrad-, Axialkolben-, Flügelzellenpumpe), Zylinder, Ventile, Filter, Kühler, Tank</li>
+        <li>Druckventile: Druckbegrenzungsventil (DBV) — Überlastschutz; Druckminderventil — sekundärer Druckkreis</li>
+        <li>Wegeventile: 4/2-, 4/3-Wegeventil — Bezeichnung: Anschlüsse / Schaltstellungen; Schaltzeichen nach ISO 1219</li>
+        <li>Stromventile: Drosselventil (druckabhängig), Stromregelventil (druckkompensiert)</li>
+        <li>Hydraulikschaltplan lesen: ISO 1219 Symbole — Pumpe, DBV, Wegeventil, Zylinder, Tank</li>
+        <li>Pneumatik: Kompressor, Wartungseinheit (Filter-Regler-Öler), einfach- und doppeltwirkender Zylinder</li>
+        <li>Pneumatik-Ventile: 3/2-, 5/2-, 5/3-Wegeventil — Grundstellung, Betätigungsarten</li>
+        <li>Unterschied Hydraulik/Pneumatik: Öl inkompressibel (hohe Kräfte, präzise), Luft kompressibel (schnell, sauber, Kompressibilität)</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf4">
+    <summary class="lf-summary">
+      <span class="lf-icon">📏</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 4 — Mess- & Prüftechnik</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Messmittel: Schieblehre (0,05 mm Auflösung), Mikrometer (0,001 mm), Messuhr (0,001–0,01 mm), Tiefenmessschieber</li>
+        <li>Grenzlehren: Gutseite (Go) muss durchgehen, Ausschussseite (Not Go) darf nicht durchgehen — prüft Toleranzbereich</li>
+        <li>Dreipunkt-Innenmessgerät: für Bohrungen ab Ø 6 mm, höhere Genauigkeit als Innen-Messschieber</li>
+        <li>Rauheitsmessgerät: Tastschnittgerät misst Ra und Rz entlang einer Messstrecke</li>
+        <li>Formprüfung: Ebenheit (Haarlineal/Tuschierplatte), Rundheit (Rundheitsmessgerät), Parallelität, Rechtwinkligkeit</li>
+        <li>Koordinatenmessmaschine (KMM): 3D-Messung, Rubintaster, Antasten von Punkten, Auswertung per Software</li>
+        <li>Kalibrierung vs. Justierung: Kalibrierung = Ist-Zustand feststellen (kein Eingriff), Justierung = Korrigieren des Messgeräts</li>
+        <li>Messfehler: Systematisch (Ablesewinkel — Ablesefehler), zufällig (Streuung), grob (falsches Ablesen)</li>
+        <li>Prüfprotokoll: Messwert, Sollmaß, Abweichung, Gut/Schlecht-Entscheidung — Rückverfolgbarkeit sicherstellen</li>
+        <li>Temperatureinfluss: Referenztemperatur 20 °C nach ISO 1 — Wärmedehnung beachten (Stahl: 11 µm/m·K)</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf5">
+    <summary class="lf-summary">
+      <span class="lf-icon">🔧</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 5 — CNC & Zerspanung</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Zerspanungsarten: Drehen (Werkstück rotiert), Fräsen (Werkzeug rotiert), Bohren, Schleifen, Sägen, Räumen</li>
+        <li>Schnittgeschwindigkeit: v_c = (π × d × n) / 1000 [m/min] — d [mm], n [U/min]; Faktor 1000 wandelt mm → m</li>
+        <li>Vorschub: f [mm/U] beim Drehen, f_z [mm/Zahn] beim Fräsen — beeinflusst Oberflächenqualität</li>
+        <li>CNC-Koordinatensystem: X, Y, Z — Maschinenursprung (M), Werkstücknullpunkt (W), Werkzeugaufnahme (T)</li>
+        <li>G-Codes: G00 Eilgang, G01 Linearinterpolation, G02 Kreisbogen UZS, G03 Kreisbogen GUZS, G41/G42 Fräserradiuskorrektur</li>
+        <li>M-Codes: M03 Spindel rechts, M04 Spindel links, M05 Spindel stop, M06 Werkzeugwechsel, M08 Kühlmittel an, M30 Programm Ende</li>
+        <li>Kühlmittel: Emulsion (Drehen/Fräsen — kühlen + schmieren), Schneidöl (Gewindeschneiden), Druckluft (Aluminium)</li>
+        <li>Werkzeugverschleiß: Freiflächenverschleiß VB [mm], Standzeit T nach Taylor: T = C / v_c^n (n meist 0,2–0,5)</li>
+        <li>Erreichbare Toleranzen: Drehen IT6–IT8, Schleifen IT4–IT6, Honen IT4–IT5</li>
+        <li>Spanungsvolumen: Q = v_c × a_p × f — a_p = Schnitttiefe, Zerspanleistung P = F_c × v_c / 60.000 [kW]</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf6">
+    <summary class="lf-summary">
+      <span class="lf-icon">🏭</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 6 — Instandhaltung & Wartung</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>DIN 31051 Instandhaltungsbegriffe: Wartung (präventiv, Soll-Zustand erhalten), Inspektion (Zustand feststellen), Instandsetzung (reaktiv), Verbesserung</li>
+        <li>Instandhaltungsstrategien: Reaktiv (after failure), Präventiv (zeitbasiert), Prädiktiv (zustandsbasiert), Proaktiv (Ursachenbeseitigung)</li>
+        <li>Schmierung: Fettschmierung (Wälzlager), Ölschmierung (Getriebe, Hydraulik), Feststoffschmierung (Hochtemperatur, MoS₂)</li>
+        <li>Schmierstoffviskosität: ISO VG 32/46/68/100/150/220 — kinematische Viskosität [mm²/s] bei 40 °C; höhere Zahl = dickflüssiger</li>
+        <li>Lageraustausch: Lagerabzieher, Einpresswerkzeug, induktiv erwärmen (max. 120 °C), Sicherungsring prüfen</li>
+        <li>Schwingungsanalyse: Beschleunigung [g], Geschwindigkeit v [mm/s] — ISO 10816 Grenzwerte; Lager, Unwucht, Ausrichtung</li>
+        <li>Thermografie: berührungslose Temperaturmessung mit Wärmebildkamera — Hotspots an Lagern, Kupplungen, Leitungen</li>
+        <li>Ölanalyse: Partikelzählung, Wassergehalt, Viskositätsprüfung → Zustand Hydrauliköl / Getriebeöl beurteilen</li>
+        <li>5S-Methode: Sortieren, Setzen (Ordnen), Sauberhalten, Standardisieren, Selbstdisziplin — Basis für Lean Production</li>
+        <li>FMEA: Fehler-Möglichkeits- und Einfluss-Analyse — RPZ = Auftretenswahrscheinlichkeit × Bedeutung × Entdeckungswahrscheinlichkeit (je 1–10)</li>
+      </ul>
+    </div>
+  </details>
+
+</main>
+
+<!-- ===================== SCREEN 3: QUIZ ===================== -->
+<main id="s-quiz" class="screen">
+
+  <div id="quiz-start">
+    <div class="quiz-hero">
+      <span class="quiz-hero-icon">❓</span>
+      <h2>Prüfungstraining</h2>
+      <p>35 Fragen · Multiple Choice · 20 pro Runde</p>
+      <div class="quiz-hs-badge" id="hs-badge">🏆 Highscore: —</div>
+      <button onclick="quizStart()" class="btn-primary">Quiz starten</button>
+    </div>
+  </div>
+
+  <div id="quiz-run" style="display:none">
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-bar" id="q-prog" style="width:0%"></div>
+    </div>
+    <div class="quiz-counter" id="q-counter">Frage 1 / 20</div>
+    <div class="quiz-card">
+      <div id="q-text" class="quiz-question"></div>
+      <div id="q-opts" class="quiz-opts"></div>
+      <div id="q-exp" class="quiz-explanation" style="display:none"></div>
+      <button id="q-next" onclick="quizNext()" class="quiz-next-btn" style="display:none">Weiter →</button>
+    </div>
+  </div>
+
+  <div id="quiz-end" style="display:none">
+    <div class="quiz-end-card">
+      <div class="quiz-score-big" id="end-score">0</div>
+      <div class="quiz-score-sub" id="end-sub">von 20 Fragen richtig</div>
+      <div class="quiz-end-hs" id="end-hs"></div>
+      <button onclick="quizStart()" class="btn-primary" style="margin-bottom:.75rem">Neue Runde</button>
+      <button onclick="showScreen('s-dash')" class="btn-primary" style="background:var(--bg3);color:var(--tx);margin-top:.5rem">Zum Dashboard</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===================== SCREEN 4: FORMELN ===================== -->
+<main id="s-form" class="screen">
+
+  <div class="formula-cat-title">⚙️ Kräfte & Mechanik</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'F = m × a')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Kräfte</div>
+    <div class="formula-name">Kraft</div>
+    <div class="formula-eq">F = m × a</div>
+    <div class="formula-desc">F [N] = Kraft, m [kg] = Masse, a [m/s²] = Beschleunigung</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'M = F × r')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Kräfte</div>
+    <div class="formula-name">Drehmoment</div>
+    <div class="formula-eq">M = F × r</div>
+    <div class="formula-desc">M [Nm] = Drehmoment, F [N] = Kraft, r [m] = Hebelarm (Radius)</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'P = M × ω = M × 2π × n/60')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Kräfte</div>
+    <div class="formula-name">Mechanische Leistung</div>
+    <div class="formula-eq">P = M × ω = M × 2π × n/60</div>
+    <div class="formula-desc">P [W], M [Nm], ω [rad/s] = Winkelgeschwindigkeit, n [U/min]</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'p = F / A')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Kräfte</div>
+    <div class="formula-name">Druck</div>
+    <div class="formula-eq">p = F / A</div>
+    <div class="formula-desc">p [Pa] oder [bar], A [m²] — 1 bar = 100.000 Pa = 100 kPa</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'F = p × A × 10  (p[bar], A[cm²], F[N])')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Kräfte</div>
+    <div class="formula-name">Hydraulikkraft</div>
+    <div class="formula-eq">F [N] = p [bar] × A [cm²] × 10</div>
+    <div class="formula-desc">1 bar × 1 cm² = 100 N. Praxisformel: F [kN] = p × A / 100</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'c = F / s  [N/mm]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Kräfte</div>
+    <div class="formula-name">Federkonstante</div>
+    <div class="formula-eq">c = F / s</div>
+    <div class="formula-desc">c [N/mm], F [N] = Kraft, s [mm] = Federweg. Parallel: c_ges = ∑c. Reihe: 1/c_ges = ∑(1/c)</div>
+  </div>
+
+  <div class="formula-cat-title">🔩 Zerspanung</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'v_c = (π × d × n) / 1000  [m/min]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Zerspanung</div>
+    <div class="formula-name">Schnittgeschwindigkeit</div>
+    <div class="formula-eq">v_c = (π × d × n) / 1000</div>
+    <div class="formula-desc">v_c [m/min], d [mm] = Durchmesser, n [U/min] = Drehzahl</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'n = (v_c × 1000) / (π × d)  [U/min]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Zerspanung</div>
+    <div class="formula-name">Drehzahl</div>
+    <div class="formula-eq">n = (v_c × 1000) / (π × d)</div>
+    <div class="formula-desc">n [U/min], v_c [m/min], d [mm] — Umstellung der Schnittgeschwindigkeitsformel</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'v_f = f × n  [mm/min]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Zerspanung</div>
+    <div class="formula-name">Vorschubgeschwindigkeit</div>
+    <div class="formula-eq">v_f = f × n</div>
+    <div class="formula-desc">v_f [mm/min], f [mm/U] = Vorschub pro Umdrehung, n [U/min]</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'Q = v_c × a_p × f  [cm³/min]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Zerspanung</div>
+    <div class="formula-name">Spanungsvolumen</div>
+    <div class="formula-eq">Q = v_c × a_p × f</div>
+    <div class="formula-desc">Q [cm³/min], a_p = Schnitttiefe [mm], f = Vorschub [mm/U]</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'T = C / v_c^n  (Standzeit nach Taylor)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Zerspanung</div>
+    <div class="formula-name">Standzeit (Taylor)</div>
+    <div class="formula-eq">T = C / v_c^n</div>
+    <div class="formula-desc">T [min] = Standzeit, C = Taylorkonstante, n = Taylorexponent (0,2–0,5)</div>
+  </div>
+
+  <div class="formula-cat-title">⚖️ Toleranzen & Passungen</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'Toleranz T = ES - EI (Bohrung) | T = es - ei (Welle)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Toleranzen</div>
+    <div class="formula-name">Toleranz</div>
+    <div class="formula-eq">T = ES − EI = es − ei</div>
+    <div class="formula-desc">ES/es = oberes Abmaß, EI/ei = unteres Abmaß (Bohrung groß, Welle klein)</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'Grenzspiel: S_max = ES - ei | S_min = EI - es')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Toleranzen</div>
+    <div class="formula-name">Grenzspiel / Grenzübermaß</div>
+    <div class="formula-eq">S_max = ES − ei | S_min = EI − es</div>
+    <div class="formula-desc">S > 0 = Spiel, S &lt; 0 = Übermaß (Presspassung). Vorzeichen beachten!</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'Abmaß: ES = Obermaß Bohrung | EI = Untermaß Bohrung | es = Obermaß Welle | ei = Untermaß Welle')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Toleranzen</div>
+    <div class="formula-name">Abmaß-Definitionen</div>
+    <div class="formula-eq">ES / EI (Bohrung) · es / ei (Welle)</div>
+    <div class="formula-desc">Einheitsbohrung H: EI = 0. Einheitswelle h: es = 0. Abmaß = Istmaß − Nennmaß</div>
+  </div>
+
+  <div class="formula-cat-title">💧 Hydraulik & Pneumatik</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'F2/F1 = A2/A1  (Pascalsches Prinzip)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Hydraulik</div>
+    <div class="formula-name">Druckübersetzung</div>
+    <div class="formula-eq">F2 / F1 = A2 / A1</div>
+    <div class="formula-desc">Pascalsches Prinzip: größere Kolbenfläche → größere Kraft bei gleichem Druck</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'Q = A × v  [L/min] — A[cm²], v[m/s]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Hydraulik</div>
+    <div class="formula-name">Volumenstrom</div>
+    <div class="formula-eq">Q = A × v</div>
+    <div class="formula-desc">Q [L/min], A [cm²] = Querschnitt, v [m/s] = Strömungsgeschwindigkeit</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'F [kN] = p [bar] × A [cm²] / 100')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Hydraulik</div>
+    <div class="formula-name">Kolbenkraft</div>
+    <div class="formula-eq">F [kN] = p [bar] × A [cm²] / 100</div>
+    <div class="formula-desc">Praxisformel Hydraulik. A = π × r² [cm²], r = Kolbenradius [cm]</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'v = Q / A  — v[m/s], Q[m³/s], A[m²]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Hydraulik</div>
+    <div class="formula-name">Zylindergeschwindigkeit</div>
+    <div class="formula-eq">v = Q / A</div>
+    <div class="formula-desc">v [m/s], Q [m³/s] = Volumenstrom, A [m²] = Kolbenfläche</div>
+  </div>
+
+  <div class="formula-cat-title">🔧 Getriebe & Antrieb</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'i = n1/n2 = z2/z1 = d2/d1')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Getriebe</div>
+    <div class="formula-name">Übersetzungsverhältnis</div>
+    <div class="formula-eq">i = n1/n2 = z2/z1 = d2/d1</div>
+    <div class="formula-desc">i &gt; 1 = Untersetzung (langsamer, mehr Drehmoment). i &lt; 1 = Übersetzung (schneller)</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'n2 = n1 / i  [U/min]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Getriebe</div>
+    <div class="formula-name">Abtriebsdrehzahl</div>
+    <div class="formula-eq">n2 = n1 / i</div>
+    <div class="formula-desc">n1 [U/min] = Antrieb, n2 = Abtrieb, i = Übersetzungsverhältnis</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'M2 = M1 × i × η')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Getriebe</div>
+    <div class="formula-name">Abtriebsdrehmoment</div>
+    <div class="formula-eq">M2 = M1 × i × η</div>
+    <div class="formula-desc">M [Nm], η = Wirkungsgrad (0–1). Schneckengetriebe: η ≈ 0,5–0,8</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'η = P_ab / P_zu × 100%')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Getriebe</div>
+    <div class="formula-name">Wirkungsgrad</div>
+    <div class="formula-eq">η = P_ab / P_zu × 100%</div>
+    <div class="formula-desc">η = 1 (100%) wäre verlustfrei. Stirnrad ca. 98%, Schnecke ca. 50–80%</div>
+  </div>
+
+</main>
+
+<!-- ===================== SCREEN 5: AP-CHECK ===================== -->
+<main id="s-ap" class="screen">
+
+  <div class="inner-tabs">
+    <button class="inner-tab on" onclick="apSwitch('ap1')">AP 1</button>
+    <button class="inner-tab" onclick="apSwitch('ap2')">AP 2</button>
+  </div>
+
+  <!-- AP1 Panel -->
+  <div class="ap-panel on" id="ap-panel-ap1">
+    <div class="ap-progress-wrap">
+      <div class="ap-prog-label">
+        <span class="ap-prog-text">Fortschritt AP 1</span>
+        <span class="ap-prog-val" id="ap-ap1-prog">0 / 20 erledigt</span>
+      </div>
+      <div class="ap-progress-bar-bg">
+        <div class="ap-progress-bar" id="ap-ap1-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="ap-list" id="ap-ap1">
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="0" onchange="apSave('ap1')"><span class="ap-item-text">ISO-Toleranzsystem: Grundtoleranz IT und Toleranzlage erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="1" onchange="apSave('ap1')"><span class="ap-item-text">Passungsarten: Spiel-, Übergangs-, Presspassung unterscheiden</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="2" onchange="apSave('ap1')"><span class="ap-item-text">Festigkeitsklassen von Schrauben lesen und berechnen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="3" onchange="apSave('ap1')"><span class="ap-item-text">Anzugsmoment berechnen (vereinfachte Formel M_A = K × F_V × d)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="4" onchange="apSave('ap1')"><span class="ap-item-text">Wälzlagertypen benennen und Einsatzbereiche nennen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="5" onchange="apSave('ap1')"><span class="ap-item-text">Lagerbezeichnung lesen (z.B. 6205 → Typ, Baureihe, Bohrung)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="6" onchange="apSave('ap1')"><span class="ap-item-text">Getriebe-Übersetzungsverhältnis berechnen (i = n1/n2 = z2/z1)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="7" onchange="apSave('ap1')"><span class="ap-item-text">Schnittgeschwindigkeit und Drehzahl berechnen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="8" onchange="apSave('ap1')"><span class="ap-item-text">G-Codes G00, G01, G02, G03 erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="9" onchange="apSave('ap1')"><span class="ap-item-text">M-Codes M03, M05, M06, M30 benennen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="10" onchange="apSave('ap1')"><span class="ap-item-text">Pascalsches Gesetz anwenden (Kraft, Druck, Fläche)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="11" onchange="apSave('ap1')"><span class="ap-item-text">Hydraulikzylinderkraft berechnen (F = p × A × 10)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="12" onchange="apSave('ap1')"><span class="ap-item-text">4/3-Wegeventil in Hydraulikschaltplan lesen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="13" onchange="apSave('ap1')"><span class="ap-item-text">Messmittel: Schieblehre, Mikrometer, Messuhr benennen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="14" onchange="apSave('ap1')"><span class="ap-item-text">Grenzlehren: Gut- und Ausschussseite erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="15" onchange="apSave('ap1')"><span class="ap-item-text">Ra und Rz Oberflächenkennwerte unterscheiden</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="16" onchange="apSave('ap1')"><span class="ap-item-text">Instandhaltungsbegriffe nach DIN 31051 nennen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="17" onchange="apSave('ap1')"><span class="ap-item-text">5S-Methode: alle 5 Schritte aufzählen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="18" onchange="apSave('ap1')"><span class="ap-item-text">Einfach- und doppeltwirkenden Pneumatikzylinder unterscheiden</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="19" onchange="apSave('ap1')"><span class="ap-item-text">Kühlmittelauswahl für verschiedene Bearbeitungen begründen</span></label>
+    </div>
+  </div>
+
+  <!-- AP2 Panel -->
+  <div class="ap-panel" id="ap-panel-ap2">
+    <div class="ap-progress-wrap">
+      <div class="ap-prog-label">
+        <span class="ap-prog-text">Fortschritt AP 2</span>
+        <span class="ap-prog-val" id="ap-ap2-prog">0 / 15 erledigt</span>
+      </div>
+      <div class="ap-progress-bar-bg">
+        <div class="ap-progress-bar" id="ap-ap2-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="ap-list" id="ap-ap2">
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="0" onchange="apSave('ap2')"><span class="ap-item-text">Komplexe Zeichnung mit Toleranzen und Oberflächenangaben vollständig lesen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="1" onchange="apSave('ap2')"><span class="ap-item-text">Passung berechnen: Grenzspiel und Grenzübermaß bestimmen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="2" onchange="apSave('ap2')"><span class="ap-item-text">CNC-Programm für Drehen oder Fräsen erstellen (G/M-Codes)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="3" onchange="apSave('ap2')"><span class="ap-item-text">Hydraulikschaltplan lesen und Funktion erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="4" onchange="apSave('ap2')"><span class="ap-item-text">Fehlerdiagnose an Hydraulikanlage systematisch durchführen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="5" onchange="apSave('ap2')"><span class="ap-item-text">Schwingungsmessung durchführen und ISO 10816 auswerten</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="6" onchange="apSave('ap2')"><span class="ap-item-text">Schmierstoff auswählen und Wechselintervall begründen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="7" onchange="apSave('ap2')"><span class="ap-item-text">FMEA für eine einfache Baugruppe erstellen (RPZ berechnen)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="8" onchange="apSave('ap2')"><span class="ap-item-text">Lagertausch planen: Werkzeuge, Erwärmung (max. 120 °C), Einbau</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="9" onchange="apSave('ap2')"><span class="ap-item-text">Koordinatenmessmaschine: Messpunkte festlegen und auswerten</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="10" onchange="apSave('ap2')"><span class="ap-item-text">Präventiven Wartungsplan für eine Maschine erstellen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="11" onchange="apSave('ap2')"><span class="ap-item-text">Getriebe dimensionieren: Übersetzung, Drehzahl, Drehmoment berechnen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="12" onchange="apSave('ap2')"><span class="ap-item-text">Prüfprotokoll nach Zeichnungsvorgabe ausfüllen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="13" onchange="apSave('ap2')"><span class="ap-item-text">Ölanalyse-Befund interpretieren und Maßnahmen ableiten</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="14" onchange="apSave('ap2')"><span class="ap-item-text">Instandhaltungsstrategie für eine Anlage auswählen und begründen</span></label>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===================== APP-SWITCHER DRAWER ===================== -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="drawerClose()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hdr">
+    <span class="drawer-title">⊞ VOLTECH Suite</span>
+    <button class="drawer-close" onclick="drawerClose()">✕</button>
+  </div>
+  <div class="drawer-apps">
+    <a class="drawer-app" href="VOLTECH-mechatronik-pro.html">
+      <span class="drawer-app-icon">⚙️</span>
+      <div><div class="drawer-app-name">Mechatronik Pro</div><div class="drawer-app-sub">Mechatroniker-Ausbildung</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-lern-basis.html">
+      <span class="drawer-app-icon">📚</span>
+      <div><div class="drawer-app-name">Lernmodus</div><div class="drawer-app-sub">Karteikarten & Grundlagen</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-lern-extra.html">
+      <span class="drawer-app-icon">🎤</span>
+      <div><div class="drawer-app-name">AP2-Extra</div><div class="drawer-app-sub">Mündliche Prüfungsvorbereitung</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-sps.html">
+      <span class="drawer-app-icon">🔌</span>
+      <div><div class="drawer-app-name">SPS-Trainer</div><div class="drawer-app-sub">Speicherprogrammierbare Steuerung</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-berichtsheft.html">
+      <span class="drawer-app-icon">📓</span>
+      <div><div class="drawer-app-name">Berichtsheft</div><div class="drawer-app-sub">Ausbildungsnachweise</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-tools2.html">
+      <span class="drawer-app-icon">🧰</span>
+      <div><div class="drawer-app-name">Lerntools</div><div class="drawer-app-sub">Rechner & Hilfsmittel</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-ampere.html">
+      <span class="drawer-app-icon">⚡</span>
+      <div><div class="drawer-app-name">AMPERE</div><div class="drawer-app-sub">Elektroniker Betriebstechnik</div></div>
+    </a>
+    <a class="drawer-app active" href="#">
+      <span class="drawer-app-icon">🔧</span>
+      <div><div class="drawer-app-name">TORQUE</div><div class="drawer-app-sub">Industriemechaniker Betriebstechnik</div></div>
+      <span class="drawer-app-badge">Aktiv</span>
+    </a>
+  </div>
+  <div class="drawer-footer">
+    <a href="index.html" style="color:var(--ac)">Arc Studio Website ↗</a>
+  </div>
+</div>
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+// ── Theme Toggle ─────────────────────────────────────────────
+(function(){
+  var KEY = 'tor_theme';
+  var isLight = localStorage.getItem(KEY) === 'light';
+  function apply(l) {
+    document.documentElement.classList.toggle('lm', l);
+    var b = document.getElementById('thm-btn');
+    if(b) b.textContent = l ? '☀️' : '🌙';
+  }
+  if(isLight) document.documentElement.classList.add('lm');
+  window.thmToggle = function() {
+    isLight = !isLight;
+    localStorage.setItem(KEY, isLight ? 'light' : 'dark');
+    apply(isLight);
+  };
+  apply(isLight);
+})();
+
+// ── Screen Navigation ────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('on'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('on'); });
+  var sc = document.getElementById(id);
+  if(sc) sc.classList.add('on');
+  var tb = document.querySelector('[data-screen="' + id + '"]');
+  if(tb) tb.classList.add('on');
+  window.scrollTo(0, 0);
+}
+
+// ── Drawer ───────────────────────────────────────────────────
+function drawerOpen() {
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('drawer-overlay').classList.add('on');
+}
+function drawerClose() {
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('drawer-overlay').classList.remove('on');
+}
+
+// ── Open Lernfeld ────────────────────────────────────────────
+function openLf(id) {
+  showScreen('s-lern');
+  var el = document.getElementById(id);
+  if(el) {
+    el.setAttribute('open', '');
+    setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+  }
+}
+
+// ── Quiz Array ───────────────────────────────────────────────
+var QUIZ = [
+  {q:'Was bedeutet die Toleranzangabe H7 bei einer Bohrung?',opts:['Übergangspassung mit Spielanteil','Einheitsbohrung: Unterabmaß = 0, obere Abweichung positiv','Einheitswelle mit Übermaß','Presspassung Klasse 7'],c:1,e:'H = Einheitsbohrung (Unterabmaß immer 0). Die Zahl 7 = Grundtoleranz IT7. Das Obermaß ist positiv → Bohrung immer etwas größer als Nennmaß.'},
+  {q:'Welche Festigkeitsklasse hat die höchste Zugfestigkeit?',opts:['8.8','10.9','12.9','6.8'],c:2,e:'12.9: Zugfestigkeit 1200 N/mm², Streckgrenze 90% = 1080 N/mm². Erste Zahl × 100 = Zugfestigkeit [N/mm²], zweite Zahl × 10% = Streckgrenzverhältnis.'},
+  {q:'Wie lautet die Formel für die Schnittgeschwindigkeit beim Drehen?',opts:['v_c = d × n / 1000','v_c = π × d × n / 1000','v_c = 2π × d × n','v_c = d × n / π'],c:1,e:'v_c = (π × d × n) / 1000 [m/min]. d = Werkstückdurchmesser [mm], n = Drehzahl [U/min]. Faktor 1000 wandelt mm → m um.'},
+  {q:'Was beschreibt das Pascalsche Gesetz?',opts:['Druck nimmt mit der Tiefe ab','Druck pflanzt sich in ruhenden Flüssigkeiten gleichmäßig in alle Richtungen fort','Volumen bleibt bei Druckerhöhung konstant','Flüssigkeiten sind kompressibel'],c:1,e:'Pascal: p = F/A. In einer eingeschlossenen Flüssigkeit pflanzt sich ein Druck ungeschwächt in alle Richtungen fort — Grundprinzip der Hydraulik.'},
+  {q:'Was ist ein Rillenkugellager geeignet für?',opts:['Nur radiale Kräfte','Nur axiale Kräfte','Radiale und begrenzte axiale Kräfte','Sehr hohe axiale Kräfte'],c:2,e:'Rillenkugellager (Typ 6xxx) nehmen radiale Hauptlasten und begrenzte Axialkräfte auf. Für reine Axialkräfte: Axialkugellager. Für hohe kombinierte Lasten: Kegelrollenlager.'},
+  {q:'Welche Passungsart ergibt immer Spiel zwischen Welle und Bohrung?',opts:['H7/k6','H7/p6','H7/f7','H7/s6'],c:2,e:'H7/f7 = Spielpassung. f-Welle liegt unterhalb der h-Nulllinie → immer Spiel. H7/k6 = Übergangspassung, H7/p6 und H7/s6 = Presspassung.'},
+  {q:'Was misst ein Mikrometer?',opts:['Längen bis 2000mm','Längen mit 0,01mm Auflösung','Längen mit 0,001mm Auflösung','Winkel bis 0,01°'],c:2,e:'Mikrometer (Bügelmessschraube): Auflösung 0,001mm (mit Nonius). Messbereich: je nach Ausführung 0-25mm, 25-50mm etc. Messuhr: 0,001-0,01mm.'},
+  {q:'Was bedeutet G00 in einem CNC-Programm?',opts:['Programmende','Eilgang ohne Konturschnitt','Linearinterpolation mit Vorschub','Kreisinterpolation im Uhrzeigersinn'],c:1,e:'G00 = Eilgang (Positionierung): maximale Maschinengeschwindigkeit, kein Materialabtrag. G01 = Linearinterpolation mit F-Wort. G02/G03 = Kreisinterpolation.'},
+  {q:'Welches Symbol wird für ein Druckbegrenzungsventil in Hydraulikschaltplänen verwendet?',opts:['Quadrat mit Pfeil diagonal','Rechteck mit Feder und Kegel nach ISO 1219','Kreis mit X','Raute mit Pfeil'],c:1,e:'DBV nach ISO 1219: Quadrat mit Feder (Einstellfeder) und Schließkegel. Öffnet wenn p_ein > Einstelldruck → Rücklauf zu Tank. Schützt System vor Überdruck.'},
+  {q:'Was versteht man unter IT7 im ISO-Toleranzsystem?',opts:['Toleranzlage T, Klasse 7','Grundtoleranz Klasse 7 — mittlere Qualität für Maschinenbau','Oberflächengüte Ra 7','Prüfklasse 7 nach ISO'],c:1,e:'IT = International Tolerance Grade. IT1-IT4: Präzision (Lehren), IT5-IT7: Maschinenbau (Lager, Getriebe), IT8-IT11: Allgemeiner Maschinenbau, IT12-IT18: Rohteilzustand.'},
+  {q:'Wie ist die Schraube der Festigkeitsklasse 8.8 zu interpretieren?',opts:['Zugfestigkeit 80 N/mm², Streckgrenze 80%','Zugfestigkeit 800 N/mm², Streckgrenze 80% = 640 N/mm²','Durchmesser 8mm, 8 Gewindegänge','8 Nm Anzugsmoment bei 8mm Gewinde'],c:1,e:'Erste Zahl × 100 = Zugfestigkeit: 8 × 100 = 800 N/mm². Zweite Zahl × 10% der Zugfestigkeit = Streckgrenze: 8 × 10% × 800 = 640 N/mm².'},
+  {q:'Was ist der Unterschied zwischen Wartung und Instandsetzung nach DIN 31051?',opts:['Kein Unterschied','Wartung ist präventiv (Soll-Zustand erhalten), Instandsetzung ist reaktiv (Soll-Zustand wiederherstellen)','Wartung kostet mehr','Instandsetzung ist präventiv'],c:1,e:'DIN 31051: Wartung = Maßnahmen zur Verzögerung des Abbaus (Öl wechseln, schmieren). Inspektion = Zustand beurteilen. Instandsetzung = Schaden beheben. Verbesserung = über Sollzustand hinaus.'},
+  {q:'Wie berechnet sich das Übersetzungsverhältnis eines Getriebes?',opts:['i = n2/n1 = z1/z2','i = n1/n2 = z2/z1','i = n1 × n2','i = z1 × z2 / n'],c:1,e:'i = n1/n2 = z2/z1. Antrieb (1), Abtrieb (2). Mehr Zähne am Abtriebsrad → Untersetzung (i > 1). Weniger Zähne → Übersetzung (i < 1). Drehmoment × i steigt bei Untersetzung.'},
+  {q:'Was bedeutet ISO VG 46 bei Hydrauliköl?',opts:['Viskositätsklasse, kinematische Viskosität ≈ 46 mm²/s bei 40°C','pH-Wert 46','Additivgehalt 46%','Produktionsnummer'],c:0,e:'ISO VG (Viscosity Grade): kinematische Viskosität in mm²/s (cSt) bei 40°C. VG 32 (leicht), VG 46 (mittel), VG 68 (schwer), VG 100 (sehr schwer). Je höher, desto dickflüssiger.'},
+  {q:'Was prüft die Gutlehre (Go-Seite) einer Grenzlehre?',opts:['Ob das Maß kleiner als das Mindestmaß ist','Ob das Werkstück passt (im Toleranzbereich — Gutseite muss durchgehen)','Ob das Maß größer als das Höchstmaß ist','Die Oberflächenrauheit'],c:1,e:'Go-Seite = Gutlehre = entspricht dem Mindestmaß (Bohrung) bzw. Höchstmaß (Welle). Muss durchgehen — sonst zu klein/zu groß. Not-Go = entspricht Höchstmaß (Bohrung), darf NICHT durchgehen.'},
+  {q:'Welche Zerspanungsart erzeugt rotationssymmetrische Werkstücke?',opts:['Fräsen','Bohren','Drehen','Schleifen'],c:2,e:'Drehen: Werkstück rotiert (Hauptbewegung), Werkzeug führt Vorschubbewegung aus. Ergebnis: Zylinder, Kegel, Planflächen. Fräsen: Werkzeug rotiert, Werkstück bewegt sich.'},
+  {q:'Was ist ein einfachwirkender Pneumatikzylinder?',opts:['Zylinder mit zwei Luftanschlüssen','Zylinder der nur in eine Richtung durch Druckluft bewegt wird, Rückzug durch Feder','Zylinder ohne Kolbenstange','Zylinder mit einstellbarer Geschwindigkeit'],c:1,e:'Einfachwirkend: Ein Luftanschluss (Druckhub), Rückzug durch eingebaute Feder. Doppeltwirkend: Zwei Anschlüsse — Druck- und Zughub durch Druckluft.'},
+  {q:'Wie groß ist die Kraft eines Hydraulikzylinders bei p=100 bar und d=80mm?',opts:['≈ 25 kN','≈ 50 kN','≈ 100 kN','≈ 200 kN'],c:1,e:'A = π × r² = π × 40² = 5027 mm² = 50,27 cm². F = p × A = 100 bar × 50,27 cm² = 5027 kgf ≈ 50 kN. (1 bar × 1 cm² = 10 N)'},
+  {q:'Was beschreibt Ra bei Oberflächenangaben?',opts:['Maximale Rautiefe','Arithmetischer Mittenrauwert — Mittelwert aller Profilabweichungen','Rauheitsklasse nach ISO','Welligkeit der Oberfläche'],c:1,e:'Ra = arithmetischer Mittenrauwert [µm]: Mittelwert der absoluten Abweichungen vom Mittelwert über die Messstrecke. Rz = gemittelte Rautiefe (5 Einzelmessstrecken). Ra ≈ Rz / 4-7.'},
+  {q:'Welches Lager nimmt ausschließlich axiale Kräfte auf?',opts:['Rillenkugellager','Zylinderrollenlager','Axialkugellager','Tonnenlager'],c:2,e:'Axialkugellager: nur Axialkräfte (Längsrichtung der Welle). Zylinderrollenlager: nur radiale Kräfte. Rillenkugellager: radial + begrenzt axial. Kegelrollenlager: radial + axial kombiniert.'},
+  {q:'Was ist Einsatzhärten?',opts:['Gesamtes Werkstück gleichmäßig härten','Nur die Randzone aufkohlen und härten — zäher Kern, harte Oberfläche','Abschrecken in Wasser','Anlassen nach dem Härten'],c:1,e:'Einsatzhärten: niedriggekohlten Stahl (16MnCr5) im Randbereich aufkohlen (C-Gehalt erhöhen), dann abschrecken. Ergebnis: harte, verschleißfeste Oberfläche, zäher Kern. Typisch für Zahnräder, Wellen.'},
+  {q:'Was bedeutet M06 im CNC-Programm?',opts:['Vorschub 6 mm/min','Werkzeugwechsel','Spindeldrehzahl 600 U/min','Kühlmittel an'],c:1,e:'M06 = Werkzeugwechsel (Tool Change). Wichtige M-Codes: M03 = Spindel rechts, M04 = Spindel links, M05 = Spindel stop, M08 = Kühlmittel an, M09 = aus, M30 = Programm Ende.'},
+  {q:'Welche Viskositätseigenschaft gilt für Hydrauliköl bei steigender Temperatur?',opts:['Viskosität steigt','Viskosität bleibt gleich','Viskosität sinkt','Keine Abhängigkeit'],c:2,e:'Bei höherer Temperatur wird Öl dünnflüssiger (Viskosität sinkt). Zu dünn → Leckage, Druckverlust. Deshalb Hydraulikanlagen kühlen. Viskositäts-Temperatur-Verhalten durch VI (Viskositätsindex) beschrieben.'},
+  {q:'Was ist eine Übergangspassung?',opts:['Immer Spiel zwischen Welle und Bohrung','Immer Übermaß zwischen Welle und Bohrung','Kann sowohl Spiel als auch Übermaß haben — abhängig von Istmaßen','Nur bei Kegelverbindungen'],c:2,e:'Übergangspassung (z.B. H7/k6, H7/m6): Toleranzzonen überschneiden sich. Je nach Istmaßen von Welle und Bohrung entsteht entweder kleines Spiel oder kleines Übermaß. Typisch für präzise zentrierte Verbindungen.'},
+  {q:'Was beschreibt die 5S-Methode in der Instandhaltung?',opts:['5 Sicherheitsregeln für Maschinen','Japanische Methode: Sortieren, Setzen, Sauberhalten, Standardisieren, Selbstdisziplin','5 Schmierstoffklassen','5 Schritte der Fehlerdiagnose'],c:1,e:'5S (5 Seiri/Seiton/Seiso/Seiketsu/Shitsuke auf Japanisch): Arbeitsplatz organisieren und sauber halten. Ziel: Verschwendung eliminieren, Fehler reduzieren, Effizienz steigern. Basis für Lean Production.'},
+  {q:'Wie wird die Federkonstante c berechnet?',opts:['c = F × s','c = s / F','c = F / s [N/mm]','c = F² / s'],c:2,e:'c = F / s [N/mm] oder [kN/m]. F = Kraft [N], s = Federweg [mm]. Hohe Federkonstante = steife Feder. Federn in Reihe: 1/c_ges = 1/c1 + 1/c2. Parallel: c_ges = c1 + c2.'},
+  {q:'Was ist der Unterschied zwischen Inspektion und Wartung nach DIN 31051?',opts:['Kein Unterschied','Inspektion = Zustand feststellen und beurteilen; Wartung = Maßnahmen zur Sollzustand-Bewahrung','Wartung = Zustand feststellen; Inspektion = reparieren','Beide meinen dasselbe wie Instandsetzung'],c:1,e:'Inspektion: Ist-Zustand erfassen, beurteilen, protokollieren (messen, prüfen). Wartung: Sollzustand erhalten durch Schmieren, Reinigen, Nachstellen, Flüssigkeiten wechseln. Reaktive Reparatur = Instandsetzung.'},
+  {q:'Welches Kühlmittel eignet sich am besten für das Gewindeschneiden?',opts:['Emulsion (Wasser-Öl-Gemisch)','Druckluft','Schneidöl (hochviskos)','Kein Kühlmittel nötig'],c:2,e:'Gewindeschneiden: Schneidöl (dickflüssig) — sorgt für gute Schmierung, verhindert Gewinderisse, verbessert Oberflächenqualität. Emulsion: gut für Drehen/Fräsen. Druckluft: für Aluminium (kein Aufschmieren).'},
+  {q:'Was ist Kalibrierung?',opts:['Den Messwert eines Messgeräts korrigieren','Den Ist-Zustand eines Messgeräts ermitteln und dokumentieren ohne Eingriff','Das Messgerät einstellen','Das Messgerät austauschen'],c:1,e:'Kalibrierung = Ist-Zustand feststellen (Vergleich mit Referenz, Protokoll erstellen) ohne Veränderung. Justierung = korrigieren (Eingriff). Fehler durch: Abnutzung, Temperatur, Alterung. Kalibrierfristen einhalten!'},
+  {q:'Was bedeutet ISO 1219 in der Hydraulik?',opts:['Sicherheitsnorm für Hydraulikanlagen','Normierung der Schaltzeichen für hydraulische und pneumatische Anlagen','Druckklassen für Hydraulikschläuche','Viskositätsklassen für Hydrauliköl'],c:1,e:'ISO 1219: Grafische Symbole und Schaltpläne für Hydraulik und Pneumatik. Einheitliche Symbole weltweit: Pumpen, Ventile, Zylinder, Filter, Kühler etc. Grundlage zum Lesen von Hydraulikschaltplänen.'},
+  {q:'Welche maximale Erwärmungstemperatur gilt beim Aufziehen von Wälzlagern?',opts:['60 °C','120 °C','200 °C','300 °C'],c:1,e:'Max. 120°C beim induktiven Erwärmen oder im Lagerofen. Höhere Temperaturen beschädigen Käfig, Dichtungen und verändern die Härte des Lagerrings. Abkühlzeit abwarten und Lager sofort aufschieben.'},
+  {q:'Was beschreibt der RPZ-Wert in der FMEA?',opts:['Risiko-Prüfungs-Zahl für Maschinen','Risikoprioritätszahl = Auftretens- × Bedeutungs- × Entdeckungswahrscheinlichkeit','Reibung-Passungs-Zusammenhang','Rauheitsprüfzahl'],c:1,e:'RPZ = A × B × E (je 1-10). A = Auftretenswahrscheinlichkeit, B = Bedeutung des Fehlers, E = Entdeckungswahrscheinlichkeit. Max. RPZ = 1000. Hohe RPZ → Maßnahmen priorisieren.'},
+  {q:'Welche Schraubenverbindung ist selbsthemmend?',opts:['Metrisches Regelgewinde M-Reihe immer','Trapezgewinde Tr immer','Metrisches Regelgewinde bei normalem Anzug durch Reibung selbsthemmend','Kein Gewinde ist selbsthemmend'],c:2,e:'Metrisches Gewinde (Steigungswinkel < Reibungswinkel): selbsthemmend durch Reibung bei normalem Anzug. Trapezgewinde (Tr): nicht selbsthemmend → für Spindeln (Schraubstock). Sicherung durch Kontermutter, Federscheibe, Klebstoff.'},
+  {q:'Was ist Plandrehen?',opts:['Drehen einer Kegelform','Bearbeiten der Stirnfläche senkrecht zur Drehachse','Drehen mit konischem Werkzeug','Innendrehen einer Bohrung'],c:1,e:'Plandrehen: Werkzeug bewegt sich senkrecht zur Drehachse (radial) → erzeugt ebene Stirnfläche. Längsdrehen: Werkzeug parallel zur Achse → Zylinderfläche. Kegeldrehen: schräger Vorschub → konische Fläche.'},
+  {q:'Was versteht man unter prädiktiver Instandhaltung?',opts:['Reparatur nach Ausfall','Feste Wartungsintervalle unabhängig vom Zustand','Zustandsbasierte Wartung durch Überwachung von Messwerten','Verbesserung über den Sollzustand hinaus'],c:2,e:'Prädiktiv (zustandsbasiert): Messwerte (Schwingung, Temperatur, Ölanalyse) werden kontinuierlich überwacht → Eingriff nur bei Bedarf. Spart Kosten gegenüber zeitbasierter Wartung, verhindert ungeplante Ausfälle.'}
+];
+
+// ── Quiz Logic ───────────────────────────────────────────────
+var quizQ = [], quizIdx = 0, quizScore = 0;
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function quizStart() {
+  quizQ = shuffle(QUIZ).slice(0, 20);
+  quizIdx = 0;
+  quizScore = 0;
+  document.getElementById('quiz-start').style.display = 'none';
+  document.getElementById('quiz-end').style.display = 'none';
+  document.getElementById('quiz-run').style.display = 'block';
+  showQuestion(0);
+}
+
+function showQuestion(idx) {
+  var q = quizQ[idx];
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-counter').textContent = 'Frage ' + (idx + 1) + ' / 20';
+  document.getElementById('q-prog').style.width = ((idx / 20) * 100) + '%';
+  document.getElementById('q-exp').style.display = 'none';
+  document.getElementById('q-exp').textContent = '';
+  document.getElementById('q-next').style.display = 'none';
+
+  var optsEl = document.getElementById('q-opts');
+  optsEl.innerHTML = '';
+  var shuffledOpts = q.opts.map(function(o, i) { return { text: o, orig: i }; });
+  shuffledOpts = shuffle(shuffledOpts);
+
+  shuffledOpts.forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt.text;
+    var isCorrect = (opt.orig === q.c);
+    btn.onclick = function() { quizAnswer(btn, isCorrect, q.e, optsEl, shuffledOpts, q.c); };
+    optsEl.appendChild(btn);
+  });
+}
+
+function quizAnswer(chosenBtn, isCorrect, explanation, optsEl, shuffledOpts, correctOrig) {
+  var btns = optsEl.querySelectorAll('.quiz-opt');
+  btns.forEach(function(b) { b.disabled = true; });
+
+  if(isCorrect) {
+    chosenBtn.classList.add('correct');
+    quizScore++;
+  } else {
+    chosenBtn.classList.add('wrong');
+    btns.forEach(function(b, i) {
+      if(shuffledOpts[i].orig === correctOrig) b.classList.add('correct');
+    });
+  }
+
+  var expEl = document.getElementById('q-exp');
+  expEl.textContent = explanation;
+  expEl.style.display = 'block';
+  document.getElementById('q-next').style.display = 'block';
+}
+
+function quizNext() {
+  quizIdx++;
+  if(quizIdx < 20) {
+    showQuestion(quizIdx);
+  } else {
+    quizEnd();
+  }
+}
+
+function quizEnd() {
+  document.getElementById('quiz-run').style.display = 'none';
+  document.getElementById('quiz-end').style.display = 'block';
+  document.getElementById('end-score').textContent = quizScore;
+  document.getElementById('end-sub').textContent = 'von 20 Fragen richtig (' + Math.round(quizScore/20*100) + '%)';
+
+  var prev = parseInt(localStorage.getItem('tor_quiz_hs') || '0');
+  var isNew = quizScore > prev;
+  if(isNew) localStorage.setItem('tor_quiz_hs', quizScore);
+  document.getElementById('end-hs').textContent = isNew ? '🏆 Neuer Highscore!' : ('Highscore: ' + prev + '/20');
+
+  updateDashStats();
+}
+
+// ── Daily Question ───────────────────────────────────────────
+var DQ_IDX = Math.floor(Math.random() * QUIZ.length);
+var dqRevealed = false;
+
+document.getElementById('dq-q').textContent = QUIZ[DQ_IDX].q;
+
+function dqReveal() {
+  if(dqRevealed) return;
+  dqRevealed = true;
+  document.getElementById('dq-answer').textContent = QUIZ[DQ_IDX].opts[QUIZ[DQ_IDX].c] + ' — ' + QUIZ[DQ_IDX].e;
+  document.getElementById('dq-answer').style.display = 'block';
+  document.getElementById('dq-toggle').style.display = 'none';
+}
+
+// ── Dashboard Stats ──────────────────────────────────────────
+function updateDashStats() {
+  var hs = localStorage.getItem('tor_quiz_hs');
+  document.getElementById('stat-hs').textContent = hs ? (hs + '/20') : '—';
+
+  var streak = localStorage.getItem('tor_streak') || '0';
+  document.getElementById('stat-streak').textContent = streak;
+
+  var cardsDone = localStorage.getItem('tor_cards_done') || '0';
+  document.getElementById('stat-cards').textContent = cardsDone;
+
+  var hsBadge = document.getElementById('hs-badge');
+  if(hsBadge) hsBadge.textContent = '🏆 Highscore: ' + (hs ? hs + '/20' : '—');
+}
+
+// ── Streak Logic ─────────────────────────────────────────────
+(function() {
+  var today = new Date().toISOString().slice(0, 10);
+  var last = localStorage.getItem('tor_last_visit');
+  var streak = parseInt(localStorage.getItem('tor_streak') || '0');
+
+  if(!last) {
+    streak = 1;
+  } else if(last !== today) {
+    var lastDate = new Date(last);
+    var todayDate = new Date(today);
+    var diffDays = Math.round((todayDate - lastDate) / (1000*60*60*24));
+    if(diffDays === 1) {
+      streak++;
+    } else if(diffDays > 1) {
+      streak = 1;
+    }
+  }
+
+  localStorage.setItem('tor_last_visit', today);
+  localStorage.setItem('tor_streak', streak);
+})();
+
+// ── Formula Copy ─────────────────────────────────────────────
+function copyFormula(btn, text) {
+  if(navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() {
+      var orig = btn.textContent;
+      btn.textContent = '✓';
+      btn.style.color = 'var(--ok)';
+      btn.style.borderColor = 'var(--ok)';
+      setTimeout(function() {
+        btn.textContent = orig;
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 1200);
+    });
+  }
+
+  // Track cards done
+  var done = parseInt(localStorage.getItem('tor_cards_done') || '0');
+  localStorage.setItem('tor_cards_done', done + 1);
+  updateDashStats();
+}
+
+// ── AP Check ────────────────────────────────────────────────
+var AP_KEYS = { ap1: 'tor_ap1_checks', ap2: 'tor_ap2_checks' };
+var currentAp = 'ap1';
+
+function apSwitch(type) {
+  currentAp = type;
+  document.querySelectorAll('.ap-panel').forEach(function(p) { p.classList.remove('on'); });
+  document.querySelectorAll('.inner-tab').forEach(function(b) { b.classList.remove('on'); });
+  document.getElementById('ap-panel-' + type).classList.add('on');
+
+  var tabs = document.querySelectorAll('.inner-tab');
+  if(type === 'ap1') tabs[0].classList.add('on');
+  else tabs[1].classList.add('on');
+
+  apLoad(type);
+}
+
+function apLoad(type) {
+  var saved = JSON.parse(localStorage.getItem(AP_KEYS[type]) || '{}');
+  document.querySelectorAll('#ap-' + type + ' .ap-check').forEach(function(cb) {
+    cb.checked = saved[cb.dataset.id] || false;
+    var label = cb.parentElement.querySelector('.ap-item-text');
+    if(label) label.classList.toggle('done', cb.checked);
+  });
+  apUpdateProgress(type);
+}
+
+function apSave(type) {
+  var data = {};
+  document.querySelectorAll('#ap-' + type + ' .ap-check').forEach(function(cb) {
+    data[cb.dataset.id] = cb.checked;
+    var label = cb.parentElement.querySelector('.ap-item-text');
+    if(label) label.classList.toggle('done', cb.checked);
+  });
+  localStorage.setItem(AP_KEYS[type], JSON.stringify(data));
+  apUpdateProgress(type);
+}
+
+function apUpdateProgress(type) {
+  var all = document.querySelectorAll('#ap-' + type + ' .ap-check').length;
+  var done = document.querySelectorAll('#ap-' + type + ' .ap-check:checked').length;
+  var el = document.getElementById('ap-' + type + '-prog');
+  if(el) el.textContent = done + ' / ' + all + ' erledigt';
+  var bar = document.getElementById('ap-' + type + '-bar');
+  if(bar) bar.style.width = (all > 0 ? (done/all*100) : 0) + '%';
+}
+
+// ── Init ─────────────────────────────────────────────────────
+(function() {
+  updateDashStats();
+  apLoad('ap1');
+  apLoad('ap2');
+})();
+</script>
+
+<!-- PWA Service Worker -->
+<script>
+var isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
+if(!isLocal) {
+  if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('pwa/sw.js').catch(function(){});
+  }
+}
+</script>
+
+</body>
+</html>
