@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#050507">
+<title>AMPERE — Elektroniker Betriebstechnik</title>
+<link rel="manifest" href="pwa/manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050507;
+  --bg2: #0f0f13;
+  --bg3: #17171d;
+  --bg4: #1f1f27;
+  --sep: rgba(255,255,255,.06);
+  --br: rgba(255,255,255,.08);
+  --tx: #f0f0f5;
+  --tx2: #a0a0b0;
+  --tx3: #505060;
+  --ac: #f97316;
+  --acd: #ea6c0a;
+  --acg: rgba(249,115,22,.12);
+  --ok: #30d158;
+  --err: #ff453a;
+  --warn: #ffd60a;
+  --r: 12px;
+  --r2: 16px;
+  --r3: 20px;
+  --sa: 'Inter', system-ui, sans-serif;
+  --mo: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); color: var(--tx); font-family: var(--sa); }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
+  color: var(--tx);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Light Mode */
+.lm { --bg:#f5f5f7; --bg2:#ffffff; --bg3:#e8e8ed; --bg4:#d8d8de;
+      --tx:#1a1a1f; --tx2:#3a3a4a; --tx3:#7a7a90; }
+.lm .hdr { background: rgba(245,245,247,.9); }
+.lm .tabs { background: rgba(245,245,247,.95); }
+.lm .drawer-overlay { background: rgba(0,0,0,.4); }
+.lm .drawer { background: var(--bg2); }
+
+/* Header */
+.hdr {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(5,5,7,.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--sep);
+  padding: .75rem 1rem;
+  display: flex; align-items: center; gap: .65rem;
+}
+.hdr-logo {
+  width: 32px; height: 32px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.hdr-wordmark { flex: 1; }
+.hdr-wordmark h1 { font-size: 17px; font-weight: 700; letter-spacing: -.3px; line-height: 1.1; }
+.hdr-wordmark p { font-size: 10px; color: var(--tx3); font-weight: 500; letter-spacing: .2px; margin-top: 1px; }
+.hdr-actions { display: flex; gap: .4rem; }
+.hdr-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--bg3); border: 1px solid var(--br);
+  color: var(--tx2); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.hdr-btn:hover { background: var(--bg4); color: var(--tx); }
+
+/* Tab Bar */
+.tabs {
+  position: sticky; top: 57px; z-index: 90;
+  background: rgba(5,5,7,.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--sep);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 .5rem;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0;
+  font-size: 12px; font-weight: 600;
+  padding: .65rem .85rem;
+  border: none; background: transparent;
+  color: var(--tx3); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+  display: flex; align-items: center; gap: .4rem;
+  white-space: nowrap; min-height: 44px;
+  font-family: var(--sa);
+}
+.tab-btn.on { color: var(--ac); border-bottom-color: var(--ac); }
+.tab-btn:hover:not(.on) { color: var(--tx2); }
+
+/* Screens */
+.screen { display: none; padding: 1rem; max-width: 640px; margin: 0 auto; padding-bottom: 2rem; }
+.screen.on { display: block; }
+
+/* Cards */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--br);
+  border-radius: var(--r2);
+  padding: 1rem;
+  margin-bottom: .75rem;
+}
+
+/* Section titles */
+.sec-title {
+  font-size: 11px; font-weight: 700; color: var(--tx3);
+  text-transform: uppercase; letter-spacing: .8px;
+  margin: 1.25rem 0 .6rem;
+}
+.sec-title:first-child { margin-top: 0; }
+
+/* Daily Question */
+.dq-card {
+  background: var(--bg2);
+  border: 1px solid var(--br);
+  border-left: 3px solid var(--ac);
+  border-radius: var(--r2);
+  padding: 1rem;
+  margin-bottom: .75rem;
+}
+.dq-label {
+  font-size: 10px; font-weight: 700; color: var(--ac);
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: .5rem;
+}
+.dq-question {
+  font-size: 15px; font-weight: 600; color: var(--tx);
+  line-height: 1.4; margin-bottom: .75rem;
+}
+.dq-toggle {
+  background: var(--acg); color: var(--ac);
+  border: 1px solid rgba(249,115,22,.3);
+  border-radius: 8px; padding: .5rem .85rem;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: var(--sa); min-height: 36px;
+  transition: all .15s;
+}
+.dq-toggle:hover { background: rgba(249,115,22,.2); }
+.dq-answer {
+  background: var(--bg3); border-radius: 8px;
+  padding: .75rem; margin-top: .75rem;
+  font-size: 13px; line-height: 1.5; color: var(--tx2);
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: .5rem; margin-bottom: .75rem;
+}
+.stat-card {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .75rem;
+}
+.stat-value {
+  font-size: 24px; font-weight: 700; color: var(--ac);
+  font-family: var(--mo); line-height: 1.2;
+}
+.stat-label { font-size: 11px; color: var(--tx3); margin-top: 2px; font-weight: 500; }
+
+/* Quick LF Grid */
+.lf-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: .5rem;
+}
+.lf-quick-card {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .75rem;
+  cursor: pointer; transition: all .15s;
+  text-align: left;
+}
+.lf-quick-card:hover { background: var(--bg3); border-color: rgba(249,115,22,.3); }
+.lf-quick-icon { font-size: 18px; margin-bottom: .3rem; display: block; }
+.lf-quick-name { font-size: 12px; font-weight: 600; color: var(--tx); line-height: 1.3; }
+.lf-quick-sub { font-size: 10px; color: var(--tx3); margin-top: 2px; }
+
+/* Accordion */
+.lf-accordion {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r2); margin-bottom: .5rem;
+  overflow: hidden;
+}
+.lf-summary {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .9rem 1rem; cursor: pointer;
+  list-style: none; user-select: none;
+  transition: color .15s;
+}
+.lf-summary::-webkit-details-marker { display: none; }
+details[open] > .lf-summary { color: var(--ac); }
+.lf-icon { font-size: 20px; flex-shrink: 0; }
+.lf-meta { flex: 1; }
+.lf-title { font-size: 14px; font-weight: 600; display: block; line-height: 1.3; }
+.lf-count { font-size: 11px; color: var(--tx3); margin-top: 2px; display: block; }
+.lf-arrow {
+  font-size: 16px; color: var(--tx3); font-weight: 700;
+  transition: transform .2s; flex-shrink: 0;
+}
+details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
+.lf-body {
+  border-top: 1px solid var(--sep);
+  padding: .75rem 1rem 1rem;
+}
+.lf-body ul { list-style: none; }
+.lf-body ul li {
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--sep);
+  font-size: 13px; line-height: 1.4; color: var(--tx2);
+  display: flex; gap: .5rem; align-items: flex-start;
+}
+.lf-body ul li:last-child { border-bottom: none; padding-bottom: 0; }
+.lf-body ul li::before {
+  content: '›'; color: var(--ac); font-weight: 700;
+  flex-shrink: 0; margin-top: 0;
+}
+
+/* Quiz */
+.quiz-hero {
+  text-align: center; padding: 2rem 1rem;
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r2); margin-bottom: 1rem;
+}
+.quiz-hero-icon { font-size: 48px; display: block; margin-bottom: .75rem; }
+.quiz-hero h2 { font-size: 22px; font-weight: 700; margin-bottom: .35rem; }
+.quiz-hero p { font-size: 14px; color: var(--tx2); margin-bottom: 1.5rem; }
+.quiz-hs-badge {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: var(--acg); color: var(--ac);
+  border: 1px solid rgba(249,115,22,.2);
+  border-radius: 20px; padding: .3rem .8rem;
+  font-size: 12px; font-weight: 600; margin-bottom: 1.25rem;
+}
+
+.btn-primary {
+  background: var(--ac); color: #fff;
+  border: none; border-radius: 12px;
+  padding: .75rem 1.5rem; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: var(--sa);
+  min-height: 48px; width: 100%; max-width: 300px;
+  transition: background .15s; display: block; margin: 0 auto;
+}
+.btn-primary:hover { background: var(--acd); }
+
+.quiz-progress-wrap {
+  background: var(--bg3); border-radius: 4px;
+  height: 4px; margin-bottom: .75rem; overflow: hidden;
+}
+.quiz-progress-bar {
+  height: 4px; background: var(--ac);
+  border-radius: 4px; transition: width .3s;
+}
+.quiz-counter {
+  font-size: 12px; color: var(--tx3); font-weight: 600;
+  text-align: right; margin-bottom: .75rem;
+}
+.quiz-card {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r2); padding: 1.25rem;
+}
+.quiz-question {
+  font-size: 16px; font-weight: 600; line-height: 1.45;
+  margin-bottom: 1rem; color: var(--tx);
+}
+.quiz-opts {
+  display: flex; flex-direction: column; gap: .5rem;
+  margin-bottom: .75rem;
+}
+.quiz-opt {
+  background: var(--bg3); border: 1px solid var(--br);
+  border-radius: 10px; padding: .75rem 1rem;
+  font-size: 14px; font-weight: 500; color: var(--tx);
+  cursor: pointer; text-align: left; font-family: var(--sa);
+  min-height: 44px; transition: all .15s; line-height: 1.3;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--ac); color: var(--tx); }
+.quiz-opt.chosen { border-color: var(--ac); background: var(--acg); color: var(--ac); }
+.quiz-opt.correct { border-color: var(--ok); background: rgba(48,209,88,.12); color: var(--ok); }
+.quiz-opt.wrong { border-color: var(--err); background: rgba(255,69,58,.1); color: var(--err); }
+.quiz-opt:disabled { cursor: default; }
+.quiz-explanation {
+  background: var(--bg3); border-radius: 10px;
+  padding: .85rem; margin-bottom: .75rem;
+  font-size: 13px; line-height: 1.5; color: var(--tx2);
+  border-left: 2px solid var(--ac);
+}
+.quiz-next-btn {
+  background: var(--ac); color: #fff;
+  border: none; border-radius: 10px;
+  padding: .7rem 1.25rem; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: var(--sa);
+  min-height: 44px; width: 100%;
+  transition: background .15s;
+}
+.quiz-next-btn:hover { background: var(--acd); }
+
+.quiz-end-card {
+  text-align: center; background: var(--bg2);
+  border: 1px solid var(--br); border-radius: var(--r2);
+  padding: 2rem 1.25rem;
+}
+.quiz-score-big {
+  font-size: 56px; font-weight: 700; color: var(--ac);
+  font-family: var(--mo); line-height: 1;
+}
+.quiz-score-sub { font-size: 14px; color: var(--tx2); margin: .35rem 0 1rem; }
+.quiz-end-hs { font-size: 13px; color: var(--tx3); margin-bottom: 1.5rem; }
+
+/* Formulas */
+.formula-cat-title {
+  font-size: 13px; font-weight: 700; color: var(--ac);
+  margin: 1.25rem 0 .5rem; display: flex; align-items: center; gap: .4rem;
+}
+.formula-cat-title:first-child { margin-top: 0; }
+.formula-card {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .85rem 1rem;
+  margin-bottom: .4rem; position: relative;
+}
+.formula-cat-badge {
+  display: inline-block; background: var(--acg);
+  color: var(--ac); border-radius: 5px;
+  font-size: 10px; font-weight: 700; padding: 2px 6px;
+  margin-bottom: .35rem; letter-spacing: .3px;
+}
+.formula-name {
+  font-size: 13px; font-weight: 600; color: var(--tx);
+  margin-bottom: .3rem;
+}
+.formula-eq {
+  font-family: var(--mo); font-size: 15px; font-weight: 600;
+  color: var(--ac); margin-bottom: .35rem; line-height: 1.4;
+}
+.formula-desc { font-size: 12px; color: var(--tx3); line-height: 1.4; }
+.formula-copy {
+  position: absolute; top: .7rem; right: .7rem;
+  background: var(--bg3); border: 1px solid var(--br);
+  border-radius: 6px; width: 28px; height: 28px;
+  font-size: 12px; cursor: pointer; color: var(--tx3);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; font-family: var(--sa);
+}
+.formula-copy:hover { color: var(--ac); border-color: var(--ac); background: var(--acg); }
+
+/* AP Check */
+.inner-tabs {
+  display: flex; gap: .4rem; margin-bottom: 1rem;
+}
+.inner-tab {
+  padding: .55rem 1.1rem; border-radius: 20px;
+  border: 1px solid var(--br); background: var(--bg2);
+  color: var(--tx2); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: var(--sa); min-height: 36px;
+  transition: all .15s;
+}
+.inner-tab.on { background: var(--ac); color: #fff; border-color: var(--ac); }
+.inner-tab:hover:not(.on) { border-color: var(--ac); color: var(--ac); }
+
+.ap-panel { display: none; }
+.ap-panel.on { display: block; }
+
+.ap-progress-wrap {
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .75rem;
+  margin-bottom: .75rem;
+}
+.ap-prog-label {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: .5rem;
+}
+.ap-prog-text { font-size: 13px; font-weight: 600; color: var(--tx2); }
+.ap-prog-val { font-size: 13px; font-weight: 700; color: var(--ac); }
+.ap-progress-bar-bg {
+  background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden;
+}
+.ap-progress-bar { height: 6px; background: var(--ac); border-radius: 4px; transition: width .3s; }
+
+.ap-list { display: flex; flex-direction: column; gap: .35rem; }
+.ap-item {
+  display: flex; align-items: flex-start; gap: .75rem;
+  background: var(--bg2); border: 1px solid var(--br);
+  border-radius: var(--r); padding: .75rem;
+  cursor: pointer; transition: border-color .15s;
+}
+.ap-item:hover { border-color: rgba(249,115,22,.3); }
+.ap-check {
+  width: 18px; height: 18px; accent-color: var(--ac);
+  cursor: pointer; flex-shrink: 0; margin-top: 1px;
+}
+.ap-item-text {
+  font-size: 13px; color: var(--tx2); line-height: 1.4;
+  flex: 1;
+}
+.ap-item-text.done { color: var(--tx3); text-decoration: line-through; }
+
+/* Drawer */
+.drawer-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.6);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+.drawer-overlay.on { opacity: 1; pointer-events: all; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 201;
+  width: min(300px, 85vw);
+  background: var(--bg2);
+  border-left: 1px solid var(--br);
+  transform: translateX(100%);
+  transition: transform .22s cubic-bezier(.22,.61,.36,1);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+}
+.drawer.on { transform: translateX(0); }
+.drawer-hdr {
+  padding: 1rem; border-bottom: 1px solid var(--sep);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.drawer-title { font-size: 14px; font-weight: 700; color: var(--tx); }
+.drawer-close {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg3); border: none; color: var(--tx2);
+  font-size: 16px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+}
+.drawer-apps { padding: .5rem 0; flex: 1; }
+.drawer-app {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .7rem 1rem; cursor: pointer;
+  text-decoration: none; color: var(--tx);
+  transition: background .15s;
+}
+.drawer-app:hover { background: var(--bg3); }
+.drawer-app.active { color: var(--ac); }
+.drawer-app-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+.drawer-app-name { font-size: 14px; font-weight: 500; }
+.drawer-app-sub { font-size: 11px; color: var(--tx3); }
+.drawer-app-badge {
+  margin-left: auto; background: var(--ac); color: #fff;
+  border-radius: 10px; padding: 1px 7px; font-size: 10px; font-weight: 700;
+}
+.drawer-footer {
+  padding: .5rem 1rem .75rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+  margin-top: .25rem;
+}
+.drawer-footer a {
+  color: var(--ac); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: .3rem;
+}
+.drawer-footer a:hover { color: var(--acd); }
+
+/* Utility */
+.mt05 { margin-top: .5rem; }
+.mt1 { margin-top: 1rem; }
+.gap2 { gap: .2rem; }
+
+@media (max-width: 400px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .lf-grid { grid-template-columns: 1fr 1fr; }
+  .formula-eq { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="hdr">
+  <div class="hdr-logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="7" fill="#f97316"/>
+      <path d="M18.5 5L9 18.5H16L13.5 27L23 13.5H16L18.5 5Z" fill="white"/>
+    </svg>
+  </div>
+  <div class="hdr-wordmark">
+    <h1>AMP<span style="color:var(--ac)">ERE</span></h1>
+    <p>Elektroniker · Betriebstechnik</p>
+  </div>
+  <div class="hdr-actions">
+    <button class="hdr-btn" id="thm-btn" onclick="thmToggle()" title="Theme wechseln">🌙</button>
+    <button class="hdr-btn" onclick="drawerOpen()" title="App-Switcher">⊞</button>
+  </div>
+</header>
+
+<!-- Tab Bar -->
+<nav class="tabs" id="tab-bar">
+  <button class="tab-btn on" data-screen="s-dash" onclick="showScreen(this.dataset.screen)">🏠 Dashboard</button>
+  <button class="tab-btn" data-screen="s-lern" onclick="showScreen(this.dataset.screen)">📖 Lernfelder</button>
+  <button class="tab-btn" data-screen="s-quiz" onclick="showScreen(this.dataset.screen)">❓ Quiz</button>
+  <button class="tab-btn" data-screen="s-form" onclick="showScreen(this.dataset.screen)">🔢 Formeln</button>
+  <button class="tab-btn" data-screen="s-ap" onclick="showScreen(this.dataset.screen)">✅ AP-Check</button>
+</nav>
+
+<!-- ===================== SCREEN 1: DASHBOARD ===================== -->
+<main id="s-dash" class="screen on">
+
+  <div class="dq-card">
+    <div class="dq-label">⚡ Frage des Tages</div>
+    <div class="dq-question" id="dq-q">Lade...</div>
+    <button class="dq-toggle" id="dq-toggle" onclick="dqReveal()">Antwort zeigen</button>
+    <div class="dq-answer" id="dq-answer" style="display:none"></div>
+  </div>
+
+  <div class="sec-title">📊 Dein Fortschritt</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-cards">0</div>
+      <div class="stat-label">Gelernte Formeln</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-hs">—</div>
+      <div class="stat-label">Quiz Highscore</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-streak">0</div>
+      <div class="stat-label">Tages-Streak 🔥</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">35</div>
+      <div class="stat-label">Fragen gesamt</div>
+    </div>
+  </div>
+
+  <div class="sec-title">📚 Lernfelder Übersicht</div>
+  <div class="lf-grid">
+    <button class="lf-quick-card" onclick="openLf('lf1')">
+      <span class="lf-quick-icon">⚡</span>
+      <div class="lf-quick-name">LF 1</div>
+      <div class="lf-quick-sub">Grundlagen & Installation</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf2')">
+      <span class="lf-quick-icon">🔌</span>
+      <div class="lf-quick-name">LF 2</div>
+      <div class="lf-quick-sub">Anlagen errichten & prüfen</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf3')">
+      <span class="lf-quick-icon">🎛️</span>
+      <div class="lf-quick-name">LF 3</div>
+      <div class="lf-quick-sub">Steuerungstechnik</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf4')">
+      <span class="lf-quick-icon">⚙️</span>
+      <div class="lf-quick-name">LF 4</div>
+      <div class="lf-quick-sub">Antriebstechnik</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf5')">
+      <span class="lf-quick-icon">🏭</span>
+      <div class="lf-quick-name">LF 5</div>
+      <div class="lf-quick-sub">Energietechnik</div>
+    </button>
+    <button class="lf-quick-card" onclick="openLf('lf6')">
+      <span class="lf-quick-icon">🔧</span>
+      <div class="lf-quick-name">LF 6</div>
+      <div class="lf-quick-sub">Instandhaltung</div>
+    </button>
+  </div>
+
+</main>
+
+<!-- ===================== SCREEN 2: LERNFELDER ===================== -->
+<main id="s-lern" class="screen">
+
+  <details class="lf-accordion" id="lf1">
+    <summary class="lf-summary">
+      <span class="lf-icon">⚡</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 1 — Elektrische Grundlagen & Installation</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Ohmsches Gesetz (U = R × I), Leistung P = U × I</li>
+        <li>Kirchhoffsche Gesetze (Knoten- und Maschensatz)</li>
+        <li>Reihen- und Parallelschaltung von Widerständen</li>
+        <li>Spannungsfall: ΔU = I × R_Leitung</li>
+        <li>Leitungsberechnung: A = (I × L × 2) / (κ × ΔU_zul) — Kupfer κ = 56 m/Ω·mm²</li>
+        <li>Schaltzeichen: Widerstände, Kondensatoren, Spulen, Schalter, Sicherungen</li>
+        <li>Stromarten: Gleichstrom, Wechselstrom, Drehstrom</li>
+        <li>Wechselstromgrößen: Spitzen-, Effektiv-, Mittelwert</li>
+        <li>Frequenz f, Periodendauer T = 1/f</li>
+        <li>Leiterwerksstoffe: Kupfer, Aluminium, ihre Eigenschaften</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf2">
+    <summary class="lf-summary">
+      <span class="lf-icon">🔌</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 2 — Elektrische Anlagen errichten & prüfen (VDE 0100)</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Netzsysteme: TN-C, TN-S, TN-C-S, TT, IT</li>
+        <li>Schutzmaßnahmen nach VDE 0100-410: Basisschutz, Fehlerschutz, Zusatzschutz</li>
+        <li>FI-Schutzschalter (RCD): Auslösestrom 30 mA (Personenschutz), 300 mA (Brandschutz)</li>
+        <li>Leitungsschutzschalter: Charakteristiken B, C, D — Auslösebereiche</li>
+        <li>Schutzklassen I (PE-Anschluss), II (Schutzisolierung), III (Schutzkleinspannung)</li>
+        <li>IP-Schutzarten: erste Ziffer Staub (0–6), zweite Ziffer Wasser (0–9)</li>
+        <li>Prüfungen nach VDE 0100-600: Sichtprüfung, Messung Schutzleiter, Isolationswiderstand, Schleifenimpedanz, FI-Test</li>
+        <li>Isolationswiderstand: mind. 1 MΩ (Neuanlage), 0,5 MΩ (Bestand)</li>
+        <li>Spannungsfall im Netz: max. 3 % (Hausinstallation), max. 5 % (Gesamtnetz)</li>
+        <li>Trenntrafo, SELV, PELV — Kleinspannungssysteme</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf3">
+    <summary class="lf-summary">
+      <span class="lf-icon">🎛️</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 3 — Steuerungstechnik</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Schütze: Aufbau, Hilfskontakte, Selbsthaltung</li>
+        <li>Motorschutzrelais: Auslösung bei Überstrom, Einstellung In × Faktor</li>
+        <li>Stern-Dreieck-Anlassen: Anlaufstrom, Anlaufmoment</li>
+        <li>SPS-Grundlagen: Eingänge, Ausgänge, Merker, Timer, Zähler</li>
+        <li>Stromlaufplan lesen (Steuerstromkreis, Hauptstromkreis)</li>
+        <li>NOT-Halt nach EN 13850, Kategorie 0 und 1</li>
+        <li>Verriegelungen (elektrisch, mechanisch)</li>
+        <li>Logische Grundfunktionen: UND, ODER, NICHT in Schütztechnik</li>
+        <li>Zeitrelais: Anzugsverzögerung, Abfallverzögerung</li>
+        <li>Wendeschütz: Drehrichtungsumkehr eines Motors</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf4">
+    <summary class="lf-summary">
+      <span class="lf-icon">⚙️</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 4 — Antriebstechnik</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Drehstromasynchronmotor: Aufbau Stator/Rotor, Wirkprinzip</li>
+        <li>Synchrondrehzahl: n_s = (60 × f) / p — p = Polpaarzahl</li>
+        <li>Schlupf: s = (n_s − n) / n_s × 100 %</li>
+        <li>Nennmoment, Anlaufmoment, Kippmoment</li>
+        <li>Motorschutz: Thermisches Überlastrelais, Thermistor (PTC)</li>
+        <li>Frequenzumrichter (FU): U/f-Kennlinie, Sanftanlauf</li>
+        <li>Gleichstrommotor: Reihenschluss, Nebenschluss, Permanentmagnet</li>
+        <li>Bremsen: Elektrodynamisches Bremsen, Gegenstrombremsen</li>
+        <li>Leistungsschild lesen: P_N, U_N, I_N, n_N, cos φ, η</li>
+        <li>Motoranschlüsse: Stern (Y), Dreieck (Δ), Spannung 230 V / 400 V</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf5">
+    <summary class="lf-summary">
+      <span class="lf-icon">🏭</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 5 — Energietechnik & Transformatoren</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Transformator: Übersetzungsverhältnis ü = U1/U2 = N1/N2 = I2/I1</li>
+        <li>Wirkungsgrad Transformator: η = P_ab / P_zu × 100 %</li>
+        <li>Leerlaufversuch und Kurzschlussversuch</li>
+        <li>Scheinleistung S = U × I, Wirkleistung P = S × cos φ, Blindleistung Q = S × sin φ</li>
+        <li>Leistungsfaktor cos φ verbessern: Kondensatoren parallel zur Last</li>
+        <li>Energiezähler: Wirkarbeit in kWh</li>
+        <li>Tarife: HT/NT, Smart Meter</li>
+        <li>Beleuchtungstechnik: Lichtstrom [lm], Beleuchtungsstärke [lx], Lichtausbeute [lm/W]</li>
+        <li>Lichtquellen: LED (80–160 lm/W), Leuchtstofflampe, Halogen</li>
+        <li>Photovoltaik: Grundprinzip, Wechselrichter, Netzeinspeisung</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="lf-accordion" id="lf6">
+    <summary class="lf-summary">
+      <span class="lf-icon">🔧</span>
+      <div class="lf-meta">
+        <span class="lf-title">LF 6 — Instandhaltung & Fehlersuche</span>
+        <span class="lf-count">10 Themen</span>
+      </div>
+      <span class="lf-arrow">›</span>
+    </summary>
+    <div class="lf-body">
+      <ul>
+        <li>Instandhaltungsstrategien: reaktiv, präventiv, prädiktiv</li>
+        <li>Fehlerdiagnose: Sichtprüfung, Messung, Funktionstest</li>
+        <li>Messgeräte: Multimeter, Zangenamperemeter, Isolationsmessgerät, Schleifenimpedanzmessgerät</li>
+        <li>DGUV Vorschrift 3 (früher BGV A3): Prüffristen für ortsfeste/ortsveränderliche Geräte</li>
+        <li>Messprotokoll erstellen nach VDE 0100-600</li>
+        <li>5 Sicherheitsregeln nach DIN VDE 0105: Freischalten, Sichern, Spannungsfreiheit feststellen, Erden/Kurzschließen, Abdecken</li>
+        <li>Schutzausrüstung: Spannungsprüfer, isolierte Werkzeuge, Schutzhandschuhe</li>
+        <li>Thermografie: Hotspots berührungslos erkennen</li>
+        <li>Schwingungsanalyse: Lager, Unwucht erkennen</li>
+        <li>Dokumentation: Schaltplanpflege, Revisionsunterlagen</li>
+      </ul>
+    </div>
+  </details>
+
+</main>
+
+<!-- ===================== SCREEN 3: QUIZ ===================== -->
+<main id="s-quiz" class="screen">
+
+  <div id="quiz-start">
+    <div class="quiz-hero">
+      <span class="quiz-hero-icon">❓</span>
+      <h2>Prüfungstraining</h2>
+      <p>35 Fragen · Multiple Choice · 20 pro Runde</p>
+      <div class="quiz-hs-badge" id="hs-badge">🏆 Highscore: —</div>
+      <button onclick="quizStart()" class="btn-primary">Quiz starten</button>
+    </div>
+  </div>
+
+  <div id="quiz-run" style="display:none">
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-bar" id="q-prog" style="width:0%"></div>
+    </div>
+    <div class="quiz-counter" id="q-counter">Frage 1 / 20</div>
+    <div class="quiz-card">
+      <div id="q-text" class="quiz-question"></div>
+      <div id="q-opts" class="quiz-opts"></div>
+      <div id="q-exp" class="quiz-explanation" style="display:none"></div>
+      <button id="q-next" onclick="quizNext()" class="quiz-next-btn" style="display:none">Weiter →</button>
+    </div>
+  </div>
+
+  <div id="quiz-end" style="display:none">
+    <div class="quiz-end-card">
+      <div class="quiz-score-big" id="end-score">0</div>
+      <div class="quiz-score-sub" id="end-sub">von 20 Fragen richtig</div>
+      <div class="quiz-end-hs" id="end-hs"></div>
+      <button onclick="quizStart()" class="btn-primary" style="margin-bottom:.75rem">Neue Runde</button>
+      <button onclick="showScreen('s-dash')" class="btn-primary" style="background:var(--bg3);color:var(--tx);margin-top:.5rem">Zum Dashboard</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===================== SCREEN 4: FORMELN ===================== -->
+<main id="s-form" class="screen">
+
+  <div class="formula-cat-title">⚡ Gleichstrom</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'U = R × I')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Gleichstrom</div>
+    <div class="formula-name">Ohmsches Gesetz</div>
+    <div class="formula-eq">U = R × I</div>
+    <div class="formula-desc">U [V] = Spannung, R [Ω] = Widerstand, I [A] = Strom</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'P = U × I = U²/R = I²×R')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Gleichstrom</div>
+    <div class="formula-name">Elektrische Leistung</div>
+    <div class="formula-eq">P = U × I = U²/R = I²×R</div>
+    <div class="formula-desc">P [W] = Leistung</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'W = P × t')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Gleichstrom</div>
+    <div class="formula-name">Elektrische Energie</div>
+    <div class="formula-eq">W = P × t</div>
+    <div class="formula-desc">W [Wh] = Energie, P [W] = Leistung, t [h] = Zeit</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'R_ges = R1 + R2 + ... + Rn')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Gleichstrom</div>
+    <div class="formula-name">Reihenschaltung Widerstände</div>
+    <div class="formula-eq">R_ges = R1 + R2 + ... + Rn</div>
+    <div class="formula-desc">Gesamtwiderstand als Summe aller Einzelwiderstände</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'1/R_ges = 1/R1 + 1/R2 | R = R1×R2/(R1+R2)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Gleichstrom</div>
+    <div class="formula-name">Parallelschaltung Widerstände</div>
+    <div class="formula-eq">1/R_ges = 1/R1 + 1/R2 + ...</div>
+    <div class="formula-desc">2 Widerstände: R = R1×R2 / (R1+R2) (Produktsummenformel)</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'U2 = U_ges × R2/(R1+R2)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Gleichstrom</div>
+    <div class="formula-name">Spannungsteiler</div>
+    <div class="formula-eq">U2 = U_ges × R2/(R1+R2)</div>
+    <div class="formula-desc">Spannung am unteren Widerstand der Reihenschaltung</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'R = ρ × l / A = l / (κ × A) | ρ(Cu)=0,0178 Ω·mm²/m')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Gleichstrom</div>
+    <div class="formula-name">Leitungswiderstand</div>
+    <div class="formula-eq">R = ρ × l / A = l / (κ × A)</div>
+    <div class="formula-desc">ρ(Cu) = 0,0178 Ω·mm²/m | κ(Cu) = 56 m/(Ω·mm²) | l [m], A [mm²]</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'ΔU = 2 × I × R_Ltg (einphasig) | ΔU = √3 × I × R_Ltg (Drehstrom)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Gleichstrom</div>
+    <div class="formula-name">Spannungsfall</div>
+    <div class="formula-eq">ΔU = 2 × I × R_Ltg (einphasig)</div>
+    <div class="formula-desc">Drehstrom: ΔU = √3 × I × R_Leitung | Faktor 2 = Hin- und Rückleiter</div>
+  </div>
+
+  <div class="formula-cat-title">〜 Wechselstrom</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'U_eff = U_max / √2 ≈ 0,707 × U_max')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Wechselstrom</div>
+    <div class="formula-name">Effektivwert</div>
+    <div class="formula-eq">U_eff = U_max / √2 ≈ 0,707 × U_max</div>
+    <div class="formula-desc">230 V Netz: U_max = 230 × √2 ≈ 325 V Spitzenspannung</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'X_L = 2π × f × L')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Wechselstrom</div>
+    <div class="formula-name">Induktiver Widerstand</div>
+    <div class="formula-eq">X_L = 2π × f × L</div>
+    <div class="formula-desc">X_L [Ω], f [Hz] = Frequenz, L [H] = Induktivität</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'X_C = 1 / (2π × f × C)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Wechselstrom</div>
+    <div class="formula-name">Kapazitiver Widerstand</div>
+    <div class="formula-eq">X_C = 1 / (2π × f × C)</div>
+    <div class="formula-desc">X_C [Ω], C [F] = Kapazität. X_C sinkt bei höherer Frequenz.</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'Z = √(R² + X²)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Wechselstrom</div>
+    <div class="formula-name">Scheinwiderstand (Impedanz)</div>
+    <div class="formula-eq">Z = √(R² + X²)</div>
+    <div class="formula-desc">Z [Ω], X = X_L − X_C (Reaktanz). Kombination aus ohmschem und reaktivem Anteil.</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'cos φ = P/S = R/Z')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Wechselstrom</div>
+    <div class="formula-name">Leistungsfaktor</div>
+    <div class="formula-eq">cos φ = P/S = R/Z</div>
+    <div class="formula-desc">cos φ = 1 → rein ohmsche Last. cos φ &lt; 1 → induktiv oder kapazitiv.</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'S² = P² + Q² | P[W] Q[VAr] S[VA]')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Wechselstrom</div>
+    <div class="formula-name">Leistungsdreieck</div>
+    <div class="formula-eq">S² = P² + Q²</div>
+    <div class="formula-desc">P [W] = Wirkleistung · Q [VAr] = Blindleistung · S [VA] = Scheinleistung</div>
+  </div>
+
+  <div class="formula-cat-title">⚙️ Motor</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'n_s = (60 × f) / p')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Motor</div>
+    <div class="formula-name">Synchrondrehzahl</div>
+    <div class="formula-eq">n_s = (60 × f) / p</div>
+    <div class="formula-desc">p = Polpaarzahl (4-poliger Motor: p = 2), f = 50 Hz → n_s = 1500 U/min</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'s = (n_s - n) / n_s × 100%')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Motor</div>
+    <div class="formula-name">Schlupf</div>
+    <div class="formula-eq">s = (n_s − n) / n_s × 100%</div>
+    <div class="formula-desc">Nennbetrieb ca. 2–8%. Kein Schlupf = kein Drehmoment beim Asynchronmotor.</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'P = M × ω = M × 2π × n/60')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Motor</div>
+    <div class="formula-name">Mechanische Leistung</div>
+    <div class="formula-eq">P = M × ω = M × 2π × n/60</div>
+    <div class="formula-desc">M [Nm] = Drehmoment, ω [rad/s] = Winkelgeschwindigkeit, n [U/min]</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'η = P_ab / P_zu × 100%')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Motor</div>
+    <div class="formula-name">Wirkungsgrad</div>
+    <div class="formula-eq">η = P_ab / P_zu × 100%</div>
+    <div class="formula-desc">Typisch 85–95% bei modernen Motoren. η = 1 wäre verlustfrei.</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'I_Y = I_Δ / 3 (Stern-Dreieck-Anlauf)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Motor</div>
+    <div class="formula-name">Anlaufstrom Stern-Dreieck</div>
+    <div class="formula-eq">I_Y = I_Δ / 3</div>
+    <div class="formula-desc">Stern-Anlauf reduziert Strom auf 1/3 des Dreieck-Anlaufstroms. Spannung auf U/√3.</div>
+  </div>
+
+  <div class="formula-cat-title">🔄 Transformator</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'ü = U1/U2 = N1/N2 = I2/I1')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Transformator</div>
+    <div class="formula-name">Übersetzungsverhältnis</div>
+    <div class="formula-eq">ü = U1/U2 = N1/N2 = I2/I1</div>
+    <div class="formula-desc">Achtung: Strom ist umgekehrt. Hohe Spannung = niedriger Strom (Leistung konstant).</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'I0 ≈ 3-10% von I_N')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Transformator</div>
+    <div class="formula-name">Leerlaufstrom</div>
+    <div class="formula-eq">I0 ≈ 3–10% von I_N</div>
+    <div class="formula-desc">Magnetisierungsstrom im Leerlauf. Bestimmt aus Leerlaufversuch.</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'u_k = U_k/U_N × 100% (typisch 4-6%)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Transformator</div>
+    <div class="formula-name">Kurzschlussspannung</div>
+    <div class="formula-eq">u_k = U_k / U_N × 100%</div>
+    <div class="formula-desc">Typisch 4–6%. Bestimmt den Kurzschlussstrom. Aus Kurzschlussversuch.</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'η = P2/(P2 + P_Fe + P_Cu) × 100%')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Transformator</div>
+    <div class="formula-name">Wirkungsgrad Trafo</div>
+    <div class="formula-eq">η = P2 / (P2 + P_Fe + P_Cu) × 100%</div>
+    <div class="formula-desc">P_Fe = Eisenverluste (lastunabh.), P_Cu = Kupferverluste (lastabh.)</div>
+  </div>
+
+  <div class="formula-cat-title">🔌 Leitungsberechnung</div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'A_min nach Tabelle (I_zul ≥ I_B)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Leitung</div>
+    <div class="formula-name">Querschnitt Wärmegrenze</div>
+    <div class="formula-eq">I_zul ≥ I_B</div>
+    <div class="formula-desc">I_zul aus Tabelle (Verlegeart, Häufung). I_B = Betriebsstrom. Mindestquerschnitt wählen.</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'A = (2 × I × L) / (κ × ΔU_zul) | κ(Cu)=56, κ(Al)=35 m/Ω·mm²')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Leitung</div>
+    <div class="formula-name">Querschnitt Spannungsfall</div>
+    <div class="formula-eq">A = (2 × I × L) / (κ × ΔU_zul)</div>
+    <div class="formula-desc">κ(Cu) = 56 m/(Ω·mm²) · κ(Al) = 35 m/(Ω·mm²) · L = einfache Länge [m]</div>
+  </div>
+
+  <div class="formula-card">
+    <button class="formula-copy" onclick="copyFormula(this,'Z_S ≤ U_0 / I_a (Schleifenimpedanz)')" title="Kopieren">⎘</button>
+    <div class="formula-cat-badge">Leitung</div>
+    <div class="formula-name">Prüfwert Schleifenimpedanz</div>
+    <div class="formula-eq">Z_S ≤ U_0 / I_a</div>
+    <div class="formula-desc">U_0 = Nennspannung [V] · I_a = Auslösestrom des Schutzorgans [A]</div>
+  </div>
+
+</main>
+
+<!-- ===================== SCREEN 5: AP-CHECK ===================== -->
+<main id="s-ap" class="screen">
+
+  <div class="inner-tabs">
+    <button class="inner-tab on" onclick="apSwitch('ap1')">AP 1</button>
+    <button class="inner-tab" onclick="apSwitch('ap2')">AP 2</button>
+  </div>
+
+  <!-- AP1 Panel -->
+  <div class="ap-panel on" id="ap-panel-ap1">
+    <div class="ap-progress-wrap">
+      <div class="ap-prog-label">
+        <span class="ap-prog-text">Fortschritt AP 1</span>
+        <span class="ap-prog-val" id="ap-ap1-prog">0 / 20 erledigt</span>
+      </div>
+      <div class="ap-progress-bar-bg">
+        <div class="ap-progress-bar" id="ap-ap1-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="ap-list" id="ap-ap1">
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="0" onchange="apSave('ap1')"><span class="ap-item-text">Grundgrößen: U, I, R, P, W berechnen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="1" onchange="apSave('ap1')"><span class="ap-item-text">Reihen- und Parallelschaltung von Widerständen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="2" onchange="apSave('ap1')"><span class="ap-item-text">Ohmsches Gesetz und Kirchhoffsche Gesetze</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="3" onchange="apSave('ap1')"><span class="ap-item-text">Leitungsquerschnitt berechnen (Spannungsfall + Wärme)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="4" onchange="apSave('ap1')"><span class="ap-item-text">Schutzarten IP-Code erklären (beide Ziffern)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="5" onchange="apSave('ap1')"><span class="ap-item-text">Schutzklassen I, II, III unterscheiden</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="6" onchange="apSave('ap1')"><span class="ap-item-text">FI-Schutzschalter: Wirkprinzip, Auslösestrom, Einbauort</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="7" onchange="apSave('ap1')"><span class="ap-item-text">Leitungsschutzschalter Typen B, C, D erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="8" onchange="apSave('ap1')"><span class="ap-item-text">Netzsysteme TN-C, TN-S, TN-C-S, TT, IT benennen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="9" onchange="apSave('ap1')"><span class="ap-item-text">Sicherheitsregeln nach VDE 0105 aufzählen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="10" onchange="apSave('ap1')"><span class="ap-item-text">Prüfungen nach VDE 0100-600 benennen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="11" onchange="apSave('ap1')"><span class="ap-item-text">Schaltplan lesen: Steuerstromkreis + Hauptstromkreis</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="12" onchange="apSave('ap1')"><span class="ap-item-text">Schützschaltung mit Selbsthaltung erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="13" onchange="apSave('ap1')"><span class="ap-item-text">Wechselstromgrößen: Effektiv-, Spitzen-, Mittelwert</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="14" onchange="apSave('ap1')"><span class="ap-item-text">cos φ erklären und Blindleistungskompensation</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="15" onchange="apSave('ap1')"><span class="ap-item-text">Stern-Dreieck-Anlauf: Zweck und Ablauf</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="16" onchange="apSave('ap1')"><span class="ap-item-text">Drehstromasynchronmotor: Aufbau und Wirkprinzip</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="17" onchange="apSave('ap1')"><span class="ap-item-text">Transformator: Übersetzungsverhältnis berechnen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="18" onchange="apSave('ap1')"><span class="ap-item-text">DGUV V3 Prüffristen kennen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="19" onchange="apSave('ap1')"><span class="ap-item-text">Schutzkleinspannung SELV und PELV unterscheiden</span></label>
+    </div>
+  </div>
+
+  <!-- AP2 Panel -->
+  <div class="ap-panel" id="ap-panel-ap2">
+    <div class="ap-progress-wrap">
+      <div class="ap-prog-label">
+        <span class="ap-prog-text">Fortschritt AP 2</span>
+        <span class="ap-prog-val" id="ap-ap2-prog">0 / 15 erledigt</span>
+      </div>
+      <div class="ap-progress-bar-bg">
+        <div class="ap-progress-bar" id="ap-ap2-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="ap-list" id="ap-ap2">
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="0" onchange="apSave('ap2')"><span class="ap-item-text">Fehlerdiagnose systematisch durchführen (Sicht, Messen, Funktion)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="1" onchange="apSave('ap2')"><span class="ap-item-text">Schleifenimpedanz messen und auswerten</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="2" onchange="apSave('ap2')"><span class="ap-item-text">Isolationswiderstand messen (Messvorschrift, Grenzwerte)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="3" onchange="apSave('ap2')"><span class="ap-item-text">FI-Schutzschalter prüfen und Auslösezeit messen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="4" onchange="apSave('ap2')"><span class="ap-item-text">Prüfprotokoll nach VDE 0100-600 erstellen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="5" onchange="apSave('ap2')"><span class="ap-item-text">Frequenzumrichter parametrieren (U/f-Kennlinie, Rampen)</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="6" onchange="apSave('ap2')"><span class="ap-item-text">SPS-Programm in KOP/FUP lesen und erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="7" onchange="apSave('ap2')"><span class="ap-item-text">Motorschutzrelais einstellen und testen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="8" onchange="apSave('ap2')"><span class="ap-item-text">Thermografie-Befund interpretieren</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="9" onchange="apSave('ap2')"><span class="ap-item-text">Energiemessung: Wirkarbeit, Scheinleistung, cos φ messen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="10" onchange="apSave('ap2')"><span class="ap-item-text">Beleuchtungsplanung: Lichtstrom, Beleuchtungsstärke berechnen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="11" onchange="apSave('ap2')"><span class="ap-item-text">Photovoltaik-Anlage: Komponenten und Schutzmaßnahmen erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="12" onchange="apSave('ap2')"><span class="ap-item-text">Not-Halt Schaltung nach EN 13850 Kategorie 0/1 erklären</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="13" onchange="apSave('ap2')"><span class="ap-item-text">Instandhaltungsstrategie auswählen und begründen</span></label>
+      <label class="ap-item"><input type="checkbox" class="ap-check" data-id="14" onchange="apSave('ap2')"><span class="ap-item-text">Technische Dokumentation: Schaltplan, Klemmenplan, Revisionsunterlagen</span></label>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===================== APP-SWITCHER DRAWER ===================== -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="drawerClose()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hdr">
+    <span class="drawer-title">⊞ VOLTECH Suite</span>
+    <button class="drawer-close" onclick="drawerClose()">✕</button>
+  </div>
+  <div class="drawer-apps">
+    <a class="drawer-app" href="VOLTECH-mechatronik-pro.html">
+      <span class="drawer-app-icon">⚙️</span>
+      <div><div class="drawer-app-name">Mechatronik Pro</div><div class="drawer-app-sub">Mechatroniker-Ausbildung</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-lern-basis.html">
+      <span class="drawer-app-icon">📚</span>
+      <div><div class="drawer-app-name">Lernmodus</div><div class="drawer-app-sub">Karteikarten & Grundlagen</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-lern-extra.html">
+      <span class="drawer-app-icon">🎤</span>
+      <div><div class="drawer-app-name">AP2-Extra</div><div class="drawer-app-sub">Mündliche Prüfungsvorbereitung</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-sps.html">
+      <span class="drawer-app-icon">🔌</span>
+      <div><div class="drawer-app-name">SPS-Trainer</div><div class="drawer-app-sub">Speicherprogrammierbare Steuerung</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-berichtsheft.html">
+      <span class="drawer-app-icon">📓</span>
+      <div><div class="drawer-app-name">Berichtsheft</div><div class="drawer-app-sub">Ausbildungsnachweise</div></div>
+    </a>
+    <a class="drawer-app" href="VOLTECH-tools2.html">
+      <span class="drawer-app-icon">🧰</span>
+      <div><div class="drawer-app-name">Lerntools</div><div class="drawer-app-sub">Rechner & Hilfsmittel</div></div>
+    </a>
+    <a class="drawer-app active" href="#">
+      <span class="drawer-app-icon">⚡</span>
+      <div><div class="drawer-app-name">AMPERE</div><div class="drawer-app-sub">Elektroniker Betriebstechnik</div></div>
+      <span class="drawer-app-badge">Aktiv</span>
+    </a>
+  </div>
+  <div class="drawer-footer">
+    <a href="index.html">Arc Studio Website ↗</a>
+  </div>
+</div>
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+// ── Theme Toggle ────────────────────────────────────────────
+(function(){
+  var KEY = 'amp_theme';
+  var isLight = localStorage.getItem(KEY) === 'light';
+  function apply(l) {
+    document.documentElement.classList.toggle('lm', l);
+    var b = document.getElementById('thm-btn');
+    if(b) b.textContent = l ? '☀️' : '🌙';
+  }
+  if(isLight) document.documentElement.classList.add('lm');
+  window.thmToggle = function() {
+    isLight = !isLight;
+    localStorage.setItem(KEY, isLight ? 'light' : 'dark');
+    apply(isLight);
+  };
+  apply(isLight);
+})();
+
+// ── Screen Navigation ───────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('on'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('on'); });
+  var sc = document.getElementById(id);
+  if(sc) sc.classList.add('on');
+  var tb = document.querySelector('[data-screen="' + id + '"]');
+  if(tb) tb.classList.add('on');
+  window.scrollTo(0, 0);
+}
+
+// ── Drawer ──────────────────────────────────────────────────
+function drawerOpen() {
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('drawer-overlay').classList.add('on');
+}
+function drawerClose() {
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('drawer-overlay').classList.remove('on');
+}
+
+// ── Open Lernfeld ───────────────────────────────────────────
+function openLf(id) {
+  showScreen('s-lern');
+  var el = document.getElementById(id);
+  if(el) {
+    el.setAttribute('open', '');
+    setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+  }
+}
+
+// ── Quiz Array ──────────────────────────────────────────────
+var QUIZ = [
+  { q: 'Was bedeutet die Schutzart IP54?', opts: ['Staubgeschützt und spritzwassergeschützt','Wasserdicht und stoßfest','Druckwasserdicht und staubdicht','Feuchtigkeitsgeschützt und schlagfest'], c: 0, e: 'Erste Ziffer 5 = Staubgeschützt (kein schädlicher Staub), zweite Ziffer 4 = Spritzwassergeschützt (aus allen Richtungen).' },
+  { q: 'Welcher Auslösestrom hat ein personenschützender FI-Schutzschalter?', opts: ['10 mA','30 mA','100 mA','300 mA'], c: 1, e: '30 mA ist der Standardwert für Personenschutz. Ab ca. 30 mA können Herzrhythmusstörungen auftreten.' },
+  { q: 'Was ist die Synchrondrehzahl eines 4-poligen Motors bei 50 Hz?', opts: ['3000 U/min','1500 U/min','1000 U/min','750 U/min'], c: 1, e: 'n_s = (60 × f) / p = (60 × 50) / 2 = 1500 U/min. 4 Pole = 2 Polpaare (p = 2).' },
+  { q: 'Welche Schutzklasse hat ein Gerät mit Schutzisolierung (doppelte Isolation)?', opts: ['Schutzklasse I','Schutzklasse II','Schutzklasse III','Schutzklasse 0'], c: 1, e: 'SK II = doppelte oder verstärkte Isolierung. Kein Schutzleiteranschluss erforderlich. Symbol: Quadrat im Quadrat.' },
+  { q: 'Wie lautet das Übersetzungsverhältnis eines Transformators?', opts: ['ü = U1/U2 = N1/N2 = I2/I1','ü = U2/U1 = N1/N2','ü = I1/I2 = U1/U2','ü = P1/P2'], c: 0, e: 'ü = U1/U2 = N1/N2 = I2/I1. Achtung: Beim Strom ist es umgekehrt — hohe Spannung = geringer Strom.' },
+  { q: 'Was prüfen die 5 Sicherheitsregeln nach VDE 0105?', opts: ['Geräte auf Beschädigungen','Schutzleiter auf Durchgang','Freischalten, Sichern, Spannungsfreiheit, Erden, Abdecken','Isolationswiderstand und Schleifenimpedanz'], c: 2, e: 'Die 5 Sicherheitsregeln: 1. Freischalten, 2. Gegen Wiedereinschalten sichern, 3. Spannungsfreiheit feststellen, 4. Erden und kurzschließen, 5. Benachbarte spannungsführende Teile abdecken.' },
+  { q: 'Was bedeutet TN-S Netz?', opts: ['Träger-Null-System ohne Schutzleiter','Getrennte Neutral- und Schutzleiter vom Transformator bis zur Anlage','Gemeinsamer PEN-Leiter bis zur Abzweigdose','Isoliertes Netz mit Erdüberwachung'], c: 1, e: 'TN-S: Separate Neutral- (N) und Schutzleiter (PE) im gesamten System. Sicherster TN-Typ, da keine Mischung von N und PE.' },
+  { q: 'Welche Prüfung misst den Widerstand des Schutzleiters?', opts: ['Schutzleiterwiderstandsmessung','Isolationswiderstandsmessung','Schleifenimpedanzmessung','FI-Auslöseprüfung'], c: 0, e: 'Die Schutzleiterwiderstandsmessung prüft den niederohmigen Durchgang des PE-Leiters von der Haupterdungsschiene bis zum Betriebsmittel.' },
+  { q: 'Ab welchem Strom löst ein Leitungsschutzschalter Typ B unverzögert aus?', opts: ['2-facher Nennstrom','3-facher Nennstrom','3–5-facher Nennstrom','10–20-facher Nennstrom'], c: 2, e: 'Typ B: 3–5 × I_N (magnetische Auslösung). Typ C: 5–10 × I_N. Typ D: 10–20 × I_N. B für ohmsche Lasten, C für Motoren.' },
+  { q: 'Was ist Schlupf bei einem Asynchronmotor?', opts: ['Differenz zwischen Strom und Spannung','Differenz zwischen Synchron- und Läuferdrehzahl relativ zur Synchrondrehzahl','Verlust durch Wirbelströme','Phasenverschiebung zwischen U und I'], c: 1, e: 's = (n_s - n) / n_s × 100%. Im Nennbetrieb ca. 2–8%. Kein Schlupf = kein Drehmoment. Schlupf = 100% → Motor steht.' },
+  { q: 'Welcher Mindest-Isolationswiderstand gilt für Neuanlagen nach VDE 0100-600?', opts: ['0,1 MΩ','0,5 MΩ','1 MΩ','10 MΩ'], c: 2, e: 'Neuanlagen: mind. 1 MΩ. Bestandsanlagen: mind. 0,5 MΩ. Messung mit 500 V DC zwischen Leitern und Erde.' },
+  { q: 'Was ist Blindleistung?', opts: ['Energie die zwischen Quelle und Last pendelt ohne Arbeit zu verrichten','Verlustleistung in Leitern','Reaktanz eines Kondensators','Leistung die als Wärme abgegeben wird'], c: 0, e: 'Q = S × sin φ, Einheit VAr. Blindleistung pendelt zwischen Generator und induktiven/kapazitiven Lasten — kostet Leitungskapazität, verrichtet keine Arbeit.' },
+  { q: 'Wie wird Blindleistung kompensiert?', opts: ['Durch Drosselspulen parallel zur Last','Durch Kondensatoren parallel zur Last','Durch Widerstände in Reihe','Durch Transformatoren'], c: 1, e: 'Kondensatoren erzeugen kapazitive Blindleistung, die die induktive Blindleistung von Motoren kompensiert. Ziel: cos φ → 1.' },
+  { q: 'Was bedeutet SELV?', opts: ['Sicherheits-Erdungs-Leitungs-Verbindung','Schutzerdung für Elektrische Leistungsverteiler','Safety Extra Low Voltage — Schutzkleinspannung ohne Erde','Selektive Erdung für Lastverteilung'], c: 2, e: 'SELV: Schutzkleinspannung (max. 50 V AC / 120 V DC), galvanisch von Netz getrennt, ohne Erdanschluss. Sicherster Bereich z.B. für Badezimmer-Rasiersteckdosen.' },
+  { q: 'Welches Messgerät misst Ströme ohne Leitungsunterbrechung?', opts: ['Zangenamperemeter (Stromzange)','Multimeter','Isolationsmessgerät','Schleifenimpedanzmessgerät'], c: 0, e: 'Die Stromzange nutzt das Magnetfeld des stromdurchflossenen Leiters. Leiter wird von der Zange umfasst — kein Öffnen des Stromkreises nötig.' },
+  { q: 'Was ist die maximale Spannungsabfall-Grenze in einer Hausinstallation?', opts: ['1 %','3 %','5 %','10 %'], c: 1, e: 'Nach VDE 0100-520 max. 3 % vom Übergabepunkt bis zur Steckdose. Gesamtnetz (inkl. Anschlussleitung): max. 5 %.' },
+  { q: 'Bei welcher Prüfung wird die Wirksamkeit des Fehlerschutzes geprüft?', opts: ['Sichtprüfung','Widerstandsmessung des Schutzleiters','Schleifenimpedanzmessung','Isolationswiderstandsmessung'], c: 2, e: 'Die Schleifenimpedanz-Messung (Z_S) bestimmt den Kurzschlussstrom im Fehlerfall: I_k = U_N / Z_S. Damit wird geprüft ob der Schutzschalter sicher auslöst.' },
+  { q: 'Wie lautet die Formel für die Leitungsquerschnittsberechnung (Kupfer)?', opts: ['A = (2 × I × L) / (κ × ΔU)','A = (I × L) / (κ × ΔU)','A = (U × L) / (κ × I)','A = (P × L) / (κ × U²)'], c: 0, e: 'A = (2 × I × L) / (κ × ΔU). Faktor 2 für Hin- und Rückleiter. κ(Cu) = 56 m/(Ω·mm²), κ(Al) = 35 m/(Ω·mm²).' },
+  { q: 'Was ist der Unterschied zwischen Schütz und Relais?', opts: ['Kein Unterschied — sind identisch','Schütze sind für größere Lasten und haben Lichtbogenlöschkammern','Relais schalten höhere Spannungen','Schütze haben keine Hilfskontakte'], c: 1, e: 'Schütze: für Hauptstromkreise (Motoren, große Lasten), Lichtbogenlöschung, viele Hilfskontakte. Relais: Hilfs-/Steuerstromkreise, kleinere Lasten.' },
+  { q: 'Wozu dient ein Motorschutzrelais?', opts: ['Kurzschlussschutz des Motors','Überspannungsschutz','Thermischer Überlastschutz des Motors','Phasenausfall-Erkennung allein'], c: 2, e: 'Thermischer Überlastschutz: Bimetall-Elemente erwärmen sich proportional zum Strom. Bei Dauerstrom > Einstellwert → Auslösung nach Zeit. Einstellung: 0,8–1,25 × I_N.' },
+  { q: 'Was ist ein Wendeschütz?', opts: ['Zwei verriegelte Schütze zur Drehrichtungsumkehr','Ein Schütz mit eingebautem Überlastrelais','Stern-Dreieck-Schütz für Sanftanlauf','Schütz mit elektronischer Steuerung'], c: 0, e: 'Zwei Schütze (K1 Rechtslauf, K2 Linkslauf) mit elektrischer und mechanischer Verriegelung. K1 und K2 dürfen nie gleichzeitig anziehen (Kurzschluss!).' },
+  { q: 'Auf welchem Prinzip basiert der FI-Schutzschalter?', opts: ['Spannungsmessung zwischen N und PE','Summenstromverfahren — Differenz von I_hin und I_rück','Widerstandsmessung des Schutzleiters','Bimetall-Auslösung bei Überstrom'], c: 1, e: 'Im Summenstromwandler heben sich I_hin und I_rück auf, wenn kein Fehlerstrom fließt. Fehlerströme (>30 mA) erzeugen ein Differenz-Magnetfeld → Auslösung.' },
+  { q: 'Was ist cos φ (Leistungsfaktor)?', opts: ['Verhältnis Wirkstrom zu Blindstrom','Effizienz eines Transformators','Verhältnis Wirkleistung zu Scheinleistung','Phasenwinkel zwischen Strom und Spannung'], c: 2, e: 'cos φ = P/S = Wirkleistung/Scheinleistung. cos φ = 1 → rein ohmscher Verbraucher. cos φ < 1 → induktive oder kapazitive Last.' },
+  { q: 'Welche Lichtausbeute haben moderne LED-Lampen?', opts: ['20–40 lm/W','40–60 lm/W','60–80 lm/W','80–160 lm/W'], c: 3, e: 'Moderne LEDs erreichen 80–160 lm/W. Zum Vergleich: Glühlampe 10–15 lm/W, Leuchtstofflampe 50–100 lm/W.' },
+  { q: 'Wie oft müssen ortsfeste elektrische Anlagen nach DGUV V3 geprüft werden?', opts: ['Jährlich','Alle 4 Jahre','Alle 6 Jahre','Alle 10 Jahre'], c: 1, e: 'Ortsfeste Anlagen nach DGUV V3: normalerweise alle 4 Jahre. Verlängerung auf 8 Jahre möglich. Ortsveränderliche Geräte je nach Nutzung: 6–24 Monate.' },
+  { q: 'Was bedeutet IP2X bei Schutzarten?', opts: ['Berührungsschutz gegen Finger (≥12 mm Durchmesser)','Vollständiger Staubschutz','Schutz gegen Fremdkörper >2 mm','Schutz gegen Tropfwasser'], c: 0, e: 'Erste Ziffer 2 = Schutz gegen feste Fremdkörper ≥12 mm (Finger). X bedeutet keine Anforderung an die zweite Ziffer (Wasserschutz).' },
+  { q: 'Was ist der Unterschied zwischen PELV und SELV?', opts: ['PELV ist sicherer als SELV','Kein Unterschied in der Praxis','PELV ist geerdet, SELV ist nicht geerdet','PELV für Innenräume, SELV für Außenanlagen'], c: 2, e: 'SELV: Keine Verbindung zu Erde (floating). PELV: Functional Earth — eine Seite geerdet (z.B. für EMV). Beide max. 50 V AC / 120 V DC.' },
+  { q: 'Welche Schaltung verwendet man für Stern-Dreieck-Anlauf?', opts: ['Direkt einschalten und sofort auf Dreieck umschalten','Erst in Stern anlassen (reduzierter Strom), dann auf Dreieck umschalten','Erst in Dreieck anlassen, dann in Stern weiterfahren','Immer in Dreieck betreiben'], c: 1, e: 'Y-Start: Motor läuft mit U/√3 ≈ 58% der Nennspannung → Anlaufstrom auf 1/3 reduziert. Nach Hochlauf Umschaltung auf Δ-Betrieb mit Nennspannung.' },
+  { q: 'Was muss bei der Schutztrennung eingehalten werden?', opts: ['Nur ein Verbraucher pro Trenntrafo, galvanische Trennung, max. 500 VA','Mehrere Verbraucher möglich, mind. 1 MΩ Isolation','FI-Schutzschalter zwingend erforderlich','Nur für Schutzklasse I Geräte'], c: 0, e: 'Schutztrennung nach VDE 0100-410: Trenntrafo 1:1, nur ein Verbraucher, galvanische Trennung, keine Verbindung zur Erde. Typisch: Rasiersteckdose im Bad.' },
+  { q: 'Welche Frequenz hat das europäische Stromnetz?', opts: ['50 Hz ± 5 Hz','50 Hz ± 0,2 Hz','60 Hz','50 Hz ± 2 Hz'], c: 1, e: '50 Hz ± 0,2 Hz (strenge Toleranz). Frequenzabweichungen zeigen Ungleichgewicht zwischen Erzeugung und Verbrauch an. USA/Kanada: 60 Hz.' },
+  { q: 'Was ist Thermografie und wofür wird sie eingesetzt?', opts: ['Messung der Leitungstemperatur','Wärmeschutzmaßnahme an Kabeln','Berührungslose Temperaturmessung zur Fehlerdiagnose (Hotspots)','Isolationsprüfung durch Wärmeeinwirkung'], c: 2, e: 'Infrarot-Thermografie erkennt Hotspots an Klemmen, Leitungen und Schaltgeräten berührungslos. Überhitzung → erhöhter Widerstand → Brandgefahr. Ideal für Präventivwartung.' },
+  { q: 'Wie berechnet sich die Scheinleistung?', opts: ['S = U × I [VA]','S = U × I × cos φ','S = U² / R','S = P + Q'], c: 0, e: 'S = U × I [VA]. Wirkleistung: P = S × cos φ [W]. Blindleistung: Q = S × sin φ [VAr]. Pythagoras: S² = P² + Q².' },
+  { q: 'Was ist ein PTC-Thermistor im Motor?', opts: ['Kondensator zur Anlaufhilfe','Temperaturfühler in der Motorwicklung, der bei Übertemperatur auslöst','Widerstand zur Strombegrenzung','Spannungsbegrenzer'], c: 1, e: 'PTC (Positive Temperature Coefficient): Widerstand steigt stark bei Übertemperatur. Eingebaut in Motorwicklung → Motorschutzrelais wertet aus → Schutz vor Wicklungsschaden.' },
+  { q: 'Was bedeutet Selektivität bei Schutzorganen?', opts: ['Alle Schutzorgane lösen gleichzeitig aus','Nur der größte Schutzschalter löst aus','Das dem Fehler nächste Schutzorgan löst aus, übergeordnete bleiben ein','Schutzorgane reagieren nur auf Kurzschlüsse'], c: 2, e: 'Selektivität: Fehlerstrom löst nur das nächste vorgeordnete Schutzorgan aus. Erreicht durch gestaffelte Kennlinien → minimale Abschaltung.' },
+  { q: 'Welche Schutzmaßnahme gilt als sicherste gegen elektrischen Schlag?', opts: ['Schutzkleinspannung SELV/PELV','Schutzerdung','Fehlerstromschutzschalter','Schutzisolierung'], c: 0, e: 'SELV/PELV (max. 50 V AC): Selbst bei direktem Kontakt ist der Strom physiologisch unbedenklich. Alle anderen Maßnahmen können im Fehlerfall noch gefährliche Spannungen haben.' }
+];
+
+// ── Quiz Logic ──────────────────────────────────────────────
+var quizQ = [], quizIdx = 0, quizScore = 0;
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function quizStart() {
+  quizQ = shuffle(QUIZ).slice(0, 20);
+  quizIdx = 0;
+  quizScore = 0;
+  document.getElementById('quiz-start').style.display = 'none';
+  document.getElementById('quiz-end').style.display = 'none';
+  document.getElementById('quiz-run').style.display = 'block';
+  showQuestion(0);
+}
+
+function showQuestion(idx) {
+  var q = quizQ[idx];
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-counter').textContent = 'Frage ' + (idx + 1) + ' / 20';
+  document.getElementById('q-prog').style.width = ((idx / 20) * 100) + '%';
+  document.getElementById('q-exp').style.display = 'none';
+  document.getElementById('q-exp').textContent = '';
+  document.getElementById('q-next').style.display = 'none';
+
+  var optsEl = document.getElementById('q-opts');
+  optsEl.innerHTML = '';
+  var shuffledOpts = q.opts.map(function(o, i) { return { text: o, orig: i }; });
+  shuffledOpts = shuffle(shuffledOpts);
+
+  shuffledOpts.forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt.text;
+    var isCorrect = (opt.orig === q.c);
+    btn.onclick = function() { quizAnswer(btn, isCorrect, q.e, optsEl, shuffledOpts, q.c); };
+    optsEl.appendChild(btn);
+  });
+}
+
+function quizAnswer(chosenBtn, isCorrect, explanation, optsEl, shuffledOpts, correctOrig) {
+  var btns = optsEl.querySelectorAll('.quiz-opt');
+  btns.forEach(function(b) { b.disabled = true; });
+
+  if(isCorrect) {
+    chosenBtn.classList.add('correct');
+    quizScore++;
+  } else {
+    chosenBtn.classList.add('wrong');
+    btns.forEach(function(b, i) {
+      if(shuffledOpts[i].orig === correctOrig) b.classList.add('correct');
+    });
+  }
+
+  var expEl = document.getElementById('q-exp');
+  expEl.textContent = explanation;
+  expEl.style.display = 'block';
+  document.getElementById('q-next').style.display = 'block';
+}
+
+function quizNext() {
+  quizIdx++;
+  if(quizIdx < 20) {
+    showQuestion(quizIdx);
+  } else {
+    quizEnd();
+  }
+}
+
+function quizEnd() {
+  document.getElementById('quiz-run').style.display = 'none';
+  document.getElementById('quiz-end').style.display = 'block';
+  document.getElementById('end-score').textContent = quizScore;
+  document.getElementById('end-sub').textContent = 'von 20 Fragen richtig (' + Math.round(quizScore/20*100) + '%)';
+
+  var prev = parseInt(localStorage.getItem('amp_quiz_hs') || '0');
+  var isNew = quizScore > prev;
+  if(isNew) localStorage.setItem('amp_quiz_hs', quizScore);
+  document.getElementById('end-hs').textContent = isNew ? '🏆 Neuer Highscore!' : ('Highscore: ' + prev + '/20');
+
+  updateDashStats();
+}
+
+// ── Daily Question ──────────────────────────────────────────
+var DQ_IDX = Math.floor(Math.random() * QUIZ.length);
+var dqRevealed = false;
+
+document.getElementById('dq-q').textContent = QUIZ[DQ_IDX].q;
+
+function dqReveal() {
+  if(dqRevealed) return;
+  dqRevealed = true;
+  document.getElementById('dq-answer').textContent = QUIZ[DQ_IDX].opts[QUIZ[DQ_IDX].c] + ' — ' + QUIZ[DQ_IDX].e;
+  document.getElementById('dq-answer').style.display = 'block';
+  document.getElementById('dq-toggle').style.display = 'none';
+}
+
+// ── Dashboard Stats ─────────────────────────────────────────
+function updateDashStats() {
+  var hs = localStorage.getItem('amp_quiz_hs');
+  document.getElementById('stat-hs').textContent = hs ? (hs + '/20') : '—';
+
+  var streak = localStorage.getItem('amp_streak') || '0';
+  document.getElementById('stat-streak').textContent = streak;
+
+  var cardsDone = localStorage.getItem('amp_cards_done') || '0';
+  document.getElementById('stat-cards').textContent = cardsDone;
+
+  var hsBadge = document.getElementById('hs-badge');
+  if(hsBadge) hsBadge.textContent = '🏆 Highscore: ' + (hs ? hs + '/20' : '—');
+}
+
+// ── Streak Logic ────────────────────────────────────────────
+(function() {
+  var today = new Date().toISOString().slice(0, 10);
+  var last = localStorage.getItem('amp_last_visit');
+  var streak = parseInt(localStorage.getItem('amp_streak') || '0');
+
+  if(!last) {
+    streak = 1;
+  } else if(last !== today) {
+    var lastDate = new Date(last);
+    var todayDate = new Date(today);
+    var diffDays = Math.round((todayDate - lastDate) / (1000*60*60*24));
+    if(diffDays === 1) {
+      streak++;
+    } else if(diffDays > 1) {
+      streak = 1;
+    }
+  }
+
+  localStorage.setItem('amp_last_visit', today);
+  localStorage.setItem('amp_streak', streak);
+})();
+
+// ── Formula Copy ────────────────────────────────────────────
+function copyFormula(btn, text) {
+  if(navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() {
+      var orig = btn.textContent;
+      btn.textContent = '✓';
+      btn.style.color = 'var(--ok)';
+      btn.style.borderColor = 'var(--ok)';
+      setTimeout(function() {
+        btn.textContent = orig;
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 1200);
+    });
+  }
+
+  // Track cards done
+  var done = parseInt(localStorage.getItem('amp_cards_done') || '0');
+  localStorage.setItem('amp_cards_done', done + 1);
+  updateDashStats();
+}
+
+// ── AP Check ───────────────────────────────────────────────
+var AP_KEYS = { ap1: 'amp_ap1_checks', ap2: 'amp_ap2_checks' };
+var currentAp = 'ap1';
+
+function apSwitch(type) {
+  currentAp = type;
+  document.querySelectorAll('.ap-panel').forEach(function(p) { p.classList.remove('on'); });
+  document.querySelectorAll('.inner-tab').forEach(function(b) { b.classList.remove('on'); });
+  document.getElementById('ap-panel-' + type).classList.add('on');
+
+  var tabs = document.querySelectorAll('.inner-tab');
+  if(type === 'ap1') tabs[0].classList.add('on');
+  else tabs[1].classList.add('on');
+
+  apLoad(type);
+}
+
+function apLoad(type) {
+  var saved = JSON.parse(localStorage.getItem(AP_KEYS[type]) || '{}');
+  document.querySelectorAll('#ap-' + type + ' .ap-check').forEach(function(cb) {
+    cb.checked = saved[cb.dataset.id] || false;
+    var label = cb.parentElement.querySelector('.ap-item-text');
+    if(label) label.classList.toggle('done', cb.checked);
+  });
+  apUpdateProgress(type);
+}
+
+function apSave(type) {
+  var data = {};
+  document.querySelectorAll('#ap-' + type + ' .ap-check').forEach(function(cb) {
+    data[cb.dataset.id] = cb.checked;
+    var label = cb.parentElement.querySelector('.ap-item-text');
+    if(label) label.classList.toggle('done', cb.checked);
+  });
+  localStorage.setItem(AP_KEYS[type], JSON.stringify(data));
+  apUpdateProgress(type);
+}
+
+function apUpdateProgress(type) {
+  var all = document.querySelectorAll('#ap-' + type + ' .ap-check').length;
+  var done = document.querySelectorAll('#ap-' + type + ' .ap-check:checked').length;
+  var el = document.getElementById('ap-' + type + '-prog');
+  if(el) el.textContent = done + ' / ' + all + ' erledigt';
+  var bar = document.getElementById('ap-' + type + '-bar');
+  if(bar) bar.style.width = (all > 0 ? (done/all*100) : 0) + '%';
+}
+
+// ── Init ────────────────────────────────────────────────────
+(function() {
+  updateDashStats();
+  apLoad('ap1');
+  apLoad('ap2');
+})();
+</script>
+
+<!-- PWA Service Worker -->
+<script>
+if(!location.hostname.includes('localhost') && !location.hostname.includes('127.0.0.1')) {
+  if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('pwa/sw.js').catch(function(){});
+  }
+}
+</script>
+
+</body>
+</html>
