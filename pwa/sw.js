@@ -3,7 +3,7 @@
 // Version: wird bei Änderungen hochgezählt → Cache wird erneuert
 // ══════════════════════════════════════════════════════════════
 
-var CACHE_NAME = 'voltiq-v5';
+var CACHE_NAME = 'voltiq-v6';
 
 var FILES_TO_CACHE = [
   '../voltiq.html',
@@ -18,6 +18,7 @@ var FILES_TO_CACHE = [
   '../VOLTECH-tools2.html',
   '../VOLTECH-ampere.html',
   '../VOLTECH-torque.html',
+  '../VOLTECH-ki.html',
   '../pwa/manifest.json'
 ];
 
