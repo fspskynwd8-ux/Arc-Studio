@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="lang-de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
@@ -236,6 +236,12 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
 .drawer-footer a{color:var(--ac);text-decoration:none;font-size:13px;font-weight:500;display:flex;align-items:center;gap:.3rem;}
 .drawer-footer a:hover{color:var(--acd);}
 
+/* ── Language ──────────────────────────────────── */
+html.lang-en .de-only { display: none !important; }
+html.lang-de .en-only { display: none !important; }
+.lang-btn { font-size: 12px; font-weight: 700; padding: .35rem .65rem; border-radius: 8px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.5); cursor: pointer; letter-spacing: .04em; }
+.lang-btn:hover { background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); }
+
 </style>
 </head>
 <body>
@@ -249,6 +255,7 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
     <div class="logo-text">VOLT<span>IQ</span></div>
   </div>
   <button class="thm-btn" id="thm-btn" onclick="thmToggle()" title="Hell/Dunkel" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;">🌙</button>
+  <button class="lang-btn" id="lang-btn" onclick="toggleLang()">EN</button>
   <button onclick="drawerOpen()" title="Apps wechseln" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;color:var(--tx2);">⊞</button>
 </header>
 
@@ -375,7 +382,7 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
       <span class="tile-icon">⚙️</span>
       <div class="tile-info">
         <div class="tile-num">Tool-App</div>
-        <div class="tile-name">Profi-Rechner</div>
+        <div class="tile-name"><span class="de-only">Profi-Rechner</span><span class="en-only">Pro Calculator</span></div>
         <div class="tile-tag">DC/AC · Kurzschluss · FU · Kabelquerschnitt</div>
         <div class="tile-features">
           <span class="tile-feat">Prüfbericht &amp; IBN-Protokoll</span>
@@ -388,8 +395,8 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
 
   <a class="app-tile t-green" href="VOLTECH-lern-basis.html">
     <span class="tile-icon">📚</span>
-    <div class="tile-num">Lern-App</div>
-    <div class="tile-name">Lernmodus</div>
+    <div class="tile-num"><span class="de-only">Lern-App</span><span class="en-only">Learn App</span></div>
+    <div class="tile-name"><span class="de-only">Lernmodus</span><span class="en-only">Learn Mode</span></div>
     <div class="tile-features">
       <div class="tile-feat">Spaced Repetition</div>
       <div class="tile-feat">121 Quiz-Fragen</div>
@@ -400,8 +407,8 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
 
   <a class="app-tile t-orange" href="VOLTECH-berichtsheft.html">
     <span class="tile-icon">📓</span>
-    <div class="tile-num">Berichtsheft</div>
-    <div class="tile-name">Ausbildungsheft</div>
+    <div class="tile-num"><span class="de-only">Berichtsheft</span><span class="en-only">Report</span></div>
+    <div class="tile-name"><span class="de-only">Ausbildungsheft</span><span class="en-only">Training Log</span></div>
     <div class="tile-features">
       <div class="tile-feat">Mo–Fr Einträge</div>
       <div class="tile-feat">Textbausteine</div>
@@ -413,7 +420,7 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
   <a class="app-tile t-purple" href="VOLTECH-sps.html">
     <span class="tile-icon">🔧</span>
     <div class="tile-num">SPS-App</div>
-    <div class="tile-name">SPS Trainer</div>
+    <div class="tile-name"><span class="de-only">SPS Trainer</span><span class="en-only">PLC Trainer</span></div>
     <div class="tile-features">
       <div class="tile-feat">KOP Lernen &amp; Trainer</div>
       <div class="tile-feat">Quiz &amp; Simulator</div>
@@ -423,7 +430,7 @@ body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh
 
   <a class="app-tile t-teal" href="VOLTECH-tools2.html">
     <span class="tile-icon">🔬</span>
-    <div class="tile-num">Lerntools</div>
+    <div class="tile-num"><span class="de-only">Lerntools</span><span class="en-only">Learn Tools</span></div>
     <div class="tile-name">Extras</div>
     <div class="tile-features">
       <div class="tile-feat">95+ Vokabeln DE↔EN</div>
@@ -834,6 +841,23 @@ function backupStatus(msg, cls){
 // ─────────────────────────────────────────────────────────────────────
 function drawerOpen(){document.getElementById('drawer').classList.add('on');document.getElementById('drawer-overlay').classList.add('on');}
 function drawerClose(){document.getElementById('drawer').classList.remove('on');document.getElementById('drawer-overlay').classList.remove('on');}
+
+// ── Language Toggle ──────────────────────────────────────────
+var currentLang = localStorage.getItem('arc_lang') || 'de';
+(function initLang() {
+  document.documentElement.classList.toggle('lang-en', currentLang === 'en');
+  document.documentElement.classList.toggle('lang-de', currentLang === 'de');
+  var btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = currentLang === 'en' ? 'DE' : 'EN';
+})();
+function toggleLang() {
+  currentLang = currentLang === 'de' ? 'en' : 'de';
+  localStorage.setItem('arc_lang', currentLang);
+  document.documentElement.classList.toggle('lang-en', currentLang === 'en');
+  document.documentElement.classList.toggle('lang-de', currentLang === 'de');
+  var btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = currentLang === 'de' ? 'EN' : 'DE';
+}
 
 </script>
 </body>

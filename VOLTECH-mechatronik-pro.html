@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="lang-de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -866,6 +866,12 @@ input:focus,select:focus,textarea:focus{
 .drawer-footer a{color:var(--ac);text-decoration:none;font-size:13px;font-weight:500;display:flex;align-items:center;gap:.3rem;}
 .drawer-footer a:hover{color:var(--acd);}
 
+/* ── Language ──────────────────────────────────── */
+html.lang-en .de-only { display: none !important; }
+html.lang-de .en-only { display: none !important; }
+.lang-btn { font-size: 12px; font-weight: 700; padding: .35rem .65rem; border-radius: 8px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.5); cursor: pointer; letter-spacing: .04em; }
+.lang-btn:hover { background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); }
+
 </style>
 </head>
 <body>
@@ -885,6 +891,7 @@ input:focus,select:focus,textarea:focus{
   </div>
   <div class="hdr-badge">MECHATRONIK PRO</div>
   <button class="thm-btn" id="thm-btn" onclick="thmToggle()" title="Hell/Dunkel" style="width:32px;height:32px;border-radius:9px;background:rgba(128,128,128,.1);border:1px solid var(--br2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;font-size:15px;margin-right:4px;">🌙</button>
+  <button class="lang-btn" id="lang-btn" onclick="toggleLang()">EN</button>
   <button class="sw-btn" id="sw-open-btn" onclick="drawerOpen()" title="Apps wechseln">⊞</button>
 </header>
 
@@ -944,25 +951,25 @@ input:focus,select:focus,textarea:focus{
 
 
 <div class="nav">
-  <button class="nt on" data-panel="dc">⚡ DC Gleichstrom</button>
-  <button class="nt" data-panel="ac">〜 AC Wechselstrom</button>
-  <button class="nt" data-panel="mw">📈 Messwerte</button>
+  <button class="nt on" data-panel="dc">⚡ <span class="de-only">DC Gleichstrom</span><span class="en-only">DC Circuit</span></button>
+  <button class="nt" data-panel="ac">〜 <span class="de-only">AC Wechselstrom</span><span class="en-only">AC Circuit</span></button>
+  <button class="nt" data-panel="mw">📈 <span class="de-only">Messwerte</span><span class="en-only">Measurements</span></button>
   <button class="nt" data-panel="proto">📋 Protokoll</button>
-  <button class="nt" data-panel="notes">📝 Notizen</button>
-  <button class="nt" data-panel="wid">Ω Widerstände</button>
-  <button class="nt w" data-panel="docs">🗂 Dokument-Manager</button>
-  <button class="nt w" data-panel="umr">⇄ Einheiten Umrechner</button>
-  <button class="nt w" data-panel="ai">🤖 KI-Assistent</button>
-  <button class="nt w" data-panel="kabel">🔌 Kabelquerschnitt</button>
-  <button class="nt w" data-panel="calc">▦ Taschenrechner</button>
-  <button class="nt w" data-panel="therm">🌡 Motorthermik</button>
-  <button class="nt w" data-panel="ksc">⚡ Kurzschluss</button>
-  <button class="nt w" data-panel="fu">🔄 FU-Assistent</button>
-  <button class="nt w" data-panel="sd">📐 Stern/Dreieck</button>
-  <button class="nt w" data-panel="pruef">📄 Prüfbericht</button>
-  <button class="nt w" data-panel="schuetz">🔌 Schützkomb.</button>
-  <button class="nt w" data-panel="uberlast">🌡 Überlastschutz</button>
-  <button class="nt w" data-panel="normen">📋 Normen</button>
+  <button class="nt" data-panel="notes">📝 <span class="de-only">Notizen</span><span class="en-only">Notes</span></button>
+  <button class="nt" data-panel="wid">Ω <span class="de-only">Widerstände</span><span class="en-only">Resistors</span></button>
+  <button class="nt w" data-panel="docs">🗂 <span class="de-only">Dokument-Manager</span><span class="en-only">Doc Manager</span></button>
+  <button class="nt w" data-panel="umr">⇄ <span class="de-only">Einheiten Umrechner</span><span class="en-only">Unit Converter</span></button>
+  <button class="nt w" data-panel="ai">🤖 <span class="de-only">KI-Assistent</span><span class="en-only">AI Assistant</span></button>
+  <button class="nt w" data-panel="kabel">🔌 <span class="de-only">Kabelquerschnitt</span><span class="en-only">Cable Cross-section</span></button>
+  <button class="nt w" data-panel="calc">▦ <span class="de-only">Taschenrechner</span><span class="en-only">Calculator</span></button>
+  <button class="nt w" data-panel="therm">🌡 <span class="de-only">Motorthermik</span><span class="en-only">Motor Thermal</span></button>
+  <button class="nt w" data-panel="ksc">⚡ <span class="de-only">Kurzschluss</span><span class="en-only">Short Circuit</span></button>
+  <button class="nt w" data-panel="fu">🔄 <span class="de-only">FU-Assistent</span><span class="en-only">VFD Assistant</span></button>
+  <button class="nt w" data-panel="sd">📐 <span class="de-only">Stern/Dreieck</span><span class="en-only">Star/Delta</span></button>
+  <button class="nt w" data-panel="pruef">📄 <span class="de-only">Prüfbericht</span><span class="en-only">Test Report</span></button>
+  <button class="nt w" data-panel="schuetz">🔌 <span class="de-only">Schützkomb.</span><span class="en-only">Contactor Comb.</span></button>
+  <button class="nt w" data-panel="uberlast">🌡 <span class="de-only">Überlastschutz</span><span class="en-only">Overload Prot.</span></button>
+  <button class="nt w" data-panel="normen">📋 <span class="de-only">Normen</span><span class="en-only">Standards</span></button>
 </div>
 
 <!-- DC -->
@@ -3900,6 +3907,23 @@ function doKabel(){
 // ══════════════════════════════════════════════════════════════════
 function drawerOpen(){document.getElementById('drawer').classList.add('on');document.getElementById('drawer-overlay').classList.add('on');}
 function drawerClose(){document.getElementById('drawer').classList.remove('on');document.getElementById('drawer-overlay').classList.remove('on');}
+
+// ── Language Toggle ──────────────────────────────────────────
+var currentLang = localStorage.getItem('arc_lang') || 'de';
+(function initLang() {
+  document.documentElement.classList.toggle('lang-en', currentLang === 'en');
+  document.documentElement.classList.toggle('lang-de', currentLang === 'de');
+  var btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = currentLang === 'en' ? 'DE' : 'EN';
+})();
+function toggleLang() {
+  currentLang = currentLang === 'de' ? 'en' : 'de';
+  localStorage.setItem('arc_lang', currentLang);
+  document.documentElement.classList.toggle('lang-en', currentLang === 'en');
+  document.documentElement.classList.toggle('lang-de', currentLang === 'de');
+  var btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = currentLang === 'de' ? 'EN' : 'DE';
+}
 
 </script>
 

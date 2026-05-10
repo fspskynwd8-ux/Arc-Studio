@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="lang-de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
@@ -633,6 +633,12 @@ input:focus,select:focus,textarea:focus{
 .drawer-footer a{color:var(--ac);text-decoration:none;font-size:13px;font-weight:500;display:flex;align-items:center;gap:.3rem;}
 .drawer-footer a:hover{color:var(--acd);}
 
+/* ── Language ──────────────────────────────────── */
+html.lang-en .de-only { display: none !important; }
+html.lang-de .en-only { display: none !important; }
+.lang-btn { font-size: 12px; font-weight: 700; padding: .35rem .65rem; border-radius: 8px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.5); cursor: pointer; letter-spacing: .04em; }
+.lang-btn:hover { background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); }
+
 </style>
 </head>
 <body>
@@ -653,6 +659,7 @@ input:focus,select:focus,textarea:focus{
   </div>
   <div class="hdr-badge">SPS</div>
   <button class="thm-btn" id="thm-btn" onclick="thmToggle()" title="Hell/Dunkel" style="width:32px;height:32px;border-radius:9px;background:rgba(128,128,128,.1);border:1px solid var(--br2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;font-size:15px;margin-right:4px;">🌙</button>
+  <button class="lang-btn" id="lang-btn" onclick="toggleLang()">EN</button>
   <button class="sw-btn" id="sw-open-btn" onclick="drawerOpen()" title="Apps wechseln">⊞</button>
 </header>
 
@@ -1087,10 +1094,10 @@ input:focus,select:focus,textarea:focus{
 <div class="toast" id="toast"></div>
 
 <nav class="bnav">
-  <button class="bnav-btn on" data-screen="lern"><span class="bico">📖</span>Lernen</button>
+  <button class="bnav-btn on" data-screen="lern"><span class="bico">📖</span><span class="de-only">Lernen</span><span class="en-only">Learn</span></button>
   <button class="bnav-btn" data-screen="trainer"><span class="bico">🎯</span>KOP-Trainer</button>
   <button class="bnav-btn" data-screen="quiz"><span class="bico">❓</span>Quiz</button>
-  <button class="bnav-btn" data-screen="sim"><span class="bico">🖥</span>Simulator</button>
+  <button class="bnav-btn" data-screen="sim"><span class="bico">🖥</span><span class="de-only">Simulator</span><span class="en-only">Simulator</span></button>
 </nav>
 
 <script>
@@ -1711,6 +1718,23 @@ if('serviceWorker' in navigator){
   }else{apply(isLight);}
 })();
 // ─────────────────────────────────────────────────────────────────────
+
+// ── Language Toggle ──────────────────────────────────────────
+var currentLang = localStorage.getItem('arc_lang') || 'de';
+(function initLang() {
+  document.documentElement.classList.toggle('lang-en', currentLang === 'en');
+  document.documentElement.classList.toggle('lang-de', currentLang === 'de');
+  var btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = currentLang === 'en' ? 'DE' : 'EN';
+})();
+function toggleLang() {
+  currentLang = currentLang === 'de' ? 'en' : 'de';
+  localStorage.setItem('arc_lang', currentLang);
+  document.documentElement.classList.toggle('lang-en', currentLang === 'en');
+  document.documentElement.classList.toggle('lang-de', currentLang === 'de');
+  var btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = currentLang === 'de' ? 'EN' : 'DE';
+}
 
 </script>
 </body>
