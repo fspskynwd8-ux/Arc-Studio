@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="lang-de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
@@ -357,6 +357,12 @@ body {
 
 /* ══ SCROLL TO BOTTOM ═══════════════════════════════════════ */
 .scroll-anchor { height: 1px; }
+
+/* ── Language ──────────────────────────────────── */
+html.lang-en .de-only { display: none !important; }
+html.lang-de .en-only { display: none !important; }
+.lang-btn { font-size: 12px; font-weight: 700; padding: .35rem .65rem; border-radius: 8px; background: var(--bg3); border: 1px solid var(--br); color: var(--tx2); cursor: pointer; letter-spacing: .04em; }
+.lang-btn:hover { background: var(--bg4); }
 </style>
 </head>
 <body>
@@ -367,10 +373,11 @@ body {
     <div class="hdr-icon" aria-hidden="true">🧠</div>
     <div>
       <div class="hdr-title">KI-Assistent</div>
-      <div class="hdr-sub">Arc Studio · offline</div>
+      <div class="hdr-sub"><span class="de-only">Arc Studio · offline</span><span class="en-only">Arc Studio · offline</span></div>
     </div>
   </div>
   <button class="hdr-btn" id="thm-btn" onclick="thmToggle()" title="Farbschema wechseln" aria-label="Farbschema wechseln">🌙</button>
+  <button class="lang-btn" id="lang-btn" onclick="toggleLang()">EN</button>
   <button class="hdr-btn" onclick="drawerOpen()" title="App-Switcher" aria-label="App-Switcher öffnen">⊞</button>
 </header>
 
@@ -379,18 +386,18 @@ body {
 
   <!-- Quick chips (hidden after first message) -->
   <div id="quick-area">
-    <div class="quick-chips-label">Schnellfragen</div>
+    <div class="quick-chips-label"><span class="de-only">Schnellfragen</span><span class="en-only">Quick Questions</span></div>
     <div class="quick-chips" role="list" aria-label="Schnellfragen">
-      <button class="chip" onclick="kiAsk(this.textContent)">Was ist Schlupf?</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">FI-Schutzschalter erklären</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">Ohmsches Gesetz</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">Was ist H7/p6?</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">SPS Eingänge Ausgänge</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">Pascalsches Gesetz</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">Schutzklassen I II III</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">Drehmoment berechnen</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">IP54 Bedeutung</button>
-      <button class="chip" onclick="kiAsk(this.textContent)">Stern-Dreieck-Anlauf</button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">Was ist Schlupf?</span><span class="en-only">What is slip?</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">FI-Schutzschalter erklären</span><span class="en-only">Explain RCD circuit breaker</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">Ohmsches Gesetz</span><span class="en-only">Ohm's Law</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">Was ist H7/p6?</span><span class="en-only">What is H7/p6?</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">SPS Eingänge Ausgänge</span><span class="en-only">PLC inputs outputs</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">Pascalsches Gesetz</span><span class="en-only">Pascal's Law</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">Schutzklassen I II III</span><span class="en-only">Protection classes I II III</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">Drehmoment berechnen</span><span class="en-only">Calculate torque</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">IP54 Bedeutung</span><span class="en-only">IP54 meaning</span></button>
+      <button class="chip" onclick="kiAsk(this.querySelector('.' + (currentLang === 'en' ? 'en' : 'de') + '-only').textContent.trim())"><span class="de-only">Stern-Dreieck-Anlauf</span><span class="en-only">Star-delta starting</span></button>
     </div>
   </div>
 
@@ -401,7 +408,7 @@ body {
 
 <!-- ══ INPUT BAR ══════════════════════════════════════════════ -->
 <div class="input-bar">
-  <input class="ki-input" type="text" id="ki-input" placeholder="Stell eine Frage..." autocomplete="off" aria-label="Frage eingeben">
+  <input class="ki-input" type="text" id="ki-input" placeholder="" data-ph-de="Stell eine Frage..." data-ph-en="Ask your question..." autocomplete="off" aria-label="Frage eingeben">
   <button class="ki-send" id="ki-send" onclick="kiSend()" aria-label="Senden">→</button>
 </div>
 
@@ -1310,9 +1317,39 @@ document.getElementById('ki-input').addEventListener('keydown', function(e) {
   if(e.key === 'Enter') kiSend();
 });
 
+// ── Language Toggle ──────────────────────────────────────────
+var currentLang = localStorage.getItem('arc_lang') || 'de';
+(function initLang() {
+  if (currentLang === 'en') {
+    document.documentElement.classList.add('lang-en');
+    document.documentElement.classList.remove('lang-de');
+    var btn = document.getElementById('lang-btn');
+    if (btn) btn.textContent = 'DE';
+  } else {
+    document.documentElement.classList.add('lang-de');
+    document.documentElement.classList.remove('lang-en');
+  }
+  var inp = document.querySelector('[data-ph-de]');
+  if (inp) inp.placeholder = currentLang === 'en' ? inp.dataset.phEn : inp.dataset.phDe;
+})();
+function toggleLang() {
+  currentLang = currentLang === 'de' ? 'en' : 'de';
+  localStorage.setItem('arc_lang', currentLang);
+  document.documentElement.classList.toggle('lang-en', currentLang === 'en');
+  document.documentElement.classList.toggle('lang-de', currentLang === 'de');
+  var btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = currentLang === 'de' ? 'EN' : 'DE';
+  var inp = document.querySelector('[data-ph-de]');
+  if (inp) inp.placeholder = currentLang === 'en' ? inp.dataset.phEn : inp.dataset.phDe;
+}
+
 // ── Willkommensnachricht ─────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function() {
-  addMessage('Hallo! Ich bin der **Arc Studio KI-Assistent** — vollständig offline.\n\nStell mir eine Frage zu Mechatronik, Elektrotechnik oder Industriemechanik. Ich erkläre Formeln, Begriffe und Zusammenhänge aus VOLTIQ, AMPERE und TORQUE.\n\nBeispiel: *"Was ist der Schlupf bei einem Asynchronmotor?"*', 'ai');
+  var kiGreeting = {
+    de: 'Hallo! Ich bin der **Arc Studio KI-Assistent** — vollständig offline.\n\nStell mir eine Frage zu Mechatronik, Elektrotechnik oder Industriemechanik. Ich erkläre Formeln, Begriffe und Zusammenhänge aus VOLTIQ, AMPERE und TORQUE.\n\nBeispiel: *"Was ist der Schlupf bei einem Asynchronmotor?"*',
+    en: 'Hello! I am the **Arc Studio AI Assistant** — fully offline.\n\nAsk me anything about mechatronics, electrical engineering or industrial mechanics. I can explain formulas, terms and concepts from VOLTIQ, AMPERE and TORQUE.\n\nExample: *"What is slip in an induction motor?"*'
+  };
+  addMessage(kiGreeting[currentLang], 'ai');
 });
 
 // ── Service Worker ───────────────────────────────────────────

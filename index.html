@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="lang-de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
@@ -806,6 +806,14 @@ footer {
 [id] {
   scroll-margin-top: 80px;
 }
+
+/* ── Language ──────────────────────────────────── */
+html.lang-en .de-only { display: none !important; }
+html.lang-de .en-only { display: none !important; }
+.lang-switch { display: flex; gap: 4px; align-items: center; }
+.lang-switch-btn { font-size: 12px; font-weight: 700; padding: .3rem .6rem; border-radius: 6px; background: transparent; border: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.5); cursor: pointer; transition: all .15s; }
+.lang-switch-btn.active { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.3); }
+.lang-switch-btn:hover { background: rgba(255,255,255,.08); color: rgba(255,255,255,.8); }
 </style>
 </head>
 <body>
@@ -828,29 +836,37 @@ footer {
       <li><a href="#faq">FAQ</a></li>
     </ul>
 
-    <a href="voltiq.html" class="btn btn-primary nav-cta">VOLTIQ starten →</a>
+    <div class="lang-switch">
+      <button class="lang-switch-btn active" id="ls-de" onclick="setLang('de')">DE</button>
+      <button class="lang-switch-btn" id="ls-en" onclick="setLang('en')">EN</button>
+    </div>
+
+    <a href="voltiq.html" class="btn btn-primary nav-cta"><span class="de-only">VOLTIQ starten →</span><span class="en-only">Start VOLTIQ →</span></a>
   </div>
 </nav>
 
 <!-- ══ HERO ══════════════════════════════════════════════════ -->
 <section id="hero" aria-labelledby="hero-headline">
-  <p class="hero-eyebrow">Kostenlos · Offline · Prüfungsnah</p>
+  <p class="hero-eyebrow"><span class="de-only">Kostenlos · Offline · Prüfungsnah</span><span class="en-only">Free · Offline · Exam-Ready</span></p>
 
   <h1 class="hero-headline" id="hero-headline">
-    Lern-Apps für<br>die Ausbildung.
+    <span class="de-only">Lern-Apps für<br>die Ausbildung.</span>
+    <span class="en-only">Learning Apps for<br>your Apprenticeship.</span>
   </h1>
 
   <p class="hero-subline">
-    Von Mechatronik über Elektrotechnik bis Industriemechanik — unsere Apps begleiten dich durch AP1, AP2 und den Ausbildungsalltag. Offline, kostenlos, ohne Account.
+    <span class="de-only">Von Mechatronik über Elektrotechnik bis Industriemechanik — unsere Apps begleiten dich durch AP1, AP2 und den Ausbildungsalltag. Offline, kostenlos, ohne Account.</span>
+    <span class="en-only">Everything you need for your IHK exam — offline, free, no account required.</span>
   </p>
 
   <p class="hero-stats mono">
-    3 Apps · KI-Assistent · 18 Lernfelder · 105+ Quizfragen · 100&nbsp;% offline · 0&nbsp;€
+    <span class="de-only">3 Apps · KI-Assistent · 18 Lernfelder · 105+ Quizfragen · 100&nbsp;% offline · 0&nbsp;€</span>
+    <span class="en-only">3 Apps · AI Assistant · 18 Learning Fields · 105+ Quiz Questions · 100&nbsp;% offline · 0&nbsp;€</span>
   </p>
 
   <div class="hero-cta-group">
-    <a href="voltiq.html" class="btn btn-primary hero-cta-btn">VOLTIQ starten →</a>
-    <p class="hero-pwa-note">Auch als PWA installierbar — direkt im Browser, kein App Store nötig</p>
+    <a href="voltiq.html" class="btn btn-primary hero-cta-btn"><span class="de-only">VOLTIQ starten →</span><span class="en-only">Start VOLTIQ →</span></a>
+    <p class="hero-pwa-note"><span class="de-only">Auch als PWA installierbar — direkt im Browser, kein App Store nötig</span><span class="en-only">Also installable as a PWA — directly in your browser, no App Store needed</span></p>
   </div>
 </section>
 
@@ -893,9 +909,9 @@ footer {
 <!-- ══ SECTION: PRODUKT ═══════════════════════════════════════ -->
 <section id="produkt" aria-labelledby="produkt-headline">
   <div class="container">
-    <p class="section-label">Unsere Apps</p>
-    <h2 class="section-headline" id="produkt-headline">Drei Apps. Ein Ziel.</h2>
-    <p class="section-subline">Offline-first, kein Account, lokal gespeichert — für Mechatroniker, Elektroniker und Industriemechaniker.</p>
+    <p class="section-label"><span class="de-only">Unsere Apps</span><span class="en-only">Our Apps</span></p>
+    <h2 class="section-headline" id="produkt-headline"><span class="de-only">Drei Apps. Ein Ziel.</span><span class="en-only">Three Apps. One Goal.</span></h2>
+    <p class="section-subline"><span class="de-only">Offline-first, kein Account, lokal gespeichert — für Mechatroniker, Elektroniker und Industriemechaniker.</span><span class="en-only">Offline-first, no account, locally stored — for mechatronics, electronics and industrial mechanics trainees.</span></p>
 
     <div class="card product-card">
       <!-- Header -->
@@ -948,8 +964,8 @@ footer {
 
       <!-- Footer -->
       <div class="product-card-footer">
-        <a href="voltiq.html" class="btn btn-primary">VOLTIQ starten →</a>
-        <p class="product-platforms">Web · PWA · iOS · Android</p>
+        <a href="voltiq.html" class="btn btn-primary"><span class="de-only">VOLTIQ starten →</span><span class="en-only">Start VOLTIQ →</span></a>
+        <p class="product-platforms"><span class="de-only">Mechatroniker · AP1/AP2</span><span class="en-only">Mechatronics Technician · AP1/AP2</span></p>
       </div>
     </div>
 
@@ -1004,8 +1020,8 @@ footer {
 
   <!-- Footer -->
   <div class="product-card-footer">
-    <a href="VOLTECH-ampere.html" class="btn btn-primary" style="background:#f97316;border-color:#f97316;">AMPERE starten →</a>
-    <p class="product-platforms">Elektroniker · EfB · AP1/AP2</p>
+    <a href="VOLTECH-ampere.html" class="btn btn-primary" style="background:#f97316;border-color:#f97316;"><span class="de-only">AMPERE starten →</span><span class="en-only">Start AMPERE →</span></a>
+    <p class="product-platforms"><span class="de-only">Elektroniker · EfB · AP1/AP2</span><span class="en-only">Electrician · EfB · AP1/AP2</span></p>
   </div>
 </div>
 
@@ -1060,8 +1076,8 @@ footer {
 
   <!-- Footer -->
   <div class="product-card-footer">
-    <a href="VOLTECH-torque.html" class="btn btn-primary" style="background:#14b8a6;border-color:#14b8a6;">TORQUE starten →</a>
-    <p class="product-platforms">Industriemechaniker · AP1/AP2</p>
+    <a href="VOLTECH-torque.html" class="btn btn-primary" style="background:#14b8a6;border-color:#14b8a6;"><span class="de-only">TORQUE starten →</span><span class="en-only">Start TORQUE →</span></a>
+    <p class="product-platforms"><span class="de-only">Industriemechaniker · AP1/AP2</span><span class="en-only">Industrial Mechanic · AP1/AP2</span></p>
   </div>
 </div>
 
@@ -1116,8 +1132,8 @@ footer {
 
   <!-- Footer -->
   <div class="product-card-footer">
-    <a href="VOLTECH-ki.html" class="btn btn-primary" style="background:#a855f7;border-color:#a855f7;">KI starten →</a>
-    <p class="product-platforms">Mechatronik · Elektrotechnik · Industriemechanik</p>
+    <a href="VOLTECH-ki.html" class="btn btn-primary" style="background:#a855f7;border-color:#a855f7;"><span class="de-only">KI starten →</span><span class="en-only">Start AI →</span></a>
+    <p class="product-platforms"><span class="de-only">Mechatronik · Elektrotechnik · Industriemechanik</span><span class="en-only">Mechatronics · Electrical Engineering · Industrial Mechanics</span></p>
   </div>
 </div>
 
@@ -1345,7 +1361,7 @@ footer {
       </div>
 
       <div class="roadmap-item" role="listitem">
-        <span class="roadmap-badge badge-progress">🔄 In Arbeit</span>
+        <span class="roadmap-badge badge-live">✅ Live</span>
         <div>
           <p class="roadmap-content-title">Rechner für AMPERE &amp; TORQUE</p>
           <p class="roadmap-content-desc">Fachspezifische Rechner wie in VOLTIQ — Hydraulik, Toleranzen, Leitungen</p>
@@ -1377,7 +1393,7 @@ footer {
       </div>
 
       <div class="roadmap-item" role="listitem">
-        <span class="roadmap-badge badge-idea">💡 Idee</span>
+        <span class="roadmap-badge badge-progress">🔄 In Arbeit</span>
         <div>
           <p class="roadmap-content-title">English Mode</p>
           <p class="roadmap-content-desc">Alle Apps auf Englisch — für internationale Azubis</p>
@@ -1596,5 +1612,21 @@ VOLTIQ ist das Ergebnis davon — kostenlos, ohne Tracking, ohne Bullshit. Wenn 
   </div>
 </footer>
 
+<script>
+// ── Language Toggle ──────────────────────────────────────────
+var currentLang = localStorage.getItem('arc_lang') || 'de';
+function setLang(l) {
+  currentLang = l;
+  localStorage.setItem('arc_lang', l);
+  document.documentElement.classList.toggle('lang-en', l === 'en');
+  document.documentElement.classList.toggle('lang-de', l === 'de');
+  document.documentElement.lang = l;
+  var de = document.getElementById('ls-de');
+  var en = document.getElementById('ls-en');
+  if (de) { de.classList.toggle('active', l === 'de'); }
+  if (en) { en.classList.toggle('active', l === 'en'); }
+}
+(function(){ setLang(currentLang); })();
+</script>
 </body>
 </html>

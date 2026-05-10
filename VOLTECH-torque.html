@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="lang-de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -501,6 +501,11 @@ details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
 .calc-hint{font-size:11px;color:var(--tx3);background:var(--bg3);border-radius:8px;padding:.5rem .75rem;margin-bottom:.75rem;line-height:1.5;}
 .calc-section-title{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin:1.25rem 0 .5rem;}
 .calc-section-title:first-child{margin-top:0;}
+/* ── Language ──────────────────────────────────── */
+html.lang-en .de-only { display: none !important; }
+html.lang-de .en-only { display: none !important; }
+.lang-btn { font-size: 12px; font-weight: 700; padding: .35rem .65rem; border-radius: 8px; background: var(--bg3); border: 1px solid var(--br); color: var(--tx2); cursor: pointer; letter-spacing: .04em; }
+.lang-btn:hover { background: var(--bg4); }
 </style>
 </head>
 <body>
@@ -515,22 +520,23 @@ details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
   </div>
   <div class="hdr-wordmark">
     <h1>TOR<span style="color:var(--ac)">QUE</span></h1>
-    <p>Industriemechaniker · Betriebstechnik</p>
+    <p><span class="de-only">Industriemechaniker · Betriebstechnik</span><span class="en-only">Industrial Mechanic · Operations Technology</span></p>
   </div>
   <div class="hdr-actions">
     <button class="hdr-btn" id="thm-btn" onclick="thmToggle()" title="Theme wechseln">🌙</button>
+    <button class="lang-btn" id="lang-btn" onclick="toggleLang()">EN</button>
     <button class="hdr-btn" onclick="drawerOpen()" title="App-Switcher">⊞</button>
   </div>
 </header>
 
 <!-- Tab Bar -->
 <nav class="tabs" id="tab-bar">
-  <button class="tab-btn on" data-screen="s-dash" onclick="showScreen(this.dataset.screen)">🏠 Dashboard</button>
-  <button class="tab-btn" data-screen="s-lern" onclick="showScreen(this.dataset.screen)">📐 Lernfelder</button>
-  <button class="tab-btn" data-screen="s-quiz" onclick="showScreen(this.dataset.screen)">❓ Quiz</button>
-  <button class="tab-btn" data-screen="s-form" onclick="showScreen(this.dataset.screen)">🔢 Formeln</button>
-  <button class="tab-btn" data-screen="s-ap" onclick="showScreen(this.dataset.screen)">✅ AP-Check</button>
-  <button class="tab-btn" data-screen="s-calc" onclick="showScreen(this.dataset.screen)">🧮 Rechner</button>
+  <button class="tab-btn on" data-screen="s-dash" onclick="showScreen(this.dataset.screen)"><span class="de-only">🏠 Dashboard</span><span class="en-only">🏠 Dashboard</span></button>
+  <button class="tab-btn" data-screen="s-lern" onclick="showScreen(this.dataset.screen)"><span class="de-only">📐 Lernfelder</span><span class="en-only">📐 Learning Areas</span></button>
+  <button class="tab-btn" data-screen="s-quiz" onclick="showScreen(this.dataset.screen)"><span class="de-only">❓ Quiz</span><span class="en-only">❓ Quiz</span></button>
+  <button class="tab-btn" data-screen="s-form" onclick="showScreen(this.dataset.screen)"><span class="de-only">🔢 Formeln</span><span class="en-only">🔢 Formulas</span></button>
+  <button class="tab-btn" data-screen="s-ap" onclick="showScreen(this.dataset.screen)"><span class="de-only">✅ AP-Check</span><span class="en-only">✅ Exam Check</span></button>
+  <button class="tab-btn" data-screen="s-calc" onclick="showScreen(this.dataset.screen)"><span class="de-only">🧮 Rechner</span><span class="en-only">🧮 Calculator</span></button>
 </nav>
 
 <!-- ===================== SCREEN 1: DASHBOARD ===================== -->
@@ -1270,43 +1276,98 @@ function openLf(id) {
   }
 }
 
+// ── Language ─────────────────────────────────────────────────
+var currentLang = localStorage.getItem('arc_lang') || 'de';
+
 // ── Quiz Array ───────────────────────────────────────────────
 var QUIZ = [
-  {q:'Was bedeutet die Toleranzangabe H7 bei einer Bohrung?',opts:['Übergangspassung mit Spielanteil','Einheitsbohrung: Unterabmaß = 0, obere Abweichung positiv','Einheitswelle mit Übermaß','Presspassung Klasse 7'],c:1,e:'H = Einheitsbohrung (Unterabmaß immer 0). Die Zahl 7 = Grundtoleranz IT7. Das Obermaß ist positiv → Bohrung immer etwas größer als Nennmaß.'},
-  {q:'Welche Festigkeitsklasse hat die höchste Zugfestigkeit?',opts:['8.8','10.9','12.9','6.8'],c:2,e:'12.9: Zugfestigkeit 1200 N/mm², Streckgrenze 90% = 1080 N/mm². Erste Zahl × 100 = Zugfestigkeit [N/mm²], zweite Zahl × 10% = Streckgrenzverhältnis.'},
-  {q:'Wie lautet die Formel für die Schnittgeschwindigkeit beim Drehen?',opts:['v_c = d × n / 1000','v_c = π × d × n / 1000','v_c = 2π × d × n','v_c = d × n / π'],c:1,e:'v_c = (π × d × n) / 1000 [m/min]. d = Werkstückdurchmesser [mm], n = Drehzahl [U/min]. Faktor 1000 wandelt mm → m um.'},
-  {q:'Was beschreibt das Pascalsche Gesetz?',opts:['Druck nimmt mit der Tiefe ab','Druck pflanzt sich in ruhenden Flüssigkeiten gleichmäßig in alle Richtungen fort','Volumen bleibt bei Druckerhöhung konstant','Flüssigkeiten sind kompressibel'],c:1,e:'Pascal: p = F/A. In einer eingeschlossenen Flüssigkeit pflanzt sich ein Druck ungeschwächt in alle Richtungen fort — Grundprinzip der Hydraulik.'},
-  {q:'Was ist ein Rillenkugellager geeignet für?',opts:['Nur radiale Kräfte','Nur axiale Kräfte','Radiale und begrenzte axiale Kräfte','Sehr hohe axiale Kräfte'],c:2,e:'Rillenkugellager (Typ 6xxx) nehmen radiale Hauptlasten und begrenzte Axialkräfte auf. Für reine Axialkräfte: Axialkugellager. Für hohe kombinierte Lasten: Kegelrollenlager.'},
-  {q:'Welche Passungsart ergibt immer Spiel zwischen Welle und Bohrung?',opts:['H7/k6','H7/p6','H7/f7','H7/s6'],c:2,e:'H7/f7 = Spielpassung. f-Welle liegt unterhalb der h-Nulllinie → immer Spiel. H7/k6 = Übergangspassung, H7/p6 und H7/s6 = Presspassung.'},
-  {q:'Was misst ein Mikrometer?',opts:['Längen bis 2000mm','Längen mit 0,01mm Auflösung','Längen mit 0,001mm Auflösung','Winkel bis 0,01°'],c:2,e:'Mikrometer (Bügelmessschraube): Auflösung 0,001mm (mit Nonius). Messbereich: je nach Ausführung 0-25mm, 25-50mm etc. Messuhr: 0,001-0,01mm.'},
-  {q:'Was bedeutet G00 in einem CNC-Programm?',opts:['Programmende','Eilgang ohne Konturschnitt','Linearinterpolation mit Vorschub','Kreisinterpolation im Uhrzeigersinn'],c:1,e:'G00 = Eilgang (Positionierung): maximale Maschinengeschwindigkeit, kein Materialabtrag. G01 = Linearinterpolation mit F-Wort. G02/G03 = Kreisinterpolation.'},
-  {q:'Welches Symbol wird für ein Druckbegrenzungsventil in Hydraulikschaltplänen verwendet?',opts:['Quadrat mit Pfeil diagonal','Rechteck mit Feder und Kegel nach ISO 1219','Kreis mit X','Raute mit Pfeil'],c:1,e:'DBV nach ISO 1219: Quadrat mit Feder (Einstellfeder) und Schließkegel. Öffnet wenn p_ein > Einstelldruck → Rücklauf zu Tank. Schützt System vor Überdruck.'},
-  {q:'Was versteht man unter IT7 im ISO-Toleranzsystem?',opts:['Toleranzlage T, Klasse 7','Grundtoleranz Klasse 7 — mittlere Qualität für Maschinenbau','Oberflächengüte Ra 7','Prüfklasse 7 nach ISO'],c:1,e:'IT = International Tolerance Grade. IT1-IT4: Präzision (Lehren), IT5-IT7: Maschinenbau (Lager, Getriebe), IT8-IT11: Allgemeiner Maschinenbau, IT12-IT18: Rohteilzustand.'},
-  {q:'Wie ist die Schraube der Festigkeitsklasse 8.8 zu interpretieren?',opts:['Zugfestigkeit 80 N/mm², Streckgrenze 80%','Zugfestigkeit 800 N/mm², Streckgrenze 80% = 640 N/mm²','Durchmesser 8mm, 8 Gewindegänge','8 Nm Anzugsmoment bei 8mm Gewinde'],c:1,e:'Erste Zahl × 100 = Zugfestigkeit: 8 × 100 = 800 N/mm². Zweite Zahl × 10% der Zugfestigkeit = Streckgrenze: 8 × 10% × 800 = 640 N/mm².'},
-  {q:'Was ist der Unterschied zwischen Wartung und Instandsetzung nach DIN 31051?',opts:['Kein Unterschied','Wartung ist präventiv (Soll-Zustand erhalten), Instandsetzung ist reaktiv (Soll-Zustand wiederherstellen)','Wartung kostet mehr','Instandsetzung ist präventiv'],c:1,e:'DIN 31051: Wartung = Maßnahmen zur Verzögerung des Abbaus (Öl wechseln, schmieren). Inspektion = Zustand beurteilen. Instandsetzung = Schaden beheben. Verbesserung = über Sollzustand hinaus.'},
-  {q:'Wie berechnet sich das Übersetzungsverhältnis eines Getriebes?',opts:['i = n2/n1 = z1/z2','i = n1/n2 = z2/z1','i = n1 × n2','i = z1 × z2 / n'],c:1,e:'i = n1/n2 = z2/z1. Antrieb (1), Abtrieb (2). Mehr Zähne am Abtriebsrad → Untersetzung (i > 1). Weniger Zähne → Übersetzung (i < 1). Drehmoment × i steigt bei Untersetzung.'},
-  {q:'Was bedeutet ISO VG 46 bei Hydrauliköl?',opts:['Viskositätsklasse, kinematische Viskosität ≈ 46 mm²/s bei 40°C','pH-Wert 46','Additivgehalt 46%','Produktionsnummer'],c:0,e:'ISO VG (Viscosity Grade): kinematische Viskosität in mm²/s (cSt) bei 40°C. VG 32 (leicht), VG 46 (mittel), VG 68 (schwer), VG 100 (sehr schwer). Je höher, desto dickflüssiger.'},
-  {q:'Was prüft die Gutlehre (Go-Seite) einer Grenzlehre?',opts:['Ob das Maß kleiner als das Mindestmaß ist','Ob das Werkstück passt (im Toleranzbereich — Gutseite muss durchgehen)','Ob das Maß größer als das Höchstmaß ist','Die Oberflächenrauheit'],c:1,e:'Go-Seite = Gutlehre = entspricht dem Mindestmaß (Bohrung) bzw. Höchstmaß (Welle). Muss durchgehen — sonst zu klein/zu groß. Not-Go = entspricht Höchstmaß (Bohrung), darf NICHT durchgehen.'},
-  {q:'Welche Zerspanungsart erzeugt rotationssymmetrische Werkstücke?',opts:['Fräsen','Bohren','Drehen','Schleifen'],c:2,e:'Drehen: Werkstück rotiert (Hauptbewegung), Werkzeug führt Vorschubbewegung aus. Ergebnis: Zylinder, Kegel, Planflächen. Fräsen: Werkzeug rotiert, Werkstück bewegt sich.'},
-  {q:'Was ist ein einfachwirkender Pneumatikzylinder?',opts:['Zylinder mit zwei Luftanschlüssen','Zylinder der nur in eine Richtung durch Druckluft bewegt wird, Rückzug durch Feder','Zylinder ohne Kolbenstange','Zylinder mit einstellbarer Geschwindigkeit'],c:1,e:'Einfachwirkend: Ein Luftanschluss (Druckhub), Rückzug durch eingebaute Feder. Doppeltwirkend: Zwei Anschlüsse — Druck- und Zughub durch Druckluft.'},
-  {q:'Wie groß ist die Kraft eines Hydraulikzylinders bei p=100 bar und d=80mm?',opts:['≈ 25 kN','≈ 50 kN','≈ 100 kN','≈ 200 kN'],c:1,e:'A = π × r² = π × 40² = 5027 mm² = 50,27 cm². F = p × A = 100 bar × 50,27 cm² = 5027 kgf ≈ 50 kN. (1 bar × 1 cm² = 10 N)'},
-  {q:'Was beschreibt Ra bei Oberflächenangaben?',opts:['Maximale Rautiefe','Arithmetischer Mittenrauwert — Mittelwert aller Profilabweichungen','Rauheitsklasse nach ISO','Welligkeit der Oberfläche'],c:1,e:'Ra = arithmetischer Mittenrauwert [µm]: Mittelwert der absoluten Abweichungen vom Mittelwert über die Messstrecke. Rz = gemittelte Rautiefe (5 Einzelmessstrecken). Ra ≈ Rz / 4-7.'},
-  {q:'Welches Lager nimmt ausschließlich axiale Kräfte auf?',opts:['Rillenkugellager','Zylinderrollenlager','Axialkugellager','Tonnenlager'],c:2,e:'Axialkugellager: nur Axialkräfte (Längsrichtung der Welle). Zylinderrollenlager: nur radiale Kräfte. Rillenkugellager: radial + begrenzt axial. Kegelrollenlager: radial + axial kombiniert.'},
-  {q:'Was ist Einsatzhärten?',opts:['Gesamtes Werkstück gleichmäßig härten','Nur die Randzone aufkohlen und härten — zäher Kern, harte Oberfläche','Abschrecken in Wasser','Anlassen nach dem Härten'],c:1,e:'Einsatzhärten: niedriggekohlten Stahl (16MnCr5) im Randbereich aufkohlen (C-Gehalt erhöhen), dann abschrecken. Ergebnis: harte, verschleißfeste Oberfläche, zäher Kern. Typisch für Zahnräder, Wellen.'},
-  {q:'Was bedeutet M06 im CNC-Programm?',opts:['Vorschub 6 mm/min','Werkzeugwechsel','Spindeldrehzahl 600 U/min','Kühlmittel an'],c:1,e:'M06 = Werkzeugwechsel (Tool Change). Wichtige M-Codes: M03 = Spindel rechts, M04 = Spindel links, M05 = Spindel stop, M08 = Kühlmittel an, M09 = aus, M30 = Programm Ende.'},
-  {q:'Welche Viskositätseigenschaft gilt für Hydrauliköl bei steigender Temperatur?',opts:['Viskosität steigt','Viskosität bleibt gleich','Viskosität sinkt','Keine Abhängigkeit'],c:2,e:'Bei höherer Temperatur wird Öl dünnflüssiger (Viskosität sinkt). Zu dünn → Leckage, Druckverlust. Deshalb Hydraulikanlagen kühlen. Viskositäts-Temperatur-Verhalten durch VI (Viskositätsindex) beschrieben.'},
-  {q:'Was ist eine Übergangspassung?',opts:['Immer Spiel zwischen Welle und Bohrung','Immer Übermaß zwischen Welle und Bohrung','Kann sowohl Spiel als auch Übermaß haben — abhängig von Istmaßen','Nur bei Kegelverbindungen'],c:2,e:'Übergangspassung (z.B. H7/k6, H7/m6): Toleranzzonen überschneiden sich. Je nach Istmaßen von Welle und Bohrung entsteht entweder kleines Spiel oder kleines Übermaß. Typisch für präzise zentrierte Verbindungen.'},
-  {q:'Was beschreibt die 5S-Methode in der Instandhaltung?',opts:['5 Sicherheitsregeln für Maschinen','Japanische Methode: Sortieren, Setzen, Sauberhalten, Standardisieren, Selbstdisziplin','5 Schmierstoffklassen','5 Schritte der Fehlerdiagnose'],c:1,e:'5S (5 Seiri/Seiton/Seiso/Seiketsu/Shitsuke auf Japanisch): Arbeitsplatz organisieren und sauber halten. Ziel: Verschwendung eliminieren, Fehler reduzieren, Effizienz steigern. Basis für Lean Production.'},
-  {q:'Wie wird die Federkonstante c berechnet?',opts:['c = F × s','c = s / F','c = F / s [N/mm]','c = F² / s'],c:2,e:'c = F / s [N/mm] oder [kN/m]. F = Kraft [N], s = Federweg [mm]. Hohe Federkonstante = steife Feder. Federn in Reihe: 1/c_ges = 1/c1 + 1/c2. Parallel: c_ges = c1 + c2.'},
-  {q:'Was ist der Unterschied zwischen Inspektion und Wartung nach DIN 31051?',opts:['Kein Unterschied','Inspektion = Zustand feststellen und beurteilen; Wartung = Maßnahmen zur Sollzustand-Bewahrung','Wartung = Zustand feststellen; Inspektion = reparieren','Beide meinen dasselbe wie Instandsetzung'],c:1,e:'Inspektion: Ist-Zustand erfassen, beurteilen, protokollieren (messen, prüfen). Wartung: Sollzustand erhalten durch Schmieren, Reinigen, Nachstellen, Flüssigkeiten wechseln. Reaktive Reparatur = Instandsetzung.'},
-  {q:'Welches Kühlmittel eignet sich am besten für das Gewindeschneiden?',opts:['Emulsion (Wasser-Öl-Gemisch)','Druckluft','Schneidöl (hochviskos)','Kein Kühlmittel nötig'],c:2,e:'Gewindeschneiden: Schneidöl (dickflüssig) — sorgt für gute Schmierung, verhindert Gewinderisse, verbessert Oberflächenqualität. Emulsion: gut für Drehen/Fräsen. Druckluft: für Aluminium (kein Aufschmieren).'},
-  {q:'Was ist Kalibrierung?',opts:['Den Messwert eines Messgeräts korrigieren','Den Ist-Zustand eines Messgeräts ermitteln und dokumentieren ohne Eingriff','Das Messgerät einstellen','Das Messgerät austauschen'],c:1,e:'Kalibrierung = Ist-Zustand feststellen (Vergleich mit Referenz, Protokoll erstellen) ohne Veränderung. Justierung = korrigieren (Eingriff). Fehler durch: Abnutzung, Temperatur, Alterung. Kalibrierfristen einhalten!'},
-  {q:'Was bedeutet ISO 1219 in der Hydraulik?',opts:['Sicherheitsnorm für Hydraulikanlagen','Normierung der Schaltzeichen für hydraulische und pneumatische Anlagen','Druckklassen für Hydraulikschläuche','Viskositätsklassen für Hydrauliköl'],c:1,e:'ISO 1219: Grafische Symbole und Schaltpläne für Hydraulik und Pneumatik. Einheitliche Symbole weltweit: Pumpen, Ventile, Zylinder, Filter, Kühler etc. Grundlage zum Lesen von Hydraulikschaltplänen.'},
-  {q:'Welche maximale Erwärmungstemperatur gilt beim Aufziehen von Wälzlagern?',opts:['60 °C','120 °C','200 °C','300 °C'],c:1,e:'Max. 120°C beim induktiven Erwärmen oder im Lagerofen. Höhere Temperaturen beschädigen Käfig, Dichtungen und verändern die Härte des Lagerrings. Abkühlzeit abwarten und Lager sofort aufschieben.'},
-  {q:'Was beschreibt der RPZ-Wert in der FMEA?',opts:['Risiko-Prüfungs-Zahl für Maschinen','Risikoprioritätszahl = Auftretens- × Bedeutungs- × Entdeckungswahrscheinlichkeit','Reibung-Passungs-Zusammenhang','Rauheitsprüfzahl'],c:1,e:'RPZ = A × B × E (je 1-10). A = Auftretenswahrscheinlichkeit, B = Bedeutung des Fehlers, E = Entdeckungswahrscheinlichkeit. Max. RPZ = 1000. Hohe RPZ → Maßnahmen priorisieren.'},
-  {q:'Welche Schraubenverbindung ist selbsthemmend?',opts:['Metrisches Regelgewinde M-Reihe immer','Trapezgewinde Tr immer','Metrisches Regelgewinde bei normalem Anzug durch Reibung selbsthemmend','Kein Gewinde ist selbsthemmend'],c:2,e:'Metrisches Gewinde (Steigungswinkel < Reibungswinkel): selbsthemmend durch Reibung bei normalem Anzug. Trapezgewinde (Tr): nicht selbsthemmend → für Spindeln (Schraubstock). Sicherung durch Kontermutter, Federscheibe, Klebstoff.'},
-  {q:'Was ist Plandrehen?',opts:['Drehen einer Kegelform','Bearbeiten der Stirnfläche senkrecht zur Drehachse','Drehen mit konischem Werkzeug','Innendrehen einer Bohrung'],c:1,e:'Plandrehen: Werkzeug bewegt sich senkrecht zur Drehachse (radial) → erzeugt ebene Stirnfläche. Längsdrehen: Werkzeug parallel zur Achse → Zylinderfläche. Kegeldrehen: schräger Vorschub → konische Fläche.'},
-  {q:'Was versteht man unter prädiktiver Instandhaltung?',opts:['Reparatur nach Ausfall','Feste Wartungsintervalle unabhängig vom Zustand','Zustandsbasierte Wartung durch Überwachung von Messwerten','Verbesserung über den Sollzustand hinaus'],c:2,e:'Prädiktiv (zustandsbasiert): Messwerte (Schwingung, Temperatur, Ölanalyse) werden kontinuierlich überwacht → Eingriff nur bei Bedarf. Spart Kosten gegenüber zeitbasierter Wartung, verhindert ungeplante Ausfälle.'}
+  { c:1,
+    de:{q:'Was bedeutet die Toleranzangabe H7 bei einer Bohrung?',opts:['Übergangspassung mit Spielanteil','Einheitsbohrung: Unterabmaß = 0, obere Abweichung positiv','Einheitswelle mit Übermaß','Presspassung Klasse 7'],e:'H = Einheitsbohrung (Unterabmaß immer 0). Die Zahl 7 = Grundtoleranz IT7. Das Obermaß ist positiv → Bohrung immer etwas größer als Nennmaß.'},
+    en:{q:'What does the tolerance designation H7 mean for a bore?',opts:['Transition fit with clearance portion','Hole basis: lower deviation = 0, upper deviation positive','Shaft basis with interference','Press fit class 7'],e:'H = hole basis (lower deviation always 0). The number 7 = fundamental tolerance IT7. Upper deviation is positive → bore is always slightly larger than nominal dimension.'}},
+  { c:2,
+    de:{q:'Welche Festigkeitsklasse hat die höchste Zugfestigkeit?',opts:['8.8','10.9','12.9','6.8'],e:'12.9: Zugfestigkeit 1200 N/mm², Streckgrenze 90% = 1080 N/mm². Erste Zahl × 100 = Zugfestigkeit [N/mm²], zweite Zahl × 10% = Streckgrenzverhältnis.'},
+    en:{q:'Which property class has the highest tensile strength?',opts:['8.8','10.9','12.9','6.8'],e:'12.9: tensile strength 1200 N/mm², yield strength 90% = 1080 N/mm². First digit × 100 = tensile strength [N/mm²], second digit × 10% = yield strength ratio.'}},
+  { c:1,
+    de:{q:'Wie lautet die Formel für die Schnittgeschwindigkeit beim Drehen?',opts:['v_c = d × n / 1000','v_c = π × d × n / 1000','v_c = 2π × d × n','v_c = d × n / π'],e:'v_c = (π × d × n) / 1000 [m/min]. d = Werkstückdurchmesser [mm], n = Drehzahl [U/min]. Faktor 1000 wandelt mm → m um.'},
+    en:{q:'What is the formula for cutting speed in turning?',opts:['v_c = d × n / 1000','v_c = π × d × n / 1000','v_c = 2π × d × n','v_c = d × n / π'],e:'v_c = (π × d × n) / 1000 [m/min]. d = workpiece diameter [mm], n = rotational speed [rpm]. Factor 1000 converts mm → m.'}},
+  { c:1,
+    de:{q:'Was beschreibt das Pascalsche Gesetz?',opts:['Druck nimmt mit der Tiefe ab','Druck pflanzt sich in ruhenden Flüssigkeiten gleichmäßig in alle Richtungen fort','Volumen bleibt bei Druckerhöhung konstant','Flüssigkeiten sind kompressibel'],e:'Pascal: p = F/A. In einer eingeschlossenen Flüssigkeit pflanzt sich ein Druck ungeschwächt in alle Richtungen fort — Grundprinzip der Hydraulik.'},
+    en:{q:'What does Pascal\'s Law describe?',opts:['Pressure decreases with depth','Pressure is transmitted equally in all directions in a confined fluid','Volume remains constant when pressure increases','Fluids are compressible'],e:'Pascal: p = F/A. In a confined fluid, pressure is transmitted undiminished in all directions — the fundamental principle of hydraulics.'}},
+  { c:2,
+    de:{q:'Was ist ein Rillenkugellager geeignet für?',opts:['Nur radiale Kräfte','Nur axiale Kräfte','Radiale und begrenzte axiale Kräfte','Sehr hohe axiale Kräfte'],e:'Rillenkugellager (Typ 6xxx) nehmen radiale Hauptlasten und begrenzte Axialkräfte auf. Für reine Axialkräfte: Axialkugellager. Für hohe kombinierte Lasten: Kegelrollenlager.'},
+    en:{q:'What is a deep groove ball bearing suitable for?',opts:['Radial forces only','Axial forces only','Radial and limited axial forces','Very high axial forces'],e:'Deep groove ball bearings (type 6xxx) take mainly radial loads and limited axial forces. For purely axial forces: thrust ball bearings. For high combined loads: tapered roller bearings.'}},
+  { c:2,
+    de:{q:'Welche Passungsart ergibt immer Spiel zwischen Welle und Bohrung?',opts:['H7/k6','H7/p6','H7/f7','H7/s6'],e:'H7/f7 = Spielpassung. f-Welle liegt unterhalb der h-Nulllinie → immer Spiel. H7/k6 = Übergangspassung, H7/p6 und H7/s6 = Presspassung.'},
+    en:{q:'Which fit always produces clearance between shaft and bore?',opts:['H7/k6','H7/p6','H7/f7','H7/s6'],e:'H7/f7 = clearance fit. f-shaft lies below the zero line → always clearance. H7/k6 = transition fit, H7/p6 and H7/s6 = interference fit.'}},
+  { c:2,
+    de:{q:'Was misst ein Mikrometer?',opts:['Längen bis 2000mm','Längen mit 0,01mm Auflösung','Längen mit 0,001mm Auflösung','Winkel bis 0,01°'],e:'Mikrometer (Bügelmessschraube): Auflösung 0,001mm (mit Nonius). Messbereich: je nach Ausführung 0-25mm, 25-50mm etc. Messuhr: 0,001-0,01mm.'},
+    en:{q:'What does a micrometer measure?',opts:['Lengths up to 2000 mm','Lengths with 0.01 mm resolution','Lengths with 0.001 mm resolution','Angles up to 0.01°'],e:'Micrometer (outside micrometer): resolution 0.001 mm (with vernier). Measuring range: depending on type 0-25 mm, 25-50 mm etc. Dial indicator: 0.001-0.01 mm.'}},
+  { c:1,
+    de:{q:'Was bedeutet G00 in einem CNC-Programm?',opts:['Programmende','Eilgang ohne Konturschnitt','Linearinterpolation mit Vorschub','Kreisinterpolation im Uhrzeigersinn'],e:'G00 = Eilgang (Positionierung): maximale Maschinengeschwindigkeit, kein Materialabtrag. G01 = Linearinterpolation mit F-Wort. G02/G03 = Kreisinterpolation.'},
+    en:{q:'What does G00 mean in a CNC programme?',opts:['Programme end','Rapid traverse without cutting','Linear interpolation with feed rate','Circular interpolation clockwise'],e:'G00 = rapid traverse (positioning): maximum machine speed, no material removal. G01 = linear interpolation with F-word. G02/G03 = circular interpolation.'}},
+  { c:1,
+    de:{q:'Welches Symbol wird für ein Druckbegrenzungsventil in Hydraulikschaltplänen verwendet?',opts:['Quadrat mit Pfeil diagonal','Rechteck mit Feder und Kegel nach ISO 1219','Kreis mit X','Raute mit Pfeil'],e:'DBV nach ISO 1219: Quadrat mit Feder (Einstellfeder) und Schließkegel. Öffnet wenn p_ein > Einstelldruck → Rücklauf zu Tank. Schützt System vor Überdruck.'},
+    en:{q:'Which symbol is used for a pressure relief valve in hydraulic circuit diagrams?',opts:['Square with diagonal arrow','Rectangle with spring and cone per ISO 1219','Circle with X','Diamond with arrow'],e:'Pressure relief valve per ISO 1219: square with spring (adjusting spring) and closing cone. Opens when inlet pressure exceeds set pressure → returns to tank. Protects system from overpressure.'}},
+  { c:1,
+    de:{q:'Was versteht man unter IT7 im ISO-Toleranzsystem?',opts:['Toleranzlage T, Klasse 7','Grundtoleranz Klasse 7 — mittlere Qualität für Maschinenbau','Oberflächengüte Ra 7','Prüfklasse 7 nach ISO'],e:'IT = International Tolerance Grade. IT1-IT4: Präzision (Lehren), IT5-IT7: Maschinenbau (Lager, Getriebe), IT8-IT11: Allgemeiner Maschinenbau, IT12-IT18: Rohteilzustand.'},
+    en:{q:'What is IT7 in the ISO tolerance system?',opts:['Tolerance position T, class 7','Fundamental tolerance grade 7 — medium quality for mechanical engineering','Surface roughness Ra 7','Inspection class 7 per ISO'],e:'IT = International Tolerance Grade. IT1-IT4: precision (gauges), IT5-IT7: mechanical engineering (bearings, gearboxes), IT8-IT11: general engineering, IT12-IT18: rough/unmachined.'}},
+  { c:1,
+    de:{q:'Wie ist die Schraube der Festigkeitsklasse 8.8 zu interpretieren?',opts:['Zugfestigkeit 80 N/mm², Streckgrenze 80%','Zugfestigkeit 800 N/mm², Streckgrenze 80% = 640 N/mm²','Durchmesser 8mm, 8 Gewindegänge','8 Nm Anzugsmoment bei 8mm Gewinde'],e:'Erste Zahl × 100 = Zugfestigkeit: 8 × 100 = 800 N/mm². Zweite Zahl × 10% der Zugfestigkeit = Streckgrenze: 8 × 10% × 800 = 640 N/mm².'},
+    en:{q:'How is a bolt of property class 8.8 interpreted?',opts:['Tensile strength 80 N/mm², yield strength 80%','Tensile strength 800 N/mm², yield strength 80% = 640 N/mm²','Diameter 8 mm, 8 thread turns','8 Nm tightening torque for 8 mm thread'],e:'First digit × 100 = tensile strength: 8 × 100 = 800 N/mm². Second digit × 10% of tensile strength = yield strength: 8 × 10% × 800 = 640 N/mm².'}},
+  { c:1,
+    de:{q:'Was ist der Unterschied zwischen Wartung und Instandsetzung nach DIN 31051?',opts:['Kein Unterschied','Wartung ist präventiv (Soll-Zustand erhalten), Instandsetzung ist reaktiv (Soll-Zustand wiederherstellen)','Wartung kostet mehr','Instandsetzung ist präventiv'],e:'DIN 31051: Wartung = Maßnahmen zur Verzögerung des Abbaus (Öl wechseln, schmieren). Inspektion = Zustand beurteilen. Instandsetzung = Schaden beheben. Verbesserung = über Sollzustand hinaus.'},
+    en:{q:'What is the difference between maintenance and repair per DIN 31051?',opts:['No difference','Maintenance is preventive (preserving required state), repair is reactive (restoring required state)','Maintenance costs more','Repair is preventive'],e:'DIN 31051: Maintenance = measures to slow deterioration (oil change, lubrication). Inspection = assess condition. Repair = rectify damage. Improvement = exceed required state.'}},
+  { c:1,
+    de:{q:'Wie berechnet sich das Übersetzungsverhältnis eines Getriebes?',opts:['i = n2/n1 = z1/z2','i = n1/n2 = z2/z1','i = n1 × n2','i = z1 × z2 / n'],e:'i = n1/n2 = z2/z1. Antrieb (1), Abtrieb (2). Mehr Zähne am Abtriebsrad → Untersetzung (i > 1). Weniger Zähne → Übersetzung (i < 1). Drehmoment × i steigt bei Untersetzung.'},
+    en:{q:'How is the gear ratio of a gearbox calculated?',opts:['i = n2/n1 = z1/z2','i = n1/n2 = z2/z1','i = n1 × n2','i = z1 × z2 / n'],e:'i = n1/n2 = z2/z1. Drive (1), output (2). More teeth on output gear → reduction (i > 1). Fewer teeth → overdrive (i < 1). Torque × i increases with reduction.'}},
+  { c:0,
+    de:{q:'Was bedeutet ISO VG 46 bei Hydrauliköl?',opts:['Viskositätsklasse, kinematische Viskosität ≈ 46 mm²/s bei 40°C','pH-Wert 46','Additivgehalt 46%','Produktionsnummer'],e:'ISO VG (Viscosity Grade): kinematische Viskosität in mm²/s (cSt) bei 40°C. VG 32 (leicht), VG 46 (mittel), VG 68 (schwer), VG 100 (sehr schwer). Je höher, desto dickflüssiger.'},
+    en:{q:'What does ISO VG 46 mean for hydraulic oil?',opts:['Viscosity grade, kinematic viscosity ≈ 46 mm²/s at 40°C','pH value 46','Additive content 46%','Production number'],e:'ISO VG (Viscosity Grade): kinematic viscosity in mm²/s (cSt) at 40°C. VG 32 (light), VG 46 (medium), VG 68 (heavy), VG 100 (very heavy). Higher = more viscous.'}},
+  { c:1,
+    de:{q:'Was prüft die Gutlehre (Go-Seite) einer Grenzlehre?',opts:['Ob das Maß kleiner als das Mindestmaß ist','Ob das Werkstück passt (im Toleranzbereich — Gutseite muss durchgehen)','Ob das Maß größer als das Höchstmaß ist','Die Oberflächenrauheit'],e:'Go-Seite = Gutlehre = entspricht dem Mindestmaß (Bohrung) bzw. Höchstmaß (Welle). Muss durchgehen — sonst zu klein/zu groß. Not-Go = entspricht Höchstmaß (Bohrung), darf NICHT durchgehen.'},
+    en:{q:'What does the Go side of a limit gauge check?',opts:['Whether the dimension is smaller than the minimum','Whether the workpiece is within tolerance (Go side must pass through)','Whether the dimension is larger than the maximum','The surface roughness'],e:'Go side = corresponds to the minimum dimension (bore) or maximum dimension (shaft). Must pass through — otherwise too small/too large. Not-Go = corresponds to maximum (bore), must NOT pass through.'}},
+  { c:2,
+    de:{q:'Welche Zerspanungsart erzeugt rotationssymmetrische Werkstücke?',opts:['Fräsen','Bohren','Drehen','Schleifen'],e:'Drehen: Werkstück rotiert (Hauptbewegung), Werkzeug führt Vorschubbewegung aus. Ergebnis: Zylinder, Kegel, Planflächen. Fräsen: Werkzeug rotiert, Werkstück bewegt sich.'},
+    en:{q:'Which machining process produces rotationally symmetrical workpieces?',opts:['Milling','Drilling','Turning','Grinding'],e:'Turning: workpiece rotates (main movement), tool performs feed movement. Result: cylinders, cones, flat surfaces. Milling: tool rotates, workpiece moves.'}},
+  { c:1,
+    de:{q:'Was ist ein einfachwirkender Pneumatikzylinder?',opts:['Zylinder mit zwei Luftanschlüssen','Zylinder der nur in eine Richtung durch Druckluft bewegt wird, Rückzug durch Feder','Zylinder ohne Kolbenstange','Zylinder mit einstellbarer Geschwindigkeit'],e:'Einfachwirkend: Ein Luftanschluss (Druckhub), Rückzug durch eingebaute Feder. Doppeltwirkend: Zwei Anschlüsse — Druck- und Zughub durch Druckluft.'},
+    en:{q:'What is a single-acting pneumatic cylinder?',opts:['Cylinder with two air connections','Cylinder moved in one direction by compressed air only, return by spring','Cylinder without piston rod','Cylinder with adjustable speed'],e:'Single-acting: one air connection (pressure stroke), return by internal spring. Double-acting: two connections — both pressure and pull strokes by compressed air.'}},
+  { c:1,
+    de:{q:'Wie groß ist die Kraft eines Hydraulikzylinders bei p=100 bar und d=80mm?',opts:['≈ 25 kN','≈ 50 kN','≈ 100 kN','≈ 200 kN'],e:'A = π × r² = π × 40² = 5027 mm² = 50,27 cm². F = p × A = 100 bar × 50,27 cm² = 5027 kgf ≈ 50 kN. (1 bar × 1 cm² = 10 N)'},
+    en:{q:'What force does a hydraulic cylinder produce at p=100 bar and d=80 mm?',opts:['≈ 25 kN','≈ 50 kN','≈ 100 kN','≈ 200 kN'],e:'A = π × r² = π × 40² = 5027 mm² = 50.27 cm². F = p × A = 100 bar × 50.27 cm² = 5027 kgf ≈ 50 kN. (1 bar × 1 cm² = 10 N)'}},
+  { c:1,
+    de:{q:'Was beschreibt Ra bei Oberflächenangaben?',opts:['Maximale Rautiefe','Arithmetischer Mittenrauwert — Mittelwert aller Profilabweichungen','Rauheitsklasse nach ISO','Welligkeit der Oberfläche'],e:'Ra = arithmetischer Mittenrauwert [µm]: Mittelwert der absoluten Abweichungen vom Mittelwert über die Messstrecke. Rz = gemittelte Rautiefe (5 Einzelmessstrecken). Ra ≈ Rz / 4-7.'},
+    en:{q:'What does Ra describe in surface finish specifications?',opts:['Maximum roughness depth','Arithmetic mean roughness — mean of all profile deviations','Roughness class per ISO','Waviness of the surface'],e:'Ra = arithmetic mean roughness [µm]: mean of absolute deviations from the mean over the measuring length. Rz = mean roughness depth (5 individual sections). Ra ≈ Rz / 4-7.'}},
+  { c:2,
+    de:{q:'Welche Toleranz hat eine H7-Bohrung mit Nennmaß 50 mm nach ISO?',opts:['±0,025 mm','0/+0,025 mm','0/+0,030 mm','+0,010/+0,040 mm'],e:'H7 bei 50 mm (Gruppe 30–50 mm): ES = +25 µm, EI = 0. Also 50,000 – 50,025 mm. IT7 = 25 µm für diese Nenndurchmessergruppe.'},
+    en:{q:'What is the tolerance of an H7 bore with nominal size 50 mm per ISO?',opts:['±0.025 mm','0/+0.025 mm','0/+0.030 mm','+0.010/+0.040 mm'],e:'H7 at 50 mm (group 30–50 mm): ES = +25 µm, EI = 0. So 50.000 – 50.025 mm. IT7 = 25 µm for this nominal diameter group.'}},
+  { c:0,
+    de:{q:'Was ist Kriechen (Relaxation) bei Schraubenverbindungen?',opts:['Zeitabhängige Verformung unter konstanter Spannung, führt zu Vorspannkraftverlust','Korrosion der Schraubenoberfläche','Selbstlösen durch Vibration','Überdehnung beim Anziehen'],e:'Kriechen/Relaxation: Unter konstanter Spannung nimmt die Dehnung zu → Vorspannkraft sinkt. Besonders bei weichen Dichtungen, Kunststoff-Zwischenlagen oder erhöhter Temperatur.'},
+    en:{q:'What is relaxation (creep) in bolted joints?',opts:['Time-dependent deformation under constant stress, leading to loss of preload','Corrosion of the bolt surface','Self-loosening due to vibration','Overextension during tightening'],e:'Relaxation/creep: under constant stress, deformation increases → preload decreases. Especially with soft gaskets, plastic inserts or elevated temperatures.'}},
+  { c:1,
+    de:{q:'Welche Lagerluft hat ein Rillenkugellager der Reihe C3?',opts:['Normale Lagerluft (CN)','Erhöhte Lagerluft (C3 > CN)','Verringerte Lagerluft (C2 < CN)','Spielfreie Vorspannung'],e:'C3 = erhöhtes Radialspiel gegenüber Normal (CN). Verwendet bei: thermisch beanspruchten Lagern, Presspassung auf Welle, Elektromotoren. C2 = verringertes Spiel.'},
+    en:{q:'What internal clearance does a C3 series deep groove ball bearing have?',opts:['Normal clearance (CN)','Increased clearance (C3 > CN)','Reduced clearance (C2 < CN)','Preloaded without clearance'],e:'C3 = increased radial clearance compared to normal (CN). Used for: thermally loaded bearings, interference fit on shaft, electric motors. C2 = reduced clearance.'}},
+  { c:2,
+    de:{q:'Was ist Kavitation in Hydrauliksystemen?',opts:['Überhitzung des Hydrauliköls','Leckage an Dichtungen','Dampfblasenbildung bei Druckunterschreitung, die beim Kollabieren Schäden verursacht','Ölverschmutzung durch Metallpartikel'],e:'Kavitation: Wenn der statische Druck unter den Dampfdruck des Öls fällt → Blasenbildung. Beim Zusammenbruch der Blasen: Druckspitzen, Materialschäden (Pitting), Lärm, Vibrationen.'},
+    en:{q:'What is cavitation in hydraulic systems?',opts:['Overheating of hydraulic oil','Leakage at seals','Formation of vapour bubbles when pressure drops below vapour pressure, causing damage when they collapse','Oil contamination by metal particles'],e:'Cavitation: when static pressure falls below the oil\'s vapour pressure → bubble formation. When bubbles collapse: pressure spikes, material damage (pitting), noise, vibrations.'}},
+  { c:0,
+    de:{q:'Was beschreibt die Schnitttiefe (ap) beim Fräsen?',opts:['Tiefe des Schnitts in Richtung Werkzeugachse','Vorschubbewegung des Tisches','Breite des gefrästen Bereichs','Drehzahl des Fräsers'],e:'ap = axiale Schnitttiefe (in Richtung Fräserachse). ae = radiale Schnitttiefe (Eingriffsbreite). Beide zusammen bestimmen das Spanvolumen und die Schnittkräfte.'},
+    en:{q:'What does the depth of cut (ap) describe in milling?',opts:['Depth of cut in the direction of the tool axis','Feed movement of the table','Width of the milled area','Rotational speed of the cutter'],e:'ap = axial depth of cut (in direction of cutter axis). ae = radial depth of cut (engagement width). Both together determine material removal rate and cutting forces.'}},
+  { c:1,
+    de:{q:'Welche Norm regelt technische Zeichnungen in Deutschland?',opts:['ISO 9001','DIN ISO 128','DIN 276','VDI 2222'],e:'DIN ISO 128: Grundlagen der Darstellung in technischen Zeichnungen (Linienarten, Ansichten, Schnitte). DIN EN ISO 286: Toleranzen. DIN 6784: Oberflächenzeichen.'},
+    en:{q:'Which standard governs technical drawings in Germany?',opts:['ISO 9001','DIN ISO 128','DIN 276','VDI 2222'],e:'DIN ISO 128: Fundamentals of representation in technical drawings (line types, views, sections). DIN EN ISO 286: tolerances. DIN 6784: surface symbols.'}},
+  { c:3,
+    de:{q:'Was ist eine Stichprobe bei der statistischen Qualitätsprüfung?',opts:['100%-Prüfung aller Teile','Prüfung jedes zweiten Teils','Zufällig ausgewählte Prüfmenge zur Schätzung der Grundgesamtheit','Prüfung der ersten 10 Teile'],e:'Stichprobe: repräsentative Teilmenge der Grundgesamtheit. AQL (Acceptable Quality Level) gibt max. zulässigen Fehleranteil an. Stichprobenumfang nach ISO 2859.'},
+    en:{q:'What is a sample in statistical quality inspection?',opts:['100% inspection of all parts','Inspection of every second part','A randomly selected inspection quantity to estimate the population','Inspection of the first 10 parts'],e:'Sample: representative subset of the population. AQL (Acceptable Quality Level) specifies the maximum permissible defect rate. Sample size per ISO 2859.'}},
+  { c:2,
+    de:{q:'Was ist der Vorteil von Wälzlagern gegenüber Gleitlagern?',opts:['Geeigneter für extrem hohe Drehzahlen','Leiser bei hohen Drehzahlen','Geringere Anlaufreibung und standardisierte Abmessungen','Kein Schmiermittel erforderlich'],e:'Wälzlager: geringere Anlaufreibung (μ ≈ 0,001-0,005 vs. 0,05-0,15 Gleitlager), genormte Abmessungen, einfacher Austausch. Gleitlager: besser bei Stößen, sehr hohen Drehzahlen.'},
+    en:{q:'What is the advantage of rolling bearings over plain bearings?',opts:['Suitable for extremely high speeds','Quieter at high speeds','Lower starting friction and standardised dimensions','No lubricant required'],e:'Rolling bearings: lower starting friction (μ ≈ 0.001-0.005 vs 0.05-0.15 for plain bearings), standardised dimensions, easy replacement. Plain bearings: better under shock loads, very high speeds.'}},
+  { c:1,
+    de:{q:'Was versteht man unter Verschleißschutz durch Härtung?',opts:['Aufbringen einer weichen Schutzschicht','Erhöhen der Oberflächenhärte durch Wärmebehandlung oder Legierungszusätze','Polieren der Oberfläche auf Ra < 0,1 µm','Beschichten mit Lack'],e:'Einsatzhärten: Kohlenstoffanreicherung der Randzone + Härten. Induktionshärten: lokales Erwärmen + Abschrecken. Nitrieren: Stickstoffeinlagerung ohne Abschrecken. Ziel: harte Oberfläche, zäher Kern.'},
+    en:{q:'What is meant by wear protection through hardening?',opts:['Applying a soft protective layer','Increasing surface hardness through heat treatment or alloying','Polishing the surface to Ra < 0.1 µm','Coating with paint'],e:'Case hardening: carbon enrichment of surface zone + hardening. Induction hardening: local heating + quenching. Nitriding: nitrogen diffusion without quenching. Goal: hard surface, tough core.'}},
+  { c:0,
+    de:{q:'Welche Schmierstoffklasse bezeichnet ein Fett nach NLGI?',opts:['NLGI 2 = mittelharte Konsistenz (häufigste Klasse)','NLGI 0 = härtestes Fett','NLGI 6 = flüssiges Öl','NLGI 3 = Schmierpaste'],e:'NLGI (National Lubricating Grease Institute): 000 = sehr flüssig ... 6 = sehr hart. NLGI 2 ist am häufigsten (Kugellager, Wälzlager). NLGI 0-1 für Zahnräder.'},
+    en:{q:'Which lubricant class designates a grease per NLGI?',opts:['NLGI 2 = medium consistency (most common grade)','NLGI 0 = hardest grease','NLGI 6 = liquid oil','NLGI 3 = lubricating paste'],e:'NLGI (National Lubricating Grease Institute): 000 = very fluid ... 6 = very hard. NLGI 2 most common (ball bearings, rolling bearings). NLGI 0-1 for gears.'}}
 ];
 
 // ── Quiz Logic ───────────────────────────────────────────────
@@ -1333,8 +1394,10 @@ function quizStart() {
 
 function showQuestion(idx) {
   var q = quizQ[idx];
-  document.getElementById('q-text').textContent = q.q;
-  document.getElementById('q-counter').textContent = 'Frage ' + (idx + 1) + ' / 20';
+  var l = currentLang || 'de';
+  var ql = q[l] || q['de'];
+  document.getElementById('q-text').textContent = ql.q;
+  document.getElementById('q-counter').textContent = l === 'en' ? 'Question ' + (idx + 1) + ' / 20' : 'Frage ' + (idx + 1) + ' / 20';
   document.getElementById('q-prog').style.width = ((idx / 20) * 100) + '%';
   document.getElementById('q-exp').style.display = 'none';
   document.getElementById('q-exp').textContent = '';
@@ -1342,7 +1405,7 @@ function showQuestion(idx) {
 
   var optsEl = document.getElementById('q-opts');
   optsEl.innerHTML = '';
-  var shuffledOpts = q.opts.map(function(o, i) { return { text: o, orig: i }; });
+  var shuffledOpts = ql.opts.map(function(o, i) { return { text: o, orig: i }; });
   shuffledOpts = shuffle(shuffledOpts);
 
   shuffledOpts.forEach(function(opt) {
@@ -1350,7 +1413,7 @@ function showQuestion(idx) {
     btn.className = 'quiz-opt';
     btn.textContent = opt.text;
     var isCorrect = (opt.orig === q.c);
-    btn.onclick = function() { quizAnswer(btn, isCorrect, q.e, optsEl, shuffledOpts, q.c); };
+    btn.onclick = function() { quizAnswer(btn, isCorrect, ql.e, optsEl, shuffledOpts, q.c); };
     optsEl.appendChild(btn);
   });
 }
@@ -1402,12 +1465,14 @@ function quizEnd() {
 var DQ_IDX = Math.floor(Math.random() * QUIZ.length);
 var dqRevealed = false;
 
-document.getElementById('dq-q').textContent = QUIZ[DQ_IDX].q;
+document.getElementById('dq-q').textContent = (QUIZ[DQ_IDX][currentLang || 'de'] || QUIZ[DQ_IDX]['de']).q;
 
 function dqReveal() {
   if(dqRevealed) return;
   dqRevealed = true;
-  document.getElementById('dq-answer').textContent = QUIZ[DQ_IDX].opts[QUIZ[DQ_IDX].c] + ' — ' + QUIZ[DQ_IDX].e;
+  var l = currentLang || 'de';
+  var ql = QUIZ[DQ_IDX][l] || QUIZ[DQ_IDX]['de'];
+  document.getElementById('dq-answer').textContent = ql.opts[QUIZ[DQ_IDX].c] + ' — ' + ql.e;
   document.getElementById('dq-answer').style.display = 'block';
   document.getElementById('dq-toggle').style.display = 'none';
 }
@@ -1663,6 +1728,27 @@ function calcWirkungsgrad() {
     '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pab) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P_ab = Abgegebene Leistung</div>' +
     '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pverlust) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P_v = Verlustleistung</div>'
   );
+}
+
+// ── Language Toggle ──────────────────────────────────────────
+(function initLang() {
+  if (currentLang === 'en') {
+    document.documentElement.classList.add('lang-en');
+    document.documentElement.classList.remove('lang-de');
+    var btn = document.getElementById('lang-btn');
+    if (btn) btn.textContent = 'DE';
+  } else {
+    document.documentElement.classList.add('lang-de');
+    document.documentElement.classList.remove('lang-en');
+  }
+})();
+function toggleLang() {
+  currentLang = currentLang === 'de' ? 'en' : 'de';
+  localStorage.setItem('arc_lang', currentLang);
+  document.documentElement.classList.toggle('lang-en', currentLang === 'en');
+  document.documentElement.classList.toggle('lang-de', currentLang === 'de');
+  var btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = currentLang === 'de' ? 'EN' : 'DE';
 }
 </script>
 
