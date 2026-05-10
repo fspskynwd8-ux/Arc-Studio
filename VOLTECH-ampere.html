@@ -480,6 +480,28 @@ details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
   .lf-grid { grid-template-columns: 1fr 1fr; }
   .formula-eq { font-size: 13px; }
 }
+
+/* ── Calculator ─────────────────────────────────── */
+.calc-card{background:var(--bg2);border:1px solid var(--br);border-radius:12px;padding:1rem;margin-bottom:1rem;}
+.calc-card-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:.25rem;display:flex;align-items:center;gap:.4rem;}
+.calc-card-desc{font-size:11px;color:var(--tx3);margin-bottom:.75rem;line-height:1.4;}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem;}
+.calc-row.cols3{grid-template-columns:1fr 1fr 1fr;}
+.calc-field label{display:block;font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.calc-field input,.calc-field select{width:100%;box-sizing:border-box;background:var(--bg3);border:1px solid var(--br);border-radius:8px;padding:.5rem .7rem;font-size:14px;color:var(--tx);outline:none;font-family:var(--sa);-webkit-appearance:none;appearance:none;}
+.calc-field input:focus,.calc-field select:focus{border-color:var(--ac);}
+.calc-field input[readonly]{color:var(--ac);font-weight:700;background:rgba(249,115,22,.07);border-color:rgba(249,115,22,.25);}
+.calc-go{width:100%;background:var(--ac);color:#fff;border:none;border-radius:8px;padding:.65rem;font-size:13px;font-weight:700;cursor:pointer;margin:.5rem 0 .25rem;letter-spacing:.02em;}
+.calc-go:active{opacity:.85;}
+.calc-result-box{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:8px;padding:.75rem 1rem;display:none;margin-top:.4rem;}
+.calc-result-box.show{display:block;}
+.calc-result-val{font-size:22px;font-weight:800;color:var(--ac);}
+.calc-result-unit{font-size:13px;color:var(--tx3);margin-left:.25rem;}
+.calc-result-label{font-size:11px;color:var(--tx3);margin-top:2px;}
+.calc-error{font-size:12px;color:#ff453a;margin-top:.4rem;display:none;}
+.calc-hint{font-size:11px;color:var(--tx3);background:var(--bg3);border-radius:8px;padding:.5rem .75rem;margin-bottom:.75rem;line-height:1.5;}
+.calc-section-title{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin:1.25rem 0 .5rem;}
+.calc-section-title:first-child{margin-top:0;}
 </style>
 </head>
 <body>
@@ -509,6 +531,7 @@ details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
   <button class="tab-btn" data-screen="s-quiz" onclick="showScreen(this.dataset.screen)">❓ Quiz</button>
   <button class="tab-btn" data-screen="s-form" onclick="showScreen(this.dataset.screen)">🔢 Formeln</button>
   <button class="tab-btn" data-screen="s-ap" onclick="showScreen(this.dataset.screen)">✅ AP-Check</button>
+  <button class="tab-btn" data-screen="s-calc" onclick="showScreen(this.dataset.screen)">🧮 Rechner</button>
 </nav>
 
 <!-- ===================== SCREEN 1: DASHBOARD ===================== -->
@@ -1068,6 +1091,125 @@ details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
 
 </main>
 
+<main id="s-calc" class="screen">
+
+  <p class="calc-section-title">⚡ Elektrotechnik</p>
+
+  <!-- 1: Ohmsches Gesetz -->
+  <div class="calc-card">
+    <div class="calc-card-title">🔺 Ohmsches Gesetz</div>
+    <div class="calc-card-desc">Zwei Felder ausfüllen — das dritte wird berechnet.</div>
+    <div class="calc-row cols3">
+      <div class="calc-field"><label>U [V]</label><input type="number" id="ohm-u" placeholder="Spannung"></div>
+      <div class="calc-field"><label>I [A]</label><input type="number" id="ohm-i" placeholder="Strom"></div>
+      <div class="calc-field"><label>R [Ω]</label><input type="number" id="ohm-r" placeholder="Widerstand"></div>
+    </div>
+    <button class="calc-go" onclick="calcOhm()">BERECHNEN</button>
+    <div class="calc-result-box" id="ohm-res"></div>
+    <div class="calc-error" id="ohm-err"></div>
+  </div>
+
+  <!-- 2: Elektrische Leistung -->
+  <div class="calc-card">
+    <div class="calc-card-title">⚡ Elektrische Leistung</div>
+    <div class="calc-card-desc">Zwei Felder ausfüllen — P, U oder I wird berechnet.</div>
+    <div class="calc-row cols3">
+      <div class="calc-field"><label>P [W]</label><input type="number" id="pow-p" placeholder="Leistung"></div>
+      <div class="calc-field"><label>U [V]</label><input type="number" id="pow-u" placeholder="Spannung"></div>
+      <div class="calc-field"><label>I [A]</label><input type="number" id="pow-i" placeholder="Strom"></div>
+    </div>
+    <button class="calc-go" onclick="calcPower()">BERECHNEN</button>
+    <div class="calc-result-box" id="pow-res"></div>
+    <div class="calc-error" id="pow-err"></div>
+  </div>
+
+  <!-- 3: Widerstand Reihe/Parallel -->
+  <div class="calc-card">
+    <div class="calc-card-title">🔗 Widerstandsschaltung</div>
+    <div class="calc-card-desc">Bis zu 5 Widerstände — Reihe oder Parallel.</div>
+    <div class="calc-hint">Nicht benötigte Felder leer lassen.</div>
+    <div class="calc-row">
+      <div class="calc-field"><label>R1 [Ω]</label><input type="number" id="rs-r1" placeholder="z.B. 100"></div>
+      <div class="calc-field"><label>R2 [Ω]</label><input type="number" id="rs-r2" placeholder="z.B. 200"></div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field"><label>R3 [Ω]</label><input type="number" id="rs-r3" placeholder="optional"></div>
+      <div class="calc-field"><label>R4 [Ω]</label><input type="number" id="rs-r4" placeholder="optional"></div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field"><label>R5 [Ω]</label><input type="number" id="rs-r5" placeholder="optional"></div>
+      <div class="calc-field"><label>Schaltung</label>
+        <select id="rs-mode">
+          <option value="series">Reihenschaltung</option>
+          <option value="parallel">Parallelschaltung</option>
+        </select>
+      </div>
+    </div>
+    <button class="calc-go" onclick="calcResistors()">BERECHNEN</button>
+    <div class="calc-result-box" id="rs-res"></div>
+    <div class="calc-error" id="rs-err"></div>
+  </div>
+
+  <!-- 4: Transformator -->
+  <div class="calc-card">
+    <div class="calc-card-title">🔄 Transformator</div>
+    <div class="calc-card-desc">Spannungsübersetzung und Windungsverhältnis.</div>
+    <div class="calc-row">
+      <div class="calc-field"><label>U1 [V]</label><input type="number" id="tr-u1" placeholder="Primärspannung"></div>
+      <div class="calc-field"><label>U2 [V]</label><input type="number" id="tr-u2" placeholder="Sekundärspannung"></div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field"><label>N1 (Windungen)</label><input type="number" id="tr-n1" placeholder="Primärwicklung"></div>
+      <div class="calc-field"><label>N2 (Windungen)</label><input type="number" id="tr-n2" placeholder="Sekundärwicklung"></div>
+    </div>
+    <button class="calc-go" onclick="calcTrafo()">BERECHNEN</button>
+    <div class="calc-result-box" id="tr-res"></div>
+    <div class="calc-error" id="tr-err"></div>
+  </div>
+
+  <p class="calc-section-title">🔌 Kabel & Installation</p>
+
+  <!-- 5: Kabelquerschnitt -->
+  <div class="calc-card">
+    <div class="calc-card-title">📏 Kabelquerschnitt</div>
+    <div class="calc-card-desc">Mindestquerschnitt nach Strom, Länge und erlaubtem Spannungsfall.</div>
+    <div class="calc-row">
+      <div class="calc-field"><label>I [A]</label><input type="number" id="kq-i" placeholder="Strom"></div>
+      <div class="calc-field"><label>L [m]</label><input type="number" id="kq-l" placeholder="Leitungslänge"></div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field"><label>ΔU [%] (max)</label><input type="number" id="kq-du" placeholder="z.B. 3" value="3"></div>
+      <div class="calc-field"><label>U_Netz [V]</label><input type="number" id="kq-un" placeholder="z.B. 230" value="230"></div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field"><label>Material</label>
+        <select id="kq-mat">
+          <option value="56">Kupfer (κ = 56)</option>
+          <option value="35">Aluminium (κ = 35)</option>
+        </select>
+      </div>
+    </div>
+    <button class="calc-go" onclick="calcKabel()">BERECHNEN</button>
+    <div class="calc-result-box" id="kq-res"></div>
+    <div class="calc-error" id="kq-err"></div>
+  </div>
+
+  <!-- 6: Wirkungsgrad -->
+  <div class="calc-card">
+    <div class="calc-card-title">📊 Wirkungsgrad</div>
+    <div class="calc-card-desc">Zwei Felder ausfüllen — das dritte wird berechnet.</div>
+    <div class="calc-row cols3">
+      <div class="calc-field"><label>η [%]</label><input type="number" id="wg-eta" placeholder="Wirkungsgrad"></div>
+      <div class="calc-field"><label>P_zu [W]</label><input type="number" id="wg-pzu" placeholder="Aufnahme"></div>
+      <div class="calc-field"><label>P_ab [W]</label><input type="number" id="wg-pab" placeholder="Abgabe"></div>
+    </div>
+    <button class="calc-go" onclick="calcWirkungsgrad()">BERECHNEN</button>
+    <div class="calc-result-box" id="wg-res"></div>
+    <div class="calc-error" id="wg-err"></div>
+  </div>
+
+</main>
+
 <!-- ===================== APP-SWITCHER DRAWER ===================== -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="drawerClose()"></div>
 <div class="drawer" id="drawer">
@@ -1425,6 +1567,145 @@ function apUpdateProgress(type) {
   apLoad('ap1');
   apLoad('ap2');
 })();
+
+// ── Calculators ─────────────────────────────────────────────
+
+function calcShowResult(id, html) {
+  var el = document.getElementById(id);
+  el.innerHTML = html;
+  el.classList.add('show');
+}
+function calcShowError(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function calcClear(resId, errId) {
+  var r = document.getElementById(resId); r.classList.remove('show'); r.innerHTML = '';
+  var e = document.getElementById(errId); e.style.display = 'none'; e.textContent = '';
+}
+function fmtNum(n) {
+  if (Math.abs(n) >= 1000) return n.toLocaleString('de-DE', {maximumFractionDigits: 2});
+  if (Math.abs(n) >= 1) return parseFloat(n.toFixed(4)).toString();
+  return parseFloat(n.toPrecision(4)).toString();
+}
+
+function calcOhm() {
+  calcClear('ohm-res','ohm-err');
+  var u = parseFloat(document.getElementById('ohm-u').value);
+  var i = parseFloat(document.getElementById('ohm-i').value);
+  var r = parseFloat(document.getElementById('ohm-r').value);
+  var filled = [!isNaN(u),!isNaN(i),!isNaN(r)].filter(Boolean).length;
+  if (filled < 2) { calcShowError('ohm-err','Bitte mindestens 2 Werte eingeben.'); return; }
+  if (!isNaN(u) && !isNaN(i)) r = u / i;
+  else if (!isNaN(u) && !isNaN(r)) i = u / r;
+  else if (!isNaN(i) && !isNaN(r)) u = i * r;
+  calcShowResult('ohm-res',
+    '<div class="calc-result-val">' + fmtNum(u) + '<span class="calc-result-unit">V</span></div><div class="calc-result-label">U = Spannung</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(i) + '<span class="calc-result-unit">A</span></div><div class="calc-result-label">I = Strom</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(r) + '<span class="calc-result-unit">Ω</span></div><div class="calc-result-label">R = Widerstand</div>'
+  );
+}
+
+function calcPower() {
+  calcClear('pow-res','pow-err');
+  var p = parseFloat(document.getElementById('pow-p').value);
+  var u = parseFloat(document.getElementById('pow-u').value);
+  var i = parseFloat(document.getElementById('pow-i').value);
+  var filled = [!isNaN(p),!isNaN(u),!isNaN(i)].filter(Boolean).length;
+  if (filled < 2) { calcShowError('pow-err','Bitte mindestens 2 Werte eingeben.'); return; }
+  if (!isNaN(u) && !isNaN(i)) p = u * i;
+  else if (!isNaN(p) && !isNaN(u)) i = p / u;
+  else if (!isNaN(p) && !isNaN(i)) u = p / i;
+  calcShowResult('pow-res',
+    '<div class="calc-result-val">' + fmtNum(p) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P = Leistung</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(u) + '<span class="calc-result-unit">V</span></div><div class="calc-result-label">U = Spannung</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(i) + '<span class="calc-result-unit">A</span></div><div class="calc-result-label">I = Strom</div>'
+  );
+}
+
+function calcResistors() {
+  calcClear('rs-res','rs-err');
+  var ids = ['rs-r1','rs-r2','rs-r3','rs-r4','rs-r5'];
+  var vals = ids.map(function(id){ return parseFloat(document.getElementById(id).value); }).filter(function(v){ return !isNaN(v) && v > 0; });
+  if (vals.length < 2) { calcShowError('rs-err','Bitte mindestens 2 Widerstände eingeben.'); return; }
+  var mode = document.getElementById('rs-mode').value;
+  var rges;
+  if (mode === 'series') {
+    rges = vals.reduce(function(a,b){ return a+b; }, 0);
+  } else {
+    rges = 1 / vals.reduce(function(a,b){ return a + 1/b; }, 0);
+  }
+  calcShowResult('rs-res',
+    '<div class="calc-result-val">' + fmtNum(rges) + '<span class="calc-result-unit">Ω</span></div>' +
+    '<div class="calc-result-label">R_ges — ' + (mode==='series'?'Reihenschaltung':'Parallelschaltung') + ' aus ' + vals.length + ' Widerständen</div>'
+  );
+}
+
+function calcTrafo() {
+  calcClear('tr-res','tr-err');
+  var u1 = parseFloat(document.getElementById('tr-u1').value);
+  var u2 = parseFloat(document.getElementById('tr-u2').value);
+  var n1 = parseFloat(document.getElementById('tr-n1').value);
+  var n2 = parseFloat(document.getElementById('tr-n2').value);
+  var html = '';
+  if (!isNaN(u1) && !isNaN(n1) && !isNaN(n2)) {
+    u2 = u1 * n2 / n1;
+    html += '<div class="calc-result-val">' + fmtNum(u2) + '<span class="calc-result-unit">V</span></div><div class="calc-result-label">U2 = Sekundärspannung</div>';
+  } else if (!isNaN(u1) && !isNaN(u2) && !isNaN(n1)) {
+    n2 = u2 * n1 / u1;
+    html += '<div class="calc-result-val">' + fmtNum(n2) + '<span class="calc-result-unit">Wdg.</span></div><div class="calc-result-label">N2 = Sekundärwindungen</div>';
+  } else if (!isNaN(u1) && !isNaN(u2) && !isNaN(n2)) {
+    n1 = u1 * n2 / u2;
+    html += '<div class="calc-result-val">' + fmtNum(n1) + '<span class="calc-result-unit">Wdg.</span></div><div class="calc-result-label">N1 = Primärwindungen</div>';
+  } else {
+    calcShowError('tr-err','Bitte mindestens 3 der 4 Werte eingeben.'); return;
+  }
+  if (!isNaN(u1) && !isNaN(u2)) {
+    var ue = u1/u2;
+    html += '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(ue) + '<span class="calc-result-unit">:1</span></div><div class="calc-result-label">Übersetzungsverhältnis ü = U1/U2</div>';
+  }
+  calcShowResult('tr-res', html);
+}
+
+function calcKabel() {
+  calcClear('kq-res','kq-err');
+  var I = parseFloat(document.getElementById('kq-i').value);
+  var L = parseFloat(document.getElementById('kq-l').value);
+  var dU_pct = parseFloat(document.getElementById('kq-du').value) || 3;
+  var U_n = parseFloat(document.getElementById('kq-un').value) || 230;
+  var kappa = parseFloat(document.getElementById('kq-mat').value);
+  if (isNaN(I)||isNaN(L)) { calcShowError('kq-err','Bitte Strom und Leitungslänge eingeben.'); return; }
+  var dU = U_n * dU_pct / 100;
+  var A = (2 * I * L) / (kappa * dU);
+  // Standard cross-sections
+  var std = [0.75,1,1.5,2.5,4,6,10,16,25,35,50,70,95,120];
+  var A_std = std.find(function(s){ return s >= A; }) || std[std.length-1];
+  calcShowResult('kq-res',
+    '<div class="calc-result-val">' + fmtNum(A) + '<span class="calc-result-unit">mm²</span></div><div class="calc-result-label">Rechnerischer Mindestquerschnitt</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + A_std + '<span class="calc-result-unit">mm²</span></div><div class="calc-result-label">Nächste Normquerschnitt (empfohlen)</div>' +
+    '<div style="font-size:11px;color:var(--tx3);margin-top:.5rem;">Formel: A = 2×I×L / (κ×ΔU) | ΔU = ' + fmtNum(dU) + ' V</div>'
+  );
+}
+
+function calcWirkungsgrad() {
+  calcClear('wg-res','wg-err');
+  var eta = parseFloat(document.getElementById('wg-eta').value);
+  var pzu = parseFloat(document.getElementById('wg-pzu').value);
+  var pab = parseFloat(document.getElementById('wg-pab').value);
+  var filled = [!isNaN(eta),!isNaN(pzu),!isNaN(pab)].filter(Boolean).length;
+  if (filled < 2) { calcShowError('wg-err','Bitte mindestens 2 Werte eingeben.'); return; }
+  if (!isNaN(pzu) && !isNaN(pab)) eta = pab/pzu*100;
+  else if (!isNaN(eta) && !isNaN(pzu)) pab = pzu*eta/100;
+  else if (!isNaN(eta) && !isNaN(pab)) pzu = pab/(eta/100);
+  var pverlust = pzu - pab;
+  calcShowResult('wg-res',
+    '<div class="calc-result-val">' + fmtNum(eta) + '<span class="calc-result-unit">%</span></div><div class="calc-result-label">η = Wirkungsgrad</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pzu) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P_zu = Aufgenommene Leistung</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pab) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P_ab = Abgegebene Leistung</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pverlust) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P_v = Verlustleistung</div>'
+  );
+}
 </script>
 
 <!-- PWA Service Worker -->

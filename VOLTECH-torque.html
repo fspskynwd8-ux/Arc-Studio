@@ -481,6 +481,26 @@ details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
   .lf-grid { grid-template-columns: 1fr 1fr; }
   .formula-eq { font-size: 13px; }
 }
+/* ── Calculator ─────────────────────────────────── */
+.calc-card{background:var(--bg2);border:1px solid var(--br);border-radius:10px;padding:1rem;margin-bottom:1rem;}
+.calc-card-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:.25rem;display:flex;align-items:center;gap:.4rem;}
+.calc-card-desc{font-size:11px;color:var(--tx3);margin-bottom:.75rem;line-height:1.4;}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem;}
+.calc-row.cols3{grid-template-columns:1fr 1fr 1fr;}
+.calc-field label{display:block;font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.calc-field input,.calc-field select{width:100%;box-sizing:border-box;background:var(--bg3);border:1px solid var(--br);border-radius:8px;padding:.5rem .7rem;font-size:14px;color:var(--tx);outline:none;font-family:var(--sa);-webkit-appearance:none;appearance:none;}
+.calc-field input:focus,.calc-field select:focus{border-color:var(--ac);}
+.calc-go{width:100%;background:var(--ac);color:#fff;border:none;border-radius:8px;padding:.65rem;font-size:13px;font-weight:700;cursor:pointer;margin:.5rem 0 .25rem;letter-spacing:.02em;}
+.calc-go:active{opacity:.85;}
+.calc-result-box{background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.2);border-radius:8px;padding:.75rem 1rem;display:none;margin-top:.4rem;}
+.calc-result-box.show{display:block;}
+.calc-result-val{font-size:22px;font-weight:800;color:var(--ac);}
+.calc-result-unit{font-size:13px;color:var(--tx3);margin-left:.25rem;}
+.calc-result-label{font-size:11px;color:var(--tx3);margin-top:2px;}
+.calc-error{font-size:12px;color:#ff453a;margin-top:.4rem;display:none;}
+.calc-hint{font-size:11px;color:var(--tx3);background:var(--bg3);border-radius:8px;padding:.5rem .75rem;margin-bottom:.75rem;line-height:1.5;}
+.calc-section-title{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin:1.25rem 0 .5rem;}
+.calc-section-title:first-child{margin-top:0;}
 </style>
 </head>
 <body>
@@ -510,6 +530,7 @@ details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
   <button class="tab-btn" data-screen="s-quiz" onclick="showScreen(this.dataset.screen)">❓ Quiz</button>
   <button class="tab-btn" data-screen="s-form" onclick="showScreen(this.dataset.screen)">🔢 Formeln</button>
   <button class="tab-btn" data-screen="s-ap" onclick="showScreen(this.dataset.screen)">✅ AP-Check</button>
+  <button class="tab-btn" data-screen="s-calc" onclick="showScreen(this.dataset.screen)">🧮 Rechner</button>
 </nav>
 
 <!-- ===================== SCREEN 1: DASHBOARD ===================== -->
@@ -1037,6 +1058,116 @@ details[open] .lf-arrow { transform: rotate(90deg); color: var(--ac); }
 
 </main>
 
+<main id="s-calc" class="screen">
+
+  <p class="calc-section-title">⚙️ Mechanik</p>
+
+  <!-- 1: Drehmoment -->
+  <div class="calc-card">
+    <div class="calc-card-title">🔩 Drehmoment</div>
+    <div class="calc-card-desc">Zwei Felder ausfüllen — das dritte wird berechnet.</div>
+    <div class="calc-row cols3">
+      <div class="calc-field"><label>M [Nm]</label><input type="number" id="dm-m" placeholder="Drehmoment"></div>
+      <div class="calc-field"><label>F [N]</label><input type="number" id="dm-f" placeholder="Kraft"></div>
+      <div class="calc-field"><label>r [m]</label><input type="number" id="dm-r" placeholder="Hebelarm"></div>
+    </div>
+    <button class="calc-go" onclick="calcDrehmoment()">BERECHNEN</button>
+    <div class="calc-result-box" id="dm-res"></div>
+    <div class="calc-error" id="dm-err"></div>
+  </div>
+
+  <!-- 2: Mechanische Leistung -->
+  <div class="calc-card">
+    <div class="calc-card-title">⚡ Mechanische Leistung</div>
+    <div class="calc-card-desc">Leistung aus Drehmoment und Drehzahl berechnen.</div>
+    <div class="calc-row">
+      <div class="calc-field"><label>M [Nm]</label><input type="number" id="ml-m" placeholder="Drehmoment"></div>
+      <div class="calc-field"><label>n [U/min]</label><input type="number" id="ml-n" placeholder="Drehzahl"></div>
+    </div>
+    <button class="calc-go" onclick="calcMechLeistung()">BERECHNEN</button>
+    <div class="calc-result-box" id="ml-res"></div>
+    <div class="calc-error" id="ml-err"></div>
+  </div>
+
+  <!-- 3: Getriebe -->
+  <div class="calc-card">
+    <div class="calc-card-title">⚙️ Getriebe-Rechner</div>
+    <div class="calc-card-desc">Übersetzungsverhältnis, Drehzahl oder Zähnezahl berechnen.</div>
+    <div class="calc-hint">Drei der vier Felder ausfüllen.</div>
+    <div class="calc-row">
+      <div class="calc-field"><label>n1 [U/min]</label><input type="number" id="gt-n1" placeholder="Antrieb"></div>
+      <div class="calc-field"><label>n2 [U/min]</label><input type="number" id="gt-n2" placeholder="Abtrieb"></div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field"><label>z1 (Zähne)</label><input type="number" id="gt-z1" placeholder="Antriebsrad"></div>
+      <div class="calc-field"><label>z2 (Zähne)</label><input type="number" id="gt-z2" placeholder="Abtriebsrad"></div>
+    </div>
+    <button class="calc-go" onclick="calcGetriebe()">BERECHNEN</button>
+    <div class="calc-result-box" id="gt-res"></div>
+    <div class="calc-error" id="gt-err"></div>
+  </div>
+
+  <p class="calc-section-title">💧 Hydraulik & Pneumatik</p>
+
+  <!-- 4: Hydraulik p = F/A -->
+  <div class="calc-card">
+    <div class="calc-card-title">💧 Hydraulik / Druck</div>
+    <div class="calc-card-desc">Zwei Felder ausfüllen — das dritte wird berechnet.</div>
+    <div class="calc-row cols3">
+      <div class="calc-field"><label>p [bar]</label><input type="number" id="hy-p" placeholder="Druck"></div>
+      <div class="calc-field"><label>F [N]</label><input type="number" id="hy-f" placeholder="Kraft"></div>
+      <div class="calc-field"><label>A [cm²]</label><input type="number" id="hy-a" placeholder="Fläche"></div>
+    </div>
+    <button class="calc-go" onclick="calcHydraulik()">BERECHNEN</button>
+    <div class="calc-result-box" id="hy-res"></div>
+    <div class="calc-error" id="hy-err"></div>
+  </div>
+
+  <p class="calc-section-title">🔩 Verbindungstechnik</p>
+
+  <!-- 5: Anzugsmoment -->
+  <div class="calc-card">
+    <div class="calc-card-title">🔧 Anzugsmoment Schraube</div>
+    <div class="calc-card-desc">Richtwert für Anzugsmoment nach Gewindedurchmesser und Festigkeitsklasse (μ ≈ 0.12).</div>
+    <div class="calc-row">
+      <div class="calc-field"><label>Gewinde d [mm]</label>
+        <select id="az-d">
+          <option value="3">M3</option><option value="4">M4</option><option value="5">M5</option>
+          <option value="6">M6</option><option value="8">M8</option><option value="10" selected>M10</option>
+          <option value="12">M12</option><option value="16">M16</option><option value="20">M20</option>
+          <option value="24">M24</option>
+        </select>
+      </div>
+      <div class="calc-field"><label>Festigkeitsklasse</label>
+        <select id="az-fk">
+          <option value="0.58">5.6</option>
+          <option value="0.64">6.8</option>
+          <option value="0.80" selected>8.8</option>
+          <option value="0.90">10.9</option>
+          <option value="1.08">12.9</option>
+        </select>
+      </div>
+    </div>
+    <button class="calc-go" onclick="calcAnzug()">BERECHNEN</button>
+    <div class="calc-result-box" id="az-res"></div>
+  </div>
+
+  <!-- 6: Wirkungsgrad -->
+  <div class="calc-card">
+    <div class="calc-card-title">📊 Wirkungsgrad</div>
+    <div class="calc-card-desc">Zwei Felder ausfüllen — das dritte wird berechnet.</div>
+    <div class="calc-row cols3">
+      <div class="calc-field"><label>η [%]</label><input type="number" id="wg-eta" placeholder="Wirkungsgrad"></div>
+      <div class="calc-field"><label>P_zu [W]</label><input type="number" id="wg-pzu" placeholder="Aufnahme"></div>
+      <div class="calc-field"><label>P_ab [W]</label><input type="number" id="wg-pab" placeholder="Abgabe"></div>
+    </div>
+    <button class="calc-go" onclick="calcWirkungsgrad()">BERECHNEN</button>
+    <div class="calc-result-box" id="wg-res"></div>
+    <div class="calc-error" id="wg-err"></div>
+  </div>
+
+</main>
+
 <!-- ===================== APP-SWITCHER DRAWER ===================== -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="drawerClose()"></div>
 <div class="drawer" id="drawer">
@@ -1394,6 +1525,145 @@ function apUpdateProgress(type) {
   apLoad('ap1');
   apLoad('ap2');
 })();
+
+// ── Calculators ─────────────────────────────────────────────
+
+function calcShowResult(id, html) {
+  var el = document.getElementById(id);
+  el.innerHTML = html;
+  el.classList.add('show');
+}
+function calcShowError(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function calcClear(resId, errId) {
+  var r = document.getElementById(resId); r.classList.remove('show'); r.innerHTML = '';
+  if (errId) { var e = document.getElementById(errId); if(e){e.style.display = 'none'; e.textContent = '';} }
+}
+function fmtNum(n) {
+  if (Math.abs(n) >= 1000) return n.toLocaleString('de-DE', {maximumFractionDigits: 2});
+  if (Math.abs(n) >= 1) return parseFloat(n.toFixed(4)).toString();
+  return parseFloat(n.toPrecision(4)).toString();
+}
+
+function calcDrehmoment() {
+  calcClear('dm-res','dm-err');
+  var m = parseFloat(document.getElementById('dm-m').value);
+  var f = parseFloat(document.getElementById('dm-f').value);
+  var r = parseFloat(document.getElementById('dm-r').value);
+  var filled = [!isNaN(m),!isNaN(f),!isNaN(r)].filter(Boolean).length;
+  if (filled < 2) { calcShowError('dm-err','Bitte mindestens 2 Werte eingeben.'); return; }
+  if (!isNaN(f) && !isNaN(r)) m = f * r;
+  else if (!isNaN(m) && !isNaN(r)) f = m / r;
+  else if (!isNaN(m) && !isNaN(f)) r = m / f;
+  calcShowResult('dm-res',
+    '<div class="calc-result-val">' + fmtNum(m) + '<span class="calc-result-unit">Nm</span></div><div class="calc-result-label">M = Drehmoment</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(f) + '<span class="calc-result-unit">N</span></div><div class="calc-result-label">F = Kraft</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(r) + '<span class="calc-result-unit">m</span></div><div class="calc-result-label">r = Hebelarm</div>'
+  );
+}
+
+function calcMechLeistung() {
+  calcClear('ml-res','ml-err');
+  var m = parseFloat(document.getElementById('ml-m').value);
+  var n = parseFloat(document.getElementById('ml-n').value);
+  if (isNaN(m)||isNaN(n)) { calcShowError('ml-err','Bitte beide Werte eingeben.'); return; }
+  var omega = 2 * Math.PI * n / 60;
+  var p = m * omega;
+  var pkw = p / 1000;
+  calcShowResult('ml-res',
+    '<div class="calc-result-val">' + fmtNum(p) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P = Mechanische Leistung</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pkw) + '<span class="calc-result-unit">kW</span></div><div class="calc-result-label">P in Kilowatt</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(omega) + '<span class="calc-result-unit">rad/s</span></div><div class="calc-result-label">ω = Winkelgeschwindigkeit</div>'
+  );
+}
+
+function calcGetriebe() {
+  calcClear('gt-res','gt-err');
+  var n1 = parseFloat(document.getElementById('gt-n1').value);
+  var n2 = parseFloat(document.getElementById('gt-n2').value);
+  var z1 = parseFloat(document.getElementById('gt-z1').value);
+  var z2 = parseFloat(document.getElementById('gt-z2').value);
+  var html = '';
+  var i;
+  if (!isNaN(n1) && !isNaN(n2)) {
+    i = n1 / n2;
+    if (!isNaN(z1) && isNaN(z2)) z2 = z1 * i;
+    if (!isNaN(z2) && isNaN(z1)) z1 = z2 / i;
+  } else if (!isNaN(z1) && !isNaN(z2)) {
+    i = z2 / z1;
+    if (!isNaN(n1) && isNaN(n2)) n2 = n1 / i;
+    if (!isNaN(n2) && isNaN(n1)) n1 = n2 * i;
+  } else {
+    calcShowError('gt-err','Bitte mindestens n1+n2 oder z1+z2 eingeben.'); return;
+  }
+  if (isNaN(i)) { calcShowError('gt-err','Nicht genug Werte für Berechnung.'); return; }
+  html += '<div class="calc-result-val">' + fmtNum(i) + '<span class="calc-result-unit">:1</span></div><div class="calc-result-label">i = Übersetzungsverhältnis (n1/n2)</div>';
+  if (!isNaN(n2)) html += '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(n2) + '<span class="calc-result-unit">U/min</span></div><div class="calc-result-label">n2 = Abtriebsdrehzahl</div>';
+  if (!isNaN(n1)) html += '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(n1) + '<span class="calc-result-unit">U/min</span></div><div class="calc-result-label">n1 = Antriebsdrehzahl</div>';
+  if (!isNaN(z1) && !isNaN(z2)) html += '<div style="font-size:11px;color:var(--tx3);margin-top:.5rem;">z1 = ' + fmtNum(z1) + ' | z2 = ' + fmtNum(z2) + ' Zähne</div>';
+  calcShowResult('gt-res', html);
+}
+
+function calcHydraulik() {
+  calcClear('hy-res','hy-err');
+  var p = parseFloat(document.getElementById('hy-p').value); // bar
+  var f = parseFloat(document.getElementById('hy-f').value); // N
+  var a = parseFloat(document.getElementById('hy-a').value); // cm²
+  var filled = [!isNaN(p),!isNaN(f),!isNaN(a)].filter(Boolean).length;
+  if (filled < 2) { calcShowError('hy-err','Bitte mindestens 2 Werte eingeben.'); return; }
+  // p [bar] = F[N] / A[cm²] / 10  (1 bar = 10 N/cm²)
+  if (!isNaN(f) && !isNaN(a)) p = f / (a * 10);
+  else if (!isNaN(p) && !isNaN(a)) f = p * a * 10;
+  else if (!isNaN(p) && !isNaN(f)) a = f / (p * 10);
+  calcShowResult('hy-res',
+    '<div class="calc-result-val">' + fmtNum(p) + '<span class="calc-result-unit">bar</span></div><div class="calc-result-label">p = Druck</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(f) + '<span class="calc-result-unit">N</span></div><div class="calc-result-label">F = Kraft</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(a) + '<span class="calc-result-unit">cm²</span></div><div class="calc-result-label">A = Kolbenfläche</div>'
+  );
+}
+
+function calcAnzug() {
+  calcClear('az-res', null);
+  var d = parseFloat(document.getElementById('az-d').value);
+  var fk = parseFloat(document.getElementById('az-fk').value);
+  // Streckgrenzennäherung: R_p0.2 Werte für Festigkeitsklassen
+  // M_A ≈ 0.12 × F_v × d (mm)  mit F_v = 0.7 × R_p0.2 × A_s
+  // A_s (Spannungsquerschnitte in mm²) — simplified lookup
+  var as_table = {3:5.03,4:8.78,5:14.2,6:20.1,8:36.6,10:58,12:84.3,16:157,20:245,24:353};
+  var rp_table = {'0.58':300,'0.64':480,'0.80':640,'0.90':900,'1.08':1080};
+  var A_s = as_table[d] || (Math.PI/4*Math.pow(d*0.9,2));
+  var Rp = rp_table[String(fk)] || 640;
+  var Fv = 0.70 * Rp * A_s; // N
+  var MA = 0.12 * Fv * d / 1000; // Nm (d in mm → /1000)
+  var fkLabel = document.getElementById('az-fk').options[document.getElementById('az-fk').selectedIndex].text;
+  var dLabel = document.getElementById('az-d').options[document.getElementById('az-d').selectedIndex].text;
+  calcShowResult('az-res',
+    '<div class="calc-result-val">' + fmtNum(MA) + '<span class="calc-result-unit">Nm</span></div><div class="calc-result-label">Anzugsmoment M_A (' + dLabel + ' / FK ' + fkLabel + ')</div>' +
+    '<div style="font-size:11px;color:var(--tx3);margin-top:.5rem;">Vorspannkraft F_v ≈ ' + fmtNum(Fv) + ' N | Richtwert, μ = 0.12</div>'
+  );
+}
+
+function calcWirkungsgrad() {
+  calcClear('wg-res','wg-err');
+  var eta = parseFloat(document.getElementById('wg-eta').value);
+  var pzu = parseFloat(document.getElementById('wg-pzu').value);
+  var pab = parseFloat(document.getElementById('wg-pab').value);
+  var filled = [!isNaN(eta),!isNaN(pzu),!isNaN(pab)].filter(Boolean).length;
+  if (filled < 2) { calcShowError('wg-err','Bitte mindestens 2 Werte eingeben.'); return; }
+  if (!isNaN(pzu) && !isNaN(pab)) eta = pab/pzu*100;
+  else if (!isNaN(eta) && !isNaN(pzu)) pab = pzu*eta/100;
+  else if (!isNaN(eta) && !isNaN(pab)) pzu = pab/(eta/100);
+  var pverlust = pzu - pab;
+  calcShowResult('wg-res',
+    '<div class="calc-result-val">' + fmtNum(eta) + '<span class="calc-result-unit">%</span></div><div class="calc-result-label">η = Wirkungsgrad</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pzu) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P_zu = Aufgenommene Leistung</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pab) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P_ab = Abgegebene Leistung</div>' +
+    '<div class="calc-result-val" style="margin-top:.5rem">' + fmtNum(pverlust) + '<span class="calc-result-unit">W</span></div><div class="calc-result-label">P_v = Verlustleistung</div>'
+  );
+}
 </script>
 
 <!-- PWA Service Worker -->
