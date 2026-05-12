@@ -9,7 +9,7 @@ set -e  # Abbruch bei Fehler
 
 # ── KONFIGURATION ─────────────────────────────────────────────
 # ⚠ Diese Werte anpassen — NIEMALS committen!
-FTP_HOST="${IONOS_FTP_HOST:-ftp.deine-domain.de}"
+FTP_HOST="${IONOS_FTP_HOST:-ftp.arc-studio.org}"
 FTP_USER="${IONOS_FTP_USER:-dein-ftp-benutzer}"
 FTP_PASS="${IONOS_FTP_PASS:-dein-ftp-passwort}"
 FTP_DIR="${IONOS_FTP_DIR:-/}"       # Zielverzeichnis auf Server (meist / oder /htdocs/)

@@ -10,9 +10,9 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# www → non-www (optional, kommentieren falls www gewünscht)
-# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-# RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+# www → non-www Redirect (arc-studio.org kanonisch)
+RewriteCond %{HTTP_HOST} ^www\.arc-studio\.org$ [NC]
+RewriteRule ^ https://arc-studio.org%{REQUEST_URI} [L,R=301]
 
 # ── SERVICE WORKER: Root-Scope erlauben ───────────────────────
 # Ermöglicht sw.js in /pwa/ die gesamte Domain (/) zu kontrollieren
@@ -61,7 +61,8 @@ Header always set X-XSS-Protection "1; mode=block"
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
 Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 
-# HSTS: Browser merkt sich HTTPS für 1 Jahr (erst aktivieren wenn HTTPS stabil läuft!)
+# HSTS: Browser merkt sich HTTPS für 1 Jahr
+# ⚠ Erst aktivieren NACHDEM HTTPS stabil läuft und getestet ist!
 # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 
 # ── FEHLERSEITEN ──────────────────────────────────────────────
