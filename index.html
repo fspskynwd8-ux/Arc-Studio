@@ -821,6 +821,107 @@ html.lang-de .en-only { display: none !important; }
 .lang-switch-btn { font-size: 12px; font-weight: 700; padding: .3rem .6rem; border-radius: 6px; background: transparent; border: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.5); cursor: pointer; transition: all .15s; }
 .lang-switch-btn.active { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.3); }
 .lang-switch-btn:hover { background: rgba(255,255,255,.08); color: rgba(255,255,255,.8); }
+
+/* ══ KONTAKTFORMULAR ════════════════════════════════════════ */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.contact-form label {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  font-size: .875rem;
+  color: rgba(255,255,255,.7);
+  font-weight: 500;
+}
+.contact-form input,
+.contact-form textarea {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  color: #fff;
+  font-size: .9rem;
+  font-family: inherit;
+  padding: .65rem .9rem;
+  transition: border-color .15s, background .15s;
+  outline: none;
+  resize: vertical;
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: rgba(99,102,241,.7);
+  background: rgba(99,102,241,.08);
+}
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: rgba(255,255,255,.3);
+}
+.contact-form textarea {
+  min-height: 130px;
+}
+.contact-form .hp-field {
+  display: none;
+  visibility: hidden;
+  position: absolute;
+  left: -9999px;
+}
+.contact-form-btn {
+  align-self: flex-start;
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: .9rem;
+  font-weight: 600;
+  padding: .7rem 1.6rem;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+}
+.contact-form-btn:hover:not(:disabled) {
+  background: #4f46e5;
+}
+.contact-form-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+.contact-msg {
+  font-size: .9rem;
+  padding: .65rem .9rem;
+  border-radius: 8px;
+  display: none;
+}
+.contact-msg.success {
+  background: rgba(34,197,94,.12);
+  border: 1px solid rgba(34,197,94,.3);
+  color: #4ade80;
+  display: block;
+}
+.contact-msg.error {
+  background: rgba(239,68,68,.12);
+  border: 1px solid rgba(239,68,68,.3);
+  color: #f87171;
+  display: block;
+}
+.contact-divider {
+  margin: 1.25rem 0 1rem;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.contact-alt {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.contact-alt-label {
+  font-size: .75rem;
+  color: rgba(255,255,255,.4);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .25rem;
+}
 </style>
 </head>
 <body>
@@ -1574,20 +1675,135 @@ VOLTIQ is the result — free, no tracking, no BS. If the app helps you, great. 
     <h2 class="section-headline" id="kontakt-headline"><span class="de-only">Schreib uns.</span><span class="en-only">Get in Touch.</span></h2>
 
     <div class="card contact-card">
-      <ul class="contact-list">
-        <li>
-          <span class="contact-icon" aria-hidden="true">📧</span>
-          <span>E-Mail:</span>
-          <a href="mailto:arc.studio@gmx.de">arc.studio@gmx.de</a>
-        </li>
-        <li>
-          <span class="contact-icon" aria-hidden="true">🐙</span>
-          <span>GitHub:</span>
-          <a href="https://github.com/arcstudio-dev/Arc-Studio" target="_blank" rel="noopener noreferrer">github.com/arcstudio-dev/Arc-Studio</a>
-        </li>
-      </ul>
-      <p class="contact-note"><span class="de-only">Kein Kontaktformular — ich antworte direkt per E-Mail, meistens innerhalb von 1–2 Tagen.</span><span class="en-only">No contact form — I reply directly via email, usually within 1–2 days.</span></p>
+      <form class="contact-form" id="contactForm" novalidate>
+        <!-- Honeypot (Bot-Schutz, für echte Nutzer unsichtbar) -->
+        <label class="hp-field" aria-hidden="true">
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </label>
+
+        <label>
+          <span class="de-only">Name</span><span class="en-only">Name</span>
+          <input type="text" name="name" id="cf-name" maxlength="100" required
+                 placeholder="Max Mustermann">
+        </label>
+        <label>
+          <span class="de-only">E-Mail-Adresse</span><span class="en-only">Email address</span>
+          <input type="email" name="email" id="cf-email" maxlength="254" required
+                 placeholder="max@example.de">
+        </label>
+        <label>
+          <span class="de-only">Nachricht</span><span class="en-only">Message</span>
+          <textarea name="message" id="cf-message" maxlength="2000" required
+                    placeholder="Deine Nachricht…"></textarea>
+        </label>
+
+        <button type="submit" class="contact-form-btn" id="cf-submit">
+          <span class="de-only">Nachricht senden</span>
+          <span class="en-only">Send message</span>
+        </button>
+
+        <div class="contact-msg" id="cf-msg" role="alert" aria-live="polite"></div>
+      </form>
+
+      <hr class="contact-divider">
+
+      <div class="contact-alt">
+        <p class="contact-alt-label">
+          <span class="de-only">Alternativ erreichbar via</span>
+          <span class="en-only">Alternatively reachable via</span>
+        </p>
+        <ul class="contact-list">
+          <li>
+            <span class="contact-icon" aria-hidden="true">📧</span>
+            <span>E-Mail:</span>
+            <a href="mailto:arc.studio@gmx.de">arc.studio@gmx.de</a>
+          </li>
+          <li>
+            <span class="contact-icon" aria-hidden="true">🐙</span>
+            <span>GitHub:</span>
+            <a href="https://github.com/arcstudio-dev/Arc-Studio" target="_blank" rel="noopener noreferrer">github.com/arcstudio-dev/Arc-Studio</a>
+          </li>
+        </ul>
+      </div>
     </div>
+
+    <script>
+    (function () {
+      var form    = document.getElementById('contactForm');
+      var btn     = document.getElementById('cf-submit');
+      var msgBox  = document.getElementById('cf-msg');
+
+      function showMsg(text, type) {
+        msgBox.textContent = text;
+        msgBox.className = 'contact-msg ' + type;
+      }
+      function clearMsg() {
+        msgBox.textContent = '';
+        msgBox.className = 'contact-msg';
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearMsg();
+
+        var name    = document.getElementById('cf-name').value.trim();
+        var email   = document.getElementById('cf-email').value.trim();
+        var message = document.getElementById('cf-message').value.trim();
+        var website = form.querySelector('input[name="website"]').value;
+
+        if (!name || !email || !message) {
+          showMsg(
+            (document.documentElement.classList.contains('lang-en')
+              ? 'Please fill in all fields.'
+              : 'Bitte alle Felder ausfüllen.'),
+            'error'
+          );
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = document.documentElement.classList.contains('lang-en')
+          ? 'Sending…'
+          : 'Wird gesendet…';
+
+        fetch('feedback.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, email: email, message: message, website: website })
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data.ok) {
+            showMsg(
+              document.documentElement.classList.contains('lang-en')
+                ? '✅ Message sent!'
+                : '✅ Nachricht gesendet!',
+              'success'
+            );
+            form.reset();
+          } else {
+            showMsg('❌ ' + (data.error || (document.documentElement.classList.contains('lang-en')
+              ? 'An error occurred. Please try again.'
+              : 'Ein Fehler ist aufgetreten. Bitte erneut versuchen.')), 'error');
+          }
+        })
+        .catch(function () {
+          showMsg(
+            document.documentElement.classList.contains('lang-en')
+              ? '❌ Network error. Please try again later.'
+              : '❌ Netzwerkfehler. Bitte später erneut versuchen.',
+            'error'
+          );
+        })
+        .finally(function () {
+          btn.disabled = false;
+          btn.innerHTML = document.documentElement.classList.contains('lang-en')
+            ? '<span class="de-only">Nachricht senden</span><span class="en-only">Send message</span>'
+            : '<span class="de-only">Nachricht senden</span><span class="en-only">Send message</span>';
+        });
+      });
+    })();
+    </script>
   </div>
 </section>
 

@@ -59,11 +59,11 @@ Header always set X-Content-Type-Options "nosniff"
 Header always set X-Frame-Options "SAMEORIGIN"
 Header always set X-XSS-Protection "1; mode=block"
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none'"
 Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 
-# HSTS: Browser merkt sich HTTPS für 1 Jahr
-# ⚠ Erst aktivieren NACHDEM HTTPS stabil läuft und getestet ist!
-# Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+# HSTS: Browser merkt sich HTTPS für 1 Jahr (inkl. preload-Liste)
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
 # ── FEHLERSEITEN ──────────────────────────────────────────────
 ErrorDocument 404 /index.html
