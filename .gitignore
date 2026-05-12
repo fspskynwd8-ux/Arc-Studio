@@ -1,3 +1,10 @@
 .DS_Store
 Thumbs.db
 *.log
+
+# FTP-Zugangsdaten — NIEMALS committen
+.env
+*.env.local
+
+# Deployment-Logs
+deploy.log

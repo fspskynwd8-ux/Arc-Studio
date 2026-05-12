@@ -1628,7 +1628,8 @@ if('serviceWorker' in navigator){
   var isLocal = ['localhost','127.0.0.1','0.0.0.0'].includes(location.hostname)
              || location.protocol === 'file:'
              || location.hostname.endsWith('.local')
-             || location.hostname.endsWith('.github.io');
+             || location.hostname.endsWith('.github.io')
+             || location.protocol === 'https:';
   if(isLocal){
     window.addEventListener('load', function(){
       navigator.serviceWorker.register('./pwa/sw.js', {scope: './'})

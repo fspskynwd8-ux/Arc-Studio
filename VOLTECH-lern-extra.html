@@ -1407,26 +1407,66 @@ var CARDS = [
 ];
 
 var QUIZ = [
-  {q:'Wie lautet das Ohmsche Gesetz?',f:'U = ?',kat:'dc',opts:['U = R × I','U = R + I','U = R / I','U = I / R'],c:0,e:'U=R×I. Strom: I=U/R. Widerstand: R=U/I.'},
-  {q:'Was ist die Einheit der elektrischen Leistung?',f:'',kat:'dc',opts:['Watt (W)','Joule (J)','Ampere (A)','Volt (V)'],c:0,e:'Watt = Volt × Ampere. 1 kW = 1000 W.'},
-  {q:'Gesamtwiderstand: 3 Widerstände (100Ω, 220Ω, 470Ω) in Reihe?',f:'R = R₁ + R₂ + R₃',kat:'dc',opts:['790 Ω','70 Ω','197 Ω','790 kΩ'],c:0,e:'100+220+470=790 Ω. In der Reihe addieren sich alle Widerstände.'},
-  {q:'2 gleiche Widerstände (200Ω) parallel – Gesamtwiderstand?',f:'1/R = 1/R₁ + 1/R₂',kat:'dc',opts:['100 Ω','400 Ω','200 Ω','50 Ω'],c:0,e:'1/R=1/200+1/200=2/200 → R=100 Ω. Parallel immer kleiner als kleinster Wert.'},
-  {q:'Elektrische Leistung bei U=230V und I=4A?',f:'P = U × I',kat:'dc',opts:['920 W','57,5 W','234 W','920 kW'],c:0,e:'P=230×4=920 W = 0,92 kW. Typisch für einen Wasserkocher.'},
-  {q:'Wirkungsgrad eines Motors: P_ab=4,6 kW, P_zu=5 kW?',f:'η = P_ab / P_zu',kat:'dc',opts:['0,92 = 92%','0,88 = 88%','1,09 = 109%','0,46 = 46%'],c:0,e:'η=4,6/5=0,92 = 92%. Verlustleistung: 0,4 kW als Wärme.'},
-  {q:'Was ist der induktive Blindwiderstand bei f=50Hz und L=200mH?',f:'XL = 2π × f × L',kat:'ac',opts:['≈ 62,8 Ω','≈ 6,28 Ω','≈ 628 Ω','≈ 0,628 Ω'],c:0,e:'XL=2π×50×0,2≈62,83 Ω. Doppelte Induktivität → doppelter XL.'},
-  {q:'Leistungsfaktor cos φ = 0,8 bei S=10 kVA – Wirkleistung P?',f:'P = S × cos φ',kat:'ac',opts:['8 kW','12,5 kW','6 kW','10 kW'],c:0,e:'P=10×0,8=8 kW. Q=√(10²-8²)=6 kvar.'},
-  {q:'Stern-Dreieck-Anlauf – auf welchen Faktor sinkt der Anlaufstrom?',f:'',kat:'ac',opts:['1/3 des Direktanlaufstroms','1/√3','2/3','Bleibt gleich'],c:0,e:'Stern: U=400/√3≈231V. Dreieck: U=400V. Strom in Stern: 1/3 des Dreieckstroms.'},
-  {q:'AND-Gatter: A=1, B=0 – Ausgangswert Q?',f:'Q = A AND B',kat:'sps',opts:['0','1','Undefiniert','Beide'],c:0,e:'AND: Ausgang 1 NUR wenn ALLE Eingänge 1. A=1 UND B=0 → Q=0.'},
-  {q:'Timer TON: IN wechselt auf 0 während der Verzögerungszeit – was passiert?',f:'',kat:'sps',opts:['Timer wird zurückgesetzt, Q bleibt 0','Q schaltet sofort auf 1','Q bleibt im letzten Zustand','Fehler in der SPS'],c:0,e:'TON: IN=0 → sofort Reset. Verzögerung muss vollständig ablaufen wenn IN=1.'},
-  {q:'Vorteil von 4–20mA gegenüber 0–10V?',f:'',kat:'sps',opts:['Drahtbruch erkennbar (Signal < 4mA)','Geringerer Energieverbrauch','Höhere Auflösung','Einfachere Verkabelung'],c:0,e:'0mA = Drahtbruch oder Kurzschluss! 4mA = Messwert 0%. Sicherheitsvorteil!'},
-  {q:'Was ist das Tastverhältnis D bei PWM?',f:'D = t_ein / T',kat:'elek',opts:['Einschaltzeit / Periodendauer','Periodendauer / Ausschaltzeit','Amplitude / Frequenz','Ausschaltzeit / Einschaltzeit'],c:0,e:'D=0,7 → 70% Einschaltzeit → 70% der Versorgungsspannung im Mittel.'},
-  {q:'Zeitkonstante τ eines RC-Glieds: R=10kΩ, C=100µF?',f:'τ = R × C',kat:'elek',opts:['1 Sekunde','10 Sekunden','0,1 Sekunden','100 Sekunden'],c:0,e:'τ=10000×0,0001=1s. Nach 5s (5τ) ist der Kondensator praktisch voll geladen.'},
-  {q:'Mindestisolationswiderstand einer neuen elektrischen Anlage?',f:'',kat:'pruef',opts:['≥ 1 MΩ','≥ 1 kΩ','≥ 100 Ω','≥ 10 MΩ'],c:0,e:'VDE 0100: R_iso ≥ 1 MΩ. Gemessen mit 500V DC vor der Inbetriebnahme.'},
-  {q:'Maximalwiderstand des Schutzleiters R_PE?',f:'',kat:'pruef',opts:['≤ 1 Ω','≤ 10 Ω','≤ 100 mΩ','≤ 5 Ω'],c:0,e:'R_PE ≤ 1 Ω sichert schnelle Abschaltung. DGUV V3 / VDE 0701-0702.'},
-  {q:'Schutzklasse II bedeutet?',f:'',kat:'pruef',opts:['Doppelte Isolierung, kein PE nötig','Schutzleiter muss angeschlossen sein','Betrieb nur bis 50V','Nur im Freien einsetzbar'],c:0,e:'SK II: zwei unabhängige Isolierschichten. Erkennbar am □-Symbol. Kein PE erforderlich.'},
-  {q:'AP1 der Mechatroniker-Ausbildung findet statt...',f:'',kat:'pruef',opts:['Vor Ende des 2. Ausbildungsjahres','Am Ende des 3. Ausbildungsjahres','Nach der Zwischenprüfung im 1. LJ','Direkt vor AP2'],c:0,e:'AP1 = Ende 2. LJ. Basis: LF 1–7. Ergebnis geht in AP2-Gesamtnote ein (40%).'},
-  {q:'Drehmoment eines Motors: P=5,5 kW, n=1450 rpm?',f:'M = P/ω · ω=2π×n/60',kat:'mech',opts:['≈ 36,2 Nm','≈ 362 Nm','≈ 3,62 Nm','≈ 8000 Nm'],c:0,e:'ω=2π×1450/60≈151,8 rad/s. M=5500/151,8≈36,2 Nm.'},
-  {q:'Getriebeübersetzung i=4: Eingang n₁=1400rpm – Ausgangsdrehzahl?',f:'i = n₁/n₂',kat:'mech',opts:['350 rpm','5600 rpm','1400 rpm','700 rpm'],c:0,e:'n₂=n₁/i=1400/4=350 rpm. Drehmoment steigt: M₂=M₁×i=4-fach (ohne Verluste).'},
+  {c:0,kat:'dc',f:'U = ?',
+   de:{q:'Wie lautet das Ohmsche Gesetz?',opts:['U = R × I','U = R + I','U = R / I','U = I / R'],e:'U=R×I. Strom: I=U/R. Widerstand: R=U/I.'},
+   en:{q:'What is Ohm\'s Law?',opts:['U = R × I','U = R + I','U = R / I','U = I / R'],e:'U=R×I. Current: I=U/R. Resistance: R=U/I.'}},
+  {c:0,kat:'dc',f:'',
+   de:{q:'Was ist die Einheit der elektrischen Leistung?',opts:['Watt (W)','Joule (J)','Ampere (A)','Volt (V)'],e:'Watt = Volt × Ampere. 1 kW = 1000 W.'},
+   en:{q:'What is the unit of electrical power?',opts:['Watt (W)','Joule (J)','Ampere (A)','Volt (V)'],e:'Watt = Volt × Ampere. 1 kW = 1000 W.'}},
+  {c:0,kat:'dc',f:'R = R₁ + R₂ + R₃',
+   de:{q:'Gesamtwiderstand: 3 Widerstände (100Ω, 220Ω, 470Ω) in Reihe?',opts:['790 Ω','70 Ω','197 Ω','790 kΩ'],e:'100+220+470=790 Ω. In der Reihe addieren sich alle Widerstände.'},
+   en:{q:'Total resistance: 3 resistors (100Ω, 220Ω, 470Ω) in series?',opts:['790 Ω','70 Ω','197 Ω','790 kΩ'],e:'100+220+470=790 Ω. In series all resistances add up.'}},
+  {c:0,kat:'dc',f:'1/R = 1/R₁ + 1/R₂',
+   de:{q:'2 gleiche Widerstände (200Ω) parallel – Gesamtwiderstand?',opts:['100 Ω','400 Ω','200 Ω','50 Ω'],e:'1/R=1/200+1/200=2/200 → R=100 Ω. Parallel immer kleiner als kleinster Wert.'},
+   en:{q:'2 equal resistors (200Ω) in parallel – total resistance?',opts:['100 Ω','400 Ω','200 Ω','50 Ω'],e:'1/R=1/200+1/200=2/200 → R=100 Ω. Parallel always smaller than smallest value.'}},
+  {c:0,kat:'dc',f:'P = U × I',
+   de:{q:'Elektrische Leistung bei U=230V und I=4A?',opts:['920 W','57,5 W','234 W','920 kW'],e:'P=230×4=920 W = 0,92 kW. Typisch für einen Wasserkocher.'},
+   en:{q:'Electrical power at U=230V and I=4A?',opts:['920 W','57,5 W','234 W','920 kW'],e:'P=230×4=920 W = 0.92 kW. Typical for a kettle.'}},
+  {c:0,kat:'dc',f:'η = P_ab / P_zu',
+   de:{q:'Wirkungsgrad eines Motors: P_ab=4,6 kW, P_zu=5 kW?',opts:['0,92 = 92%','0,88 = 88%','1,09 = 109%','0,46 = 46%'],e:'η=4,6/5=0,92 = 92%. Verlustleistung: 0,4 kW als Wärme.'},
+   en:{q:'Efficiency of a motor: P_out=4.6 kW, P_in=5 kW?',opts:['0,92 = 92%','0,88 = 88%','1,09 = 109%','0,46 = 46%'],e:'η=4.6/5=0.92 = 92%. Loss: 0.4 kW as heat.'}},
+  {c:0,kat:'ac',f:'XL = 2π × f × L',
+   de:{q:'Was ist der induktive Blindwiderstand bei f=50Hz und L=200mH?',opts:['≈ 62,8 Ω','≈ 6,28 Ω','≈ 628 Ω','≈ 0,628 Ω'],e:'XL=2π×50×0,2≈62,83 Ω. Doppelte Induktivität → doppelter XL.'},
+   en:{q:'What is the inductive reactance at f=50Hz and L=200mH?',opts:['≈ 62,8 Ω','≈ 6,28 Ω','≈ 628 Ω','≈ 0,628 Ω'],e:'XL=2π×50×0.2≈62.83 Ω. Double inductance → double XL.'}},
+  {c:0,kat:'ac',f:'P = S × cos φ',
+   de:{q:'Leistungsfaktor cos φ = 0,8 bei S=10 kVA – Wirkleistung P?',opts:['8 kW','12,5 kW','6 kW','10 kW'],e:'P=10×0,8=8 kW. Q=√(10²-8²)=6 kvar.'},
+   en:{q:'Power factor cos φ = 0.8 at S=10 kVA – active power P?',opts:['8 kW','12,5 kW','6 kW','10 kW'],e:'P=10×0.8=8 kW. Q=√(10²-8²)=6 kvar.'}},
+  {c:0,kat:'ac',f:'',
+   de:{q:'Stern-Dreieck-Anlauf – auf welchen Faktor sinkt der Anlaufstrom?',opts:['1/3 des Direktanlaufstroms','1/√3','2/3','Bleibt gleich'],e:'Stern: U=400/√3≈231V. Dreieck: U=400V. Strom in Stern: 1/3 des Dreieckstroms.'},
+   en:{q:'Star-delta starting – by what factor does the starting current decrease?',opts:['1/3 of the direct starting current','1/√3','2/3','Stays the same'],e:'Star: U=400/√3≈231V. Delta: U=400V. Current in star: 1/3 of delta current.'}},
+  {c:0,kat:'sps',f:'Q = A AND B',
+   de:{q:'AND-Gatter: A=1, B=0 – Ausgangswert Q?',opts:['0','1','Undefiniert','Beide'],e:'AND: Ausgang 1 NUR wenn ALLE Eingänge 1. A=1 UND B=0 → Q=0.'},
+   en:{q:'AND gate: A=1, B=0 – output value Q?',opts:['0','1','Undefined','Both'],e:'AND: output 1 ONLY when ALL inputs are 1. A=1 AND B=0 → Q=0.'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Timer TON: IN wechselt auf 0 während der Verzögerungszeit – was passiert?',opts:['Timer wird zurückgesetzt, Q bleibt 0','Q schaltet sofort auf 1','Q bleibt im letzten Zustand','Fehler in der SPS'],e:'TON: IN=0 → sofort Reset. Verzögerung muss vollständig ablaufen wenn IN=1.'},
+   en:{q:'Timer TON: IN goes to 0 during the delay time – what happens?',opts:['Timer is reset, Q stays 0','Q switches immediately to 1','Q stays in the last state','Error in the PLC'],e:'TON: IN=0 → immediate reset. Delay must complete fully when IN=1.'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Vorteil von 4–20mA gegenüber 0–10V?',opts:['Drahtbruch erkennbar (Signal < 4mA)','Geringerer Energieverbrauch','Höhere Auflösung','Einfachere Verkabelung'],e:'0mA = Drahtbruch oder Kurzschluss! 4mA = Messwert 0%. Sicherheitsvorteil!'},
+   en:{q:'Advantage of 4–20mA over 0–10V?',opts:['Wire break detectable (signal < 4mA)','Lower energy consumption','Higher resolution','Simpler wiring'],e:'0mA = wire break or short circuit! 4mA = measured value 0%. Safety advantage!'}},
+  {c:0,kat:'elek',f:'D = t_ein / T',
+   de:{q:'Was ist das Tastverhältnis D bei PWM?',opts:['Einschaltzeit / Periodendauer','Periodendauer / Ausschaltzeit','Amplitude / Frequenz','Ausschaltzeit / Einschaltzeit'],e:'D=0,7 → 70% Einschaltzeit → 70% der Versorgungsspannung im Mittel.'},
+   en:{q:'What is the duty cycle D in PWM?',opts:['On-time / period duration','Period duration / off-time','Amplitude / frequency','Off-time / on-time'],e:'D=0.7 → 70% on-time → 70% of supply voltage on average.'}},
+  {c:0,kat:'elek',f:'τ = R × C',
+   de:{q:'Zeitkonstante τ eines RC-Glieds: R=10kΩ, C=100µF?',opts:['1 Sekunde','10 Sekunden','0,1 Sekunden','100 Sekunden'],e:'τ=10000×0,0001=1s. Nach 5s (5τ) ist der Kondensator praktisch voll geladen.'},
+   en:{q:'Time constant τ of an RC circuit: R=10kΩ, C=100µF?',opts:['1 second','10 seconds','0.1 seconds','100 seconds'],e:'τ=10000×0.0001=1s. After 5s (5τ) the capacitor is practically fully charged.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'Mindestisolationswiderstand einer neuen elektrischen Anlage?',opts:['≥ 1 MΩ','≥ 1 kΩ','≥ 100 Ω','≥ 10 MΩ'],e:'VDE 0100: R_iso ≥ 1 MΩ. Gemessen mit 500V DC vor der Inbetriebnahme.'},
+   en:{q:'Minimum insulation resistance of a new electrical installation?',opts:['≥ 1 MΩ','≥ 1 kΩ','≥ 100 Ω','≥ 10 MΩ'],e:'VDE 0100: R_iso ≥ 1 MΩ. Measured with 500V DC before commissioning.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'Maximalwiderstand des Schutzleiters R_PE?',opts:['≤ 1 Ω','≤ 10 Ω','≤ 100 mΩ','≤ 5 Ω'],e:'R_PE ≤ 1 Ω sichert schnelle Abschaltung. DGUV V3 / VDE 0701-0702.'},
+   en:{q:'Maximum resistance of the protective conductor R_PE?',opts:['≤ 1 Ω','≤ 10 Ω','≤ 100 mΩ','≤ 5 Ω'],e:'R_PE ≤ 1 Ω ensures fast disconnection. DGUV V3 / VDE 0701-0702.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'Schutzklasse II bedeutet?',opts:['Doppelte Isolierung, kein PE nötig','Schutzleiter muss angeschlossen sein','Betrieb nur bis 50V','Nur im Freien einsetzbar'],e:'SK II: zwei unabhängige Isolierschichten. Erkennbar am □-Symbol. Kein PE erforderlich.'},
+   en:{q:'Protection class II means?',opts:['Double insulation, no PE required','Protective conductor must be connected','Operation only up to 50V','Only for outdoor use'],e:'Class II: two independent insulating layers. Identified by the □ symbol. No PE required.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'AP1 der Mechatroniker-Ausbildung findet statt...',opts:['Vor Ende des 2. Ausbildungsjahres','Am Ende des 3. Ausbildungsjahres','Nach der Zwischenprüfung im 1. LJ','Direkt vor AP2'],e:'AP1 = Ende 2. LJ. Basis: LF 1–7. Ergebnis geht in AP2-Gesamtnote ein (40%).'},
+   en:{q:'AP1 of the mechatronics apprenticeship takes place...',opts:['Before the end of year 2 of training','At the end of year 3 of training','After the interim exam in year 1','Directly before AP2'],e:'AP1 = end of year 2. Basis: LF 1–7. Result counts towards final grade AP2 (40%).'}},
+  {c:0,kat:'mech',f:'M = P/ω · ω=2π×n/60',
+   de:{q:'Drehmoment eines Motors: P=5,5 kW, n=1450 rpm?',opts:['≈ 36,2 Nm','≈ 362 Nm','≈ 3,62 Nm','≈ 8000 Nm'],e:'ω=2π×1450/60≈151,8 rad/s. M=5500/151,8≈36,2 Nm.'},
+   en:{q:'Torque of a motor: P=5.5 kW, n=1450 rpm?',opts:['≈ 36,2 Nm','≈ 362 Nm','≈ 3,62 Nm','≈ 8000 Nm'],e:'ω=2π×1450/60≈151.8 rad/s. M=5500/151.8≈36.2 Nm.'}},
+  {c:0,kat:'mech',f:'i = n₁/n₂',
+   de:{q:'Getriebeübersetzung i=4: Eingang n₁=1400rpm – Ausgangsdrehzahl?',opts:['350 rpm','5600 rpm','1400 rpm','700 rpm'],e:'n₂=n₁/i=1400/4=350 rpm. Drehmoment steigt: M₂=M₁×i=4-fach (ohne Verluste).'},
+   en:{q:'Gear ratio i=4: input n₁=1400rpm – output speed?',opts:['350 rpm','5600 rpm','1400 rpm','700 rpm'],e:'n₂=n₁/i=1400/4=350 rpm. Torque increases: M₂=M₁×i=4× (without losses).'}},
 ];
 
 
@@ -2398,7 +2438,8 @@ if('serviceWorker' in navigator){
   var isLocal = ['localhost','127.0.0.1','0.0.0.0'].includes(location.hostname)
              || location.protocol === 'file:'
              || location.hostname.endsWith('.local')
-             || location.hostname.endsWith('.github.io');
+             || location.hostname.endsWith('.github.io')
+             || location.protocol === 'https:';
   if(isLocal){
     window.addEventListener('load', function(){
       navigator.serviceWorker.register('./pwa/sw.js', {scope: './'})
@@ -2912,6 +2953,71 @@ showScreen = function(id){
   if(id==='ap2trainer') ap2Init();
 };
 // ══════════════════════════════════════════════════════════════════
+
+// ── Bilingual Quiz Render Override ──────────────────────────────
+// Overrides showQuiz() from lern-basis.html if loaded in the same context,
+// supporting bilingual QUIZ data with de/en sub-objects.
+(function(){
+  var _origShowQuiz = window.showQuiz;
+  window.showQuiz = function(){
+    // If QUIZ items use old flat format, fall back to original
+    if(!QUIZ || !QUIZ.length || !QUIZ[0].de) {
+      if(_origShowQuiz) _origShowQuiz();
+      return;
+    }
+    if(typeof qIdx === 'undefined' || typeof qDeck === 'undefined') return;
+    if(qIdx>=qDeck.length){if(typeof endQuiz==='function')endQuiz();return;}
+    var q=qDeck[qIdx];
+    var qd = currentLang==='en' ? q.en : q.de;
+    if(typeof qAnswered!=='undefined') qAnswered=false;
+    var numEl=document.getElementById('quiz-num');
+    if(numEl) numEl.textContent=(qIdx+1)+'/'+qDeck.length;
+    var liveEl=document.getElementById('quiz-live');
+    if(liveEl && typeof qScore!=='undefined') liveEl.textContent=qScore+' ✓ · '+(qIdx-qScore)+' ✗';
+    var progEl=document.getElementById('quiz-prog');
+    if(progEl) progEl.style.width=Math.round(qIdx/qDeck.length*100)+'%';
+    var resEl=document.getElementById('quiz-res');
+    if(resEl) resEl.style.display='none';
+    var nextEl=document.getElementById('quiz-next');
+    if(nextEl) nextEl.style.display='none';
+    var formulaEl=document.getElementById('quiz-formula');
+    if(formulaEl){
+      if(q.f){formulaEl.textContent=q.f;formulaEl.style.display='block';}
+      else{formulaEl.style.display='none';}
+    }
+    var qEl=document.getElementById('quiz-q');
+    if(qEl) qEl.textContent=qd.q;
+    var opts=qd.opts.map(function(o,i){return{t:o,correct:i===q.c};});
+    for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    var container=document.getElementById('quiz-opts');
+    if(!container) return;
+    container.innerHTML='';
+    opts.forEach(function(opt){
+      var btn=document.createElement('button');
+      btn.className='quiz-opt';btn.textContent=opt.t;
+      btn.addEventListener('click',function(){
+        if(qAnswered)return;
+        qAnswered=true;
+        var correct=opt.correct;
+        if(correct && typeof qScore!=='undefined') qScore++;
+        container.querySelectorAll('.quiz-opt').forEach(function(b){
+          if(b===btn){b.classList.add(correct?'correct':'wrong');}
+          else if(opts.find(function(o){return o.t===b.textContent&&o.correct;}))b.classList.add('reveal');
+          b.disabled=true;
+        });
+        var res=document.getElementById('quiz-res');
+        if(res){
+          res.style.display='block';
+          res.className='quiz-res '+(correct?'ok':'fail');
+          var pre = correct ? (currentLang==='en'?'✓ Correct! ':'✓ Richtig! ') : (currentLang==='en'?'✕ Wrong! ':'✕ Falsch! ');
+          res.textContent = pre + qd.e;
+        }
+        if(nextEl) nextEl.style.display='block';
+      });
+      container.appendChild(btn);
+    });
+  };
+})();
 
 // ── Language Toggle ──────────────────────────────────────────
 var currentLang = localStorage.getItem('arc_lang') || 'de';

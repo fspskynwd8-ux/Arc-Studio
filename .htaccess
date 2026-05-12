@@ -1,0 +1,89 @@
+# ══════════════════════════════════════════════════════════════
+# Arc Studio — IONOS Apache .htaccess
+# Optimiert für: Shared Hosting / Webspace
+# ══════════════════════════════════════════════════════════════
+
+# ── HTTPS ERZWINGEN ───────────────────────────────────────────
+RewriteEngine On
+
+# HTTP → HTTPS Redirect (301 permanent)
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# www → non-www (optional, kommentieren falls www gewünscht)
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+# ── SERVICE WORKER: Root-Scope erlauben ───────────────────────
+# Ermöglicht sw.js in /pwa/ die gesamte Domain (/) zu kontrollieren
+<Files "sw.js">
+  Header always set Service-Worker-Allowed "/"
+</Files>
+
+# ── MIME-TYPES ────────────────────────────────────────────────
+# Kritisch für PWA und moderne Browser
+AddType application/manifest+json          .json
+AddType text/javascript                    .js
+AddType text/css                           .css
+AddType text/html                          .html
+AddType image/svg+xml                      .svg
+AddType font/woff2                         .woff2
+AddType font/woff                          .woff
+
+# ── CACHE-CONTROL ─────────────────────────────────────────────
+# HTML: kein Cache (immer frisch)
+<FilesMatch "\.(html|htm)$">
+  Header always set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+
+# Service Worker: kein Cache (immer frisch damit Updates ankommen)
+<FilesMatch "sw\.js$">
+  Header always set Cache-Control "no-cache, no-store, must-revalidate"
+  Header always set Pragma "no-cache"
+  Header always set Expires "0"
+</FilesMatch>
+
+# Manifest: kurzer Cache
+<FilesMatch "manifest\.json$">
+  Header always set Cache-Control "max-age=86400"
+</FilesMatch>
+
+# Statische Assets: langer Cache
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2)$">
+  Header always set Cache-Control "max-age=2592000, public"
+</FilesMatch>
+
+# ── SECURITY HEADERS ──────────────────────────────────────────
+# Schutz vor XSS, Clickjacking und MIME-Sniffing
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+# HSTS: Browser merkt sich HTTPS für 1 Jahr (erst aktivieren wenn HTTPS stabil läuft!)
+# Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+# ── FEHLERSEITEN ──────────────────────────────────────────────
+ErrorDocument 404 /index.html
+ErrorDocument 403 /index.html
+
+# ── DIRECTORY LISTING DEAKTIVIEREN ───────────────────────────
+Options -Indexes
+
+# ── KOMPRIMIERUNG (Gzip) ──────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css
+  AddOutputFilterByType DEFLATE text/javascript application/javascript
+  AddOutputFilterByType DEFLATE application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ── SENSITIVE DATEIEN SCHÜTZEN ────────────────────────────────
+<FilesMatch "(^\.htaccess|^\.git|^\.env)">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# ── ENCODING ─────────────────────────────────────────────────
+AddDefaultCharset UTF-8

@@ -1816,7 +1816,7 @@ function calcWirkungsgrad() {
 <script>
 if(!location.hostname.includes('localhost') && !location.hostname.includes('127.0.0.1')) {
   if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('pwa/sw.js').catch(function(){});
+    navigator.serviceWorker.register('pwa/sw.js', {scope: '/'}).catch(function(){});
   }
 }
 </script>

@@ -1441,133 +1441,320 @@ html.lang-de .en-only { display: none !important; }
 // DATEN
 // ══════════════════════════════════════════════
 var LERNFELDER = [
-  {id:'lf1', lj:'lf1', farbe:'g', nr:'LF 1', titel:'Analysieren mechatronischer Systeme', stunden:'40 h', kat:'dc',
-   themen:['Blockschaltpläne lesen & erstellen','Signal-, Stoff- und Energiefluss verstehen','Vorschriften & Regelwerke (DGUV, VDE)','SI-Einheitensystem anwenden','Technische Unterlagen auswerten','Schaltzeichen kennen (DIN EN 60617)','Mess- & Prüfprotokolle erstellen','Blockschaltbild entwerfen','Teamarbeit & Kommunikation']},
-  {id:'lf2', lj:'lf1', farbe:'g', nr:'LF 2', titel:'Herstellen mechanischer Teilsysteme', stunden:'80 h', kat:'mech',
-   themen:['Manuelles Spanen: Feilen, Sägen, Bohren','Maschinelles Spanen: Drehen, Fräsen, Schleifen','Technisches Zeichnen: Einzelteilzeichnungen','Passungen und Toleranzen (ISO-System)','Werkstoffkunde: Stahl, Aluminium, Kunststoffe','Fügetechnik: Schrauben, Schweißen, Löten','Messmittel: Schieblehre, Bügelmessschraube','Qualitätsprüfung & Protokoll','Arbeitssicherheit beim Spanen']},
-  {id:'lf3', lj:'lf1', farbe:'b', nr:'LF 3', titel:'Installieren elektrischer Betriebsmittel', stunden:'120 h', kat:'dc',
-   themen:['Ohmsches Gesetz in der Praxis anwenden','Elektrische Leistung & Energie berechnen','Schutzmaßnahmen nach VDE 0100','Schutzklassen I, II, III unterscheiden','FI-Schutzschalter & Sicherungsautomat','Leitungsquerschnitt berechnen (A=I/J)','Schaltungen: Wechsel- und Kreuzschaltung','Schütz & Relais beschalten','Multimeter korrekt einsetzen','Isolationsmessung durchführen']},
-  {id:'lf4', lj:'lf1', farbe:'a', nr:'LF 4', titel:'Herstellen von Steuerungsschaltungen', stunden:'80 h', kat:'sps',
-   themen:['Logikgatter: AND, OR, NOT, NAND, NOR, XOR','Wahrheitstabellen aufstellen','KV-Diagramm anwenden','Boolesche Algebra vereinfachen','SPS-Aufbau: CPU, E/A, Netzteil','SPS-Programmierung: KOP & FUP','Pneumatik-Grundschaltungen','Sensoren: induktiv, kapazitiv, optisch, Reed','Direktsteuerung & indirekte Steuerung','Pneumatikzylinder & Ventile']},
-  {id:'lf5', lj:'lf2', farbe:'g', nr:'LF 5', titel:'Montieren und Demontieren mechatronischer Systeme', stunden:'80 h', kat:'mech',
-   themen:['Montagepläne lesen und ausführen','Getriebe: Zahnrad, Riemen, Kettenantrieb','Übersetzungsverhältnis berechnen','Hydraulik-Grundschaltungen verstehen','Hebezeuge & Lastaufnahme (DGUV)','Drehmoment & Anzugsmomente einhalten','Lagertechnik: Wälz- und Gleitlager','Kupplungen & Bremsen','Funktionsprüfung nach Montage','Demontagestrategie planen']},
-  {id:'lf6', lj:'lf2', farbe:'b', nr:'LF 6', titel:'Untersuchen von Wechselstromkreisen', stunden:'80 h', kat:'ac',
-   themen:['Wechselstrom: Frequenz, Periodendauer, Effektivwert','Impedanz Z berechnen','Induktiver Blindwiderstand XL','Kapazitiver Blindwiderstand XC','Leistungsfaktor cos φ verstehen','Wirk-, Blind- und Scheinleistung','Drehstrommotor: Aufbau & Wirkungsweise','Stern-Dreieck-Anlauf berechnen','Drehstromleistung berechnen','Oszilloskop & Stromzange einsetzen']},
-  {id:'lf7', lj:'lf2', farbe:'p', nr:'LF 7', titel:'Programmieren mechatronischer Systeme', stunden:'80 h', kat:'sps',
-   themen:['SPS: Structured Text (ST) nach IEC 61131-3','Funktionsbausteine (FB): Timer TON, Zähler CTU','Analoge Ein-/Ausgaben: 0–10V, 4–20mA','Analoge Signalauswertung (A/D-Wandlung)','Feldbussysteme kennen: PROFIBUS, PROFINET','P-, PI-, PID-Regler verstehen','HMI-Bedienterminal parametrieren','Programmdokumentation erstellen','Flankenauswertung (FPOSEN, FNEG)','Fehlersuche im SPS-Programm']},
-  {id:'lf8', lj:'lf2', farbe:'a', nr:'LF 8', titel:'Prüfen & Einrichten (→ AP1)', stunden:'40 h', kat:'pruef',
-   themen:['Mechatronisches Teilsystem systematisch testen','Schutzeinrichtungen prüfen: NOT-AUS, Lichtschranke','Isolationswiderstand messen (R_iso ≥ 1 MΩ)','Schutzleiterwiderstand messen (R_PE ≤ 1 Ω)','FI-Schutzschalter testen','Prüfprotokoll vollständig ausfüllen','AP1: Praktische Prüfung üben (4–5 h)','AP1: Schriftliche Prüfung (90 Min, LF 1–7)','Sicherheitsregeln bei Arbeiten unter Spannung','Technische Unterlagen für Prüfung auswerten']},
-  {id:'lf9', lj:'lf34', farbe:'p', nr:'LF 9', titel:'Inbetriebnahme mechatronischer Systeme', stunden:'80 h', kat:'pruef',
-   themen:['IBN-Ablaufplan erstellen und ausführen','Diagnosesysteme nutzen','Sensoren & Aktoren justieren und einrichten','Systemparameter einstellen','Schutzmaßnahmen überprüfen (DGUV V3)','Fehlerprotokolle interpretieren','Technische Dokumentation auf Englisch lesen','Ergebnisse dokumentieren','Fehlersystematisch eingrenzen','Übergabe an Betrieb vorbereiten']},
-  {id:'lf10', lj:'lf34', farbe:'p', nr:'LF 10', titel:'Instandhalten mechatronischer Systeme', stunden:'80 h', kat:'pruef',
-   themen:['Wartungsplan erstellen und ausführen','Inspektion: Sichtprüfung & Messung','Systematische Fehlersuche (Halbierungsmethode)','Instandsetzung: Bauteiltausch und Reparatur','Predictive Maintenance kennen','Zustandsüberwachung: Vibration, Thermografie','Störungsbericht dokumentieren','MTR & MTBF-Kennzahlen verstehen','Sicherheitseinrichtungen prüfen & einstellen','Wartungsintervalle planen']},
-  {id:'lf11', lj:'lf34', farbe:'g', nr:'LF 11', titel:'Testen & Antriebe optimieren', stunden:'80 h', kat:'ac',
-   themen:['Frequenzumrichter (FU) parametrieren','U/f-Kennlinie einstellen','Servoantriebe & Encoder verstehen','PID-Regler einstellen (Ziegler-Nichols)','Lastkennlinien aufnehmen & auswerten','Energieeffizienzklassen IE1–IE4','OPC-UA & MQTT Grundlagen','Digitaler Zwilling kennen','Industrie 4.0 in der Praxis','Daten erfassen & visualisieren']},
-  {id:'lf12', lj:'lf34', farbe:'r', nr:'LF 12', titel:'Betreiben vernetzter Systeme', stunden:'120 h', kat:'sps',
-   themen:['TCP/IP Grundlagen (IP, Subnetz, Gateway)','PROFINET & EtherCAT in der Praxis','IT-Sicherheit in der Industrie (OT-Security)','Firewall & VPN für Anlagen','SCADA & MES Systeme kennen','OEE-Kennzahl berechnen','DSGVO in der Industrie anwenden','Datenschutz bei Maschinendaten','IIoT: Sensor→Cloud→Analyse→Aktion','Datenkommunikation zwischen Steuergeräten']},
-  {id:'lf13', lj:'lf34', farbe:'p', nr:'LF 13', titel:'Übergabe mechatronischer Systeme an Kunden', stunden:'60 h', kat:'pruef',
-   themen:['Technische Dokumentation erstellen','CE-Konformitätserklärung kennen','Kundenschulung planen & durchführen','Englisch: Fachgespräch führen','Kunden-/Lieferantenbeziehung gestalten','Reklamationsmanagement','AP2: Praxisbezogene Aufgabe im Betrieb','AP2: Report schreiben (max. 3 Seiten)','AP2: Fachgespräch (ca. 30 Min)','AP2: Schriftliche Prüfung (Technik + WiSo)']},
+  {id:'lf1', lj:'lf1', farbe:'g', nr:'LF 1', stunden:'40 h', kat:'dc',
+   de:{titel:'Analysieren mechatronischer Systeme', themen:['Blockschaltpläne lesen & erstellen','Signal-, Stoff- und Energiefluss verstehen','Vorschriften & Regelwerke (DGUV, VDE)','SI-Einheitensystem anwenden','Technische Unterlagen auswerten','Schaltzeichen kennen (DIN EN 60617)','Mess- & Prüfprotokolle erstellen','Blockschaltbild entwerfen','Teamarbeit & Kommunikation']},
+   en:{titel:'Analysing Mechatronic Systems', themen:['Read & create block diagrams','Understand signal, material and energy flow','Regulations & standards (DGUV, VDE)','Apply SI unit system','Evaluate technical documents','Know circuit symbols (DIN EN 60617)','Create measurement & test protocols','Design block diagrams','Teamwork & communication']}},
+  {id:'lf2', lj:'lf1', farbe:'g', nr:'LF 2', stunden:'80 h', kat:'mech',
+   de:{titel:'Herstellen mechanischer Teilsysteme', themen:['Manuelles Spanen: Feilen, Sägen, Bohren','Maschinelles Spanen: Drehen, Fräsen, Schleifen','Technisches Zeichnen: Einzelteilzeichnungen','Passungen und Toleranzen (ISO-System)','Werkstoffkunde: Stahl, Aluminium, Kunststoffe','Fügetechnik: Schrauben, Schweißen, Löten','Messmittel: Schieblehre, Bügelmessschraube','Qualitätsprüfung & Protokoll','Arbeitssicherheit beim Spanen']},
+   en:{titel:'Manufacturing Mechanical Subsystems', themen:['Manual machining: filing, sawing, drilling','Machine machining: turning, milling, grinding','Technical drawing: single-part drawings','Fits and tolerances (ISO system)','Materials science: steel, aluminium, plastics','Joining technology: bolting, welding, soldering','Measuring tools: vernier caliper, micrometer','Quality inspection & protocol','Workplace safety in machining']}},
+  {id:'lf3', lj:'lf1', farbe:'b', nr:'LF 3', stunden:'120 h', kat:'dc',
+   de:{titel:'Installieren elektrischer Betriebsmittel', themen:['Ohmsches Gesetz in der Praxis anwenden','Elektrische Leistung & Energie berechnen','Schutzmaßnahmen nach VDE 0100','Schutzklassen I, II, III unterscheiden','FI-Schutzschalter & Sicherungsautomat','Leitungsquerschnitt berechnen (A=I/J)','Schaltungen: Wechsel- und Kreuzschaltung','Schütz & Relais beschalten','Multimeter korrekt einsetzen','Isolationsmessung durchführen']},
+   en:{titel:'Installing Electrical Equipment', themen:['Apply Ohm\'s Law in practice','Calculate electrical power & energy','Protective measures per VDE 0100','Distinguish protection classes I, II, III','RCD & circuit breaker','Calculate conductor cross-section (A=I/J)','Circuits: intermediate and crossover switching','Wire contactors & relays','Use multimeter correctly','Carry out insulation measurement']}},
+  {id:'lf4', lj:'lf1', farbe:'a', nr:'LF 4', stunden:'80 h', kat:'sps',
+   de:{titel:'Herstellen von Steuerungsschaltungen', themen:['Logikgatter: AND, OR, NOT, NAND, NOR, XOR','Wahrheitstabellen aufstellen','KV-Diagramm anwenden','Boolesche Algebra vereinfachen','SPS-Aufbau: CPU, E/A, Netzteil','SPS-Programmierung: KOP & FUP','Pneumatik-Grundschaltungen','Sensoren: induktiv, kapazitiv, optisch, Reed','Direktsteuerung & indirekte Steuerung','Pneumatikzylinder & Ventile']},
+   en:{titel:'Building Control Circuits', themen:['Logic gates: AND, OR, NOT, NAND, NOR, XOR','Set up truth tables','Apply Karnaugh maps','Simplify Boolean algebra','PLC structure: CPU, I/O, power supply','PLC programming: LAD & FBD','Pneumatic basic circuits','Sensors: inductive, capacitive, optical, Reed','Direct and indirect control','Pneumatic cylinders & valves']}},
+  {id:'lf5', lj:'lf2', farbe:'g', nr:'LF 5', stunden:'80 h', kat:'mech',
+   de:{titel:'Montieren und Demontieren mechatronischer Systeme', themen:['Montagepläne lesen und ausführen','Getriebe: Zahnrad, Riemen, Kettenantrieb','Übersetzungsverhältnis berechnen','Hydraulik-Grundschaltungen verstehen','Hebezeuge & Lastaufnahme (DGUV)','Drehmoment & Anzugsmomente einhalten','Lagertechnik: Wälz- und Gleitlager','Kupplungen & Bremsen','Funktionsprüfung nach Montage','Demontagestrategie planen']},
+   en:{titel:'Assembling and Disassembling Mechatronic Systems', themen:['Read and execute assembly plans','Gearboxes: gear, belt, chain drive','Calculate gear ratio','Understand hydraulic basic circuits','Lifting equipment & load handling (DGUV)','Observe torque & tightening torques','Bearing technology: rolling and sliding bearings','Clutches & brakes','Functional test after assembly','Plan disassembly strategy']}},
+  {id:'lf6', lj:'lf2', farbe:'b', nr:'LF 6', stunden:'80 h', kat:'ac',
+   de:{titel:'Untersuchen von Wechselstromkreisen', themen:['Wechselstrom: Frequenz, Periodendauer, Effektivwert','Impedanz Z berechnen','Induktiver Blindwiderstand XL','Kapazitiver Blindwiderstand XC','Leistungsfaktor cos φ verstehen','Wirk-, Blind- und Scheinleistung','Drehstrommotor: Aufbau & Wirkungsweise','Stern-Dreieck-Anlauf berechnen','Drehstromleistung berechnen','Oszilloskop & Stromzange einsetzen']},
+   en:{titel:'Investigating AC Circuits', themen:['AC: frequency, period, rms value','Calculate impedance Z','Inductive reactance XL','Capacitive reactance XC','Understand power factor cos φ','Active, reactive and apparent power','Three-phase motor: design & operating principle','Calculate star-delta starting','Calculate three-phase power','Use oscilloscope & current clamp']}},
+  {id:'lf7', lj:'lf2', farbe:'p', nr:'LF 7', stunden:'80 h', kat:'sps',
+   de:{titel:'Programmieren mechatronischer Systeme', themen:['SPS: Structured Text (ST) nach IEC 61131-3','Funktionsbausteine (FB): Timer TON, Zähler CTU','Analoge Ein-/Ausgaben: 0–10V, 4–20mA','Analoge Signalauswertung (A/D-Wandlung)','Feldbussysteme kennen: PROFIBUS, PROFINET','P-, PI-, PID-Regler verstehen','HMI-Bedienterminal parametrieren','Programmdokumentation erstellen','Flankenauswertung (FPOSEN, FNEG)','Fehlersuche im SPS-Programm']},
+   en:{titel:'Programming Mechatronic Systems', themen:['PLC: Structured Text (ST) per IEC 61131-3','Function blocks (FB): timer TON, counter CTU','Analogue I/O: 0–10 V, 4–20 mA','Analogue signal processing (A/D conversion)','Know fieldbus systems: PROFIBUS, PROFINET','Understand P, PI, PID controllers','Parameterise HMI terminal','Create programme documentation','Edge evaluation (FPOSEN, FNEG)','Fault finding in PLC programme']}},
+  {id:'lf8', lj:'lf2', farbe:'a', nr:'LF 8', stunden:'40 h', kat:'pruef',
+   de:{titel:'Prüfen & Einrichten (→ AP1)', themen:['Mechatronisches Teilsystem systematisch testen','Schutzeinrichtungen prüfen: NOT-AUS, Lichtschranke','Isolationswiderstand messen (R_iso ≥ 1 MΩ)','Schutzleiterwiderstand messen (R_PE ≤ 1 Ω)','FI-Schutzschalter testen','Prüfprotokoll vollständig ausfüllen','AP1: Praktische Prüfung üben (4–5 h)','AP1: Schriftliche Prüfung (90 Min, LF 1–7)','Sicherheitsregeln bei Arbeiten unter Spannung','Technische Unterlagen für Prüfung auswerten']},
+   en:{titel:'Testing & Setting Up (→ AP1)', themen:['Systematically test mechatronic subsystem','Check safety devices: E-STOP, light barrier','Measure insulation resistance (R_iso ≥ 1 MΩ)','Measure protective conductor resistance (R_PE ≤ 1 Ω)','Test RCD','Complete test protocol fully','AP1: Practise practical exam (4–5 h)','AP1: Written exam (90 min, LF 1–7)','Safety rules when working live','Evaluate technical documents for exam']}},
+  {id:'lf9', lj:'lf34', farbe:'p', nr:'LF 9', stunden:'80 h', kat:'pruef',
+   de:{titel:'Inbetriebnahme mechatronischer Systeme', themen:['IBN-Ablaufplan erstellen und ausführen','Diagnosesysteme nutzen','Sensoren & Aktoren justieren und einrichten','Systemparameter einstellen','Schutzmaßnahmen überprüfen (DGUV V3)','Fehlerprotokolle interpretieren','Technische Dokumentation auf Englisch lesen','Ergebnisse dokumentieren','Fehlersystematisch eingrenzen','Übergabe an Betrieb vorbereiten']},
+   en:{titel:'Commissioning Mechatronic Systems', themen:['Create and execute commissioning plan','Use diagnostic systems','Adjust and set up sensors & actuators','Set system parameters','Check protective measures (DGUV V3)','Interpret fault logs','Read technical documentation in English','Document results','Systematically narrow down faults','Prepare handover to operation']}},
+  {id:'lf10', lj:'lf34', farbe:'p', nr:'LF 10', stunden:'80 h', kat:'pruef',
+   de:{titel:'Instandhalten mechatronischer Systeme', themen:['Wartungsplan erstellen und ausführen','Inspektion: Sichtprüfung & Messung','Systematische Fehlersuche (Halbierungsmethode)','Instandsetzung: Bauteiltausch und Reparatur','Predictive Maintenance kennen','Zustandsüberwachung: Vibration, Thermografie','Störungsbericht dokumentieren','MTR & MTBF-Kennzahlen verstehen','Sicherheitseinrichtungen prüfen & einstellen','Wartungsintervalle planen']},
+   en:{titel:'Maintaining Mechatronic Systems', themen:['Create and execute maintenance plan','Inspection: visual check & measurement','Systematic fault finding (halving method)','Repair: component replacement and repair','Know predictive maintenance','Condition monitoring: vibration, thermography','Document fault report','Understand MTR & MTBF key figures','Check & set safety devices','Plan maintenance intervals']}},
+  {id:'lf11', lj:'lf34', farbe:'g', nr:'LF 11', stunden:'80 h', kat:'ac',
+   de:{titel:'Testen & Antriebe optimieren', themen:['Frequenzumrichter (FU) parametrieren','U/f-Kennlinie einstellen','Servoantriebe & Encoder verstehen','PID-Regler einstellen (Ziegler-Nichols)','Lastkennlinien aufnehmen & auswerten','Energieeffizienzklassen IE1–IE4','OPC-UA & MQTT Grundlagen','Digitaler Zwilling kennen','Industrie 4.0 in der Praxis','Daten erfassen & visualisieren']},
+   en:{titel:'Testing & Optimising Drives', themen:['Parameterise frequency inverter (FU)','Set U/f characteristic','Understand servo drives & encoders','Set PID controller (Ziegler-Nichols)','Record & evaluate load curves','Energy efficiency classes IE1–IE4','OPC-UA & MQTT basics','Get to know digital twin','Industrie 4.0 in practice','Capture & visualise data']}},
+  {id:'lf12', lj:'lf34', farbe:'r', nr:'LF 12', stunden:'120 h', kat:'sps',
+   de:{titel:'Betreiben vernetzter Systeme', themen:['TCP/IP Grundlagen (IP, Subnetz, Gateway)','PROFINET & EtherCAT in der Praxis','IT-Sicherheit in der Industrie (OT-Security)','Firewall & VPN für Anlagen','SCADA & MES Systeme kennen','OEE-Kennzahl berechnen','DSGVO in der Industrie anwenden','Datenschutz bei Maschinendaten','IIoT: Sensor→Cloud→Analyse→Aktion','Datenkommunikation zwischen Steuergeräten']},
+   en:{titel:'Operating Networked Systems', themen:['TCP/IP basics (IP, subnet, gateway)','PROFINET & EtherCAT in practice','IT security in industry (OT security)','Firewall & VPN for plant','Know SCADA & MES systems','Calculate OEE key figure','Apply GDPR in industry','Data protection for machine data','IIoT: sensor → cloud → analysis → action','Data communication between controllers']}},
+  {id:'lf13', lj:'lf34', farbe:'p', nr:'LF 13', stunden:'60 h', kat:'pruef',
+   de:{titel:'Übergabe mechatronischer Systeme an Kunden', themen:['Technische Dokumentation erstellen','CE-Konformitätserklärung kennen','Kundenschulung planen & durchführen','Englisch: Fachgespräch führen','Kunden-/Lieferantenbeziehung gestalten','Reklamationsmanagement','AP2: Praxisbezogene Aufgabe im Betrieb','AP2: Report schreiben (max. 3 Seiten)','AP2: Fachgespräch (ca. 30 Min)','AP2: Schriftliche Prüfung (Technik + WiSo)']},
+   en:{titel:'Handing Over Mechatronic Systems to Customers', themen:['Create technical documentation','Know CE declaration of conformity','Plan & conduct customer training','English: hold technical conversation','Manage customer/supplier relationship','Complaints management','AP2: Practical task in company','AP2: Write report (max. 3 pages)','AP2: Technical discussion (approx. 30 min)','AP2: Written exam (Technology + Business)']}},
 ];
 
 var CARDS = [
-  {id:'dc1',kat:'dc',tag:'DC · Ohmsches Gesetz',formel:'U = R × I',frage:'Wie lautet das Ohmsche Gesetz?',antwort:'Spannung = Widerstand × Strom',erklaer:'Umstellen: R=U/I und I=U/R. Gilt für ohmsche Verbraucher. Grundlage der Elektrotechnik.'},
-  {id:'dc2',kat:'dc',tag:'DC · Leistung',formel:'P = U × I',frage:'Elektrische Leistung berechnen?',antwort:'Leistung = Spannung × Strom',erklaer:'Auch: P=U²/R oder P=I²×R. Einheit: Watt (W). 1 kW = 1000 W.'},
-  {id:'dc3',kat:'dc',tag:'DC · Energie',formel:'W = P × t',frage:'Elektrische Energie berechnen?',antwort:'Energie = Leistung × Zeit',erklaer:'Einheit: Joule oder Wattstunden. 1 kWh = 3 600 000 J.'},
-  {id:'dc4',kat:'dc',tag:'DC · Wirkungsgrad',formel:'η = P_ab / P_zu',frage:'Was ist der Wirkungsgrad?',antwort:'Abgegebene durch zugeführte Leistung',erklaer:'η: 0…1 (0…100%). Verluste als Wärme, Reibung. Guter Motor: η≈0,92.'},
-  {id:'dc5',kat:'dc',tag:'DC · Reihe',formel:'R = R₁ + R₂ + R₃',frage:'Gesamtwiderstand Reihenschaltung?',antwort:'Widerstände addieren sich',erklaer:'Gleicher Strom überall. Spannungen addieren sich zu U_ges.'},
-  {id:'dc6',kat:'dc',tag:'DC · Parallel',formel:'1/R = 1/R₁ + 1/R₂',frage:'Gesamtwiderstand Parallelschaltung?',antwort:'Kehrwerte addieren, dann Kehrwert',erklaer:'Gleiche Spannung an allen Zweigen. R_ges < kleinstes R.'},
-  {id:'dc7',kat:'dc',tag:'DC · Spannungsteiler',formel:'U₂ = U × R₂/(R₁+R₂)',frage:'Unbelasteter Spannungsteiler?',antwort:'Teilspannung proportional zum Teilwiderstand',erklaer:'Nur unbelastet! Mit Last ändert sich das Verhältnis.'},
-  {id:'dc8',kat:'dc',tag:'DC · Maschenregel',formel:'Σ U = 0',frage:'Was sagt die Maschenregel?',antwort:'Summe aller Spannungen in einer Masche = 0',erklaer:'2. Kirchhoffscher Satz. Quellen +, Verbraucher −.'},
-  {id:'dc9',kat:'dc',tag:'DC · Knotenregel',formel:'Σ I = 0',frage:'Was sagt die Knotenregel?',antwort:'Zufließende = abfließende Ströme',erklaer:'1. Kirchhoffscher Satz. Ladungserhaltung am Knoten.'},
-  {id:'dc10',kat:'dc',tag:'DC · Verlustleistung',formel:'P_v = I² × R',frage:'Wärmeentwicklung im Leiter?',antwort:'Quadrat des Stroms mal Widerstand',erklaer:'Deshalb dicken Querschnitt wählen! Doppelter Strom → 4× Verlustleistung!'},
-  {id:'dc11',kat:'dc',tag:'DC · Leiterwiderstand',formel:'R = ρ × l / A',frage:'Wovon hängt der Leiterwiderstand ab?',antwort:'Spez. Widerstand × Länge / Querschnitt',erklaer:'ρ_Cu=0,0172 Ω·mm²/m. Doppelte Länge → 2× R. Doppelter Querschnitt → ½ R.'},
-  {id:'dc12',kat:'dc',tag:'DC · Temperatur',formel:'R_T = R₀(1+α·ΔT)',frage:'Temperatureinfluss auf Widerstand?',antwort:'Metalle: R steigt mit Temperatur',erklaer:'α_Cu≈0,00393/K. Bei 100°C ist R_Cu ca. 40% größer.'},
-  {id:'ac1',kat:'ac',tag:'AC · Impedanz',formel:'Z = √(R² + X²)',frage:'Was ist die Impedanz Z?',antwort:'Gesamtwiderstand im Wechselstromkreis',erklaer:'X = XL − XC. Z ≥ R immer. Einheit: Ohm.'},
-  {id:'ac2',kat:'ac',tag:'AC · Induktiver X',formel:'XL = 2π × f × L',frage:'Induktiver Blindwiderstand?',antwort:'Steigt mit Frequenz und Induktivität',erklaer:'50 Hz, L=100mH: XL≈31,4 Ω. Spule sperrt hohe Frequenzen.'},
-  {id:'ac3',kat:'ac',tag:'AC · Kapazitiver X',formel:'XC = 1/(2π × f × C)',frage:'Kapazitiver Blindwiderstand?',antwort:'Sinkt mit steigender Frequenz',erklaer:'Kondensator sperrt DC, lässt AC durch. Gegenteil zur Spule!'},
-  {id:'ac4',kat:'ac',tag:'AC · Resonanz',formel:'f₀ = 1/(2π√LC)',frage:'Resonanzfrequenz berechnen?',antwort:'Wenn XL = XC → Z = R (minimal)',erklaer:'Maximaler Strom bei Resonanz. Genutzt in Filtern & Empfängern.'},
-  {id:'ac5',kat:'ac',tag:'AC · Scheinleistung',formel:'S = U × I',frage:'Scheinleistung S?',antwort:'Produkt aus Spannung und Strom',erklaer:'Einheit: VA. Muss erzeugt werden, egal ob nutzbar.'},
-  {id:'ac6',kat:'ac',tag:'AC · Wirkleistung',formel:'P = S × cos φ',frage:'Wirkleistung P?',antwort:'Nutzbarer Anteil der Scheinleistung',erklaer:'Einheit: W. cos φ nahe 1 = effizient. Bei Motoren typisch 0,7–0,9.'},
-  {id:'ac7',kat:'ac',tag:'AC · Blindleistung',formel:'Q = S × sin φ',frage:'Blindleistung Q?',antwort:'Nicht nutzbare, pendelnde Leistung',erklaer:'Einheit: var. S²=P²+Q². Blindleistung → Kompensation mit Kondensatoren!'},
-  {id:'ac8',kat:'ac',tag:'AC · Trafo',formel:'ü = U₁/U₂ = n₁/n₂',frage:'Trafo-Übersetzungsverhältnis?',antwort:'Windungszahl bestimmt Spannungsverhältnis',erklaer:'Ideal: P₁=P₂. Real η≈95–98%. ü>1 = Abwärts-Trafo.'},
-  {id:'ac9',kat:'ac',tag:'AC · Stern-Dreieck',formel:'U_D = √3 × U_S',frage:'Zusammenhang Stern/Dreieck Spannung?',antwort:'Dreieck = √3 × Stern',erklaer:'400V Netz: U_Stern=231V. Stern-Dreieck-Anlauf reduziert Anlaufstrom auf 1/3.'},
-  {id:'ac10',kat:'ac',tag:'AC · Drehstrom P',formel:'P = √3 × U × I × cos φ',frage:'Leistung im Drehstromnetz?',antwort:'√3 mal Spannung mal Strom mal cos φ',erklaer:'√3≈1,732. 400V, 10A, cosφ=0,85: P≈5.890 W.'},
-  {id:'m1',kat:'mech',tag:'Mechanik · Drehmoment',formel:'M = P / ω',frage:'Drehmoment berechnen?',antwort:'Leistung durch Winkelgeschwindigkeit',erklaer:'Einheit: Nm. Auch: M = F × r (Kraft mal Hebelarm).'},
-  {id:'m2',kat:'mech',tag:'Mechanik · Winkelgeschw.',formel:'ω = 2π × n / 60',frage:'Winkelgeschwindigkeit aus Drehzahl?',antwort:'Umdrehungen/min → Radiant/Sekunde',erklaer:'n=1450 rpm: ω=2π×1450/60≈151,8 rad/s.'},
-  {id:'m3',kat:'mech',tag:'Mechanik · Leistung',formel:'P = M × ω',frage:'Mechanische Leistung?',antwort:'Drehmoment × Winkelgeschwindigkeit',erklaer:'Auch: P = F × v. Einheit: Watt.'},
-  {id:'m4',kat:'mech',tag:'Mechanik · Übersetzung',formel:'i = n₁ / n₂ = M₂ / M₁',frage:'Getriebeübersetzung berechnen?',antwort:'Drehzahlverhältnis = inverses Drehmomentverh.',erklaer:'i>1 = langsamer & mehr Drehmoment. i<1 = schneller & weniger Drehmoment.'},
-  {id:'m5',kat:'mech',tag:'Mechanik · Kraft',formel:'F = m × a',frage:'Grundgesetz der Mechanik?',antwort:'Kraft = Masse × Beschleunigung',erklaer:'Einheit: Newton (N). Gewichtskraft: F_G = m × 9,81.'},
-  {id:'m6',kat:'mech',tag:'Mechanik · Arbeit',formel:'W = F × s',frage:'Mechanische Arbeit?',antwort:'Kraft × Weg',erklaer:'Einheit: Joule (J). Nur wenn Kraft in Bewegungsrichtung wirkt.'},
-  {id:'m7',kat:'mech',tag:'Mechanik · Druck',formel:'p = F / A',frage:'Druck berechnen?',antwort:'Kraft durch Fläche',erklaer:'Einheit: Pascal. 1 bar = 100 000 Pa. Hydraulik: typisch 100–250 bar.'},
-  {id:'m8',kat:'mech',tag:'Mechanik · η-Kette',formel:'η_ges = η₁ × η₂ × η₃',frage:'Wirkungsgrad einer Antriebskette?',antwort:'Alle Einzelwirkungsgrade multiplizieren',erklaer:'3 Stufen à η=0,95: η_ges=0,857 = nur 85,7%!'},
-  {id:'m9',kat:'mech',tag:'Mechanik · Reibung',formel:'μ = F_R / F_N',frage:'Was ist die Reibungszahl μ?',antwort:'Reibungskraft / Normalkraft',erklaer:'Stahl/Stahl trocken: μ≈0,15. Mit Öl: μ≈0,05. Für Bremsberechnungen.'},
-  {id:'e1',kat:'elek',tag:'Elektronik · Kondensator',formel:'Q = C × U',frage:'Ladung im Kondensator?',antwort:'Kapazität × Spannung',erklaer:'Einheit: Coulomb (C). C in Farad (µF, nF, pF in der Praxis).'},
-  {id:'e2',kat:'elek',tag:'Elektronik · Kondensator W',formel:'W = ½ × C × U²',frage:'Energie im Kondensator?',antwort:'Halbe Kapazität mal Spannung zum Quadrat',erklaer:'Kondensator gibt Energie schlagartig ab → Blitz, Schweißgerät.'},
-  {id:'e3',kat:'elek',tag:'Elektronik · Spule W',formel:'W = ½ × L × I²',frage:'Energie in der Spule?',antwort:'Halbe Induktivität mal Strom zum Quadrat',erklaer:'Spule verhindert plötzliche Stromänderungen → Entstörung, Sanftanlauf.'},
-  {id:'e4',kat:'elek',tag:'Elektronik · RC-Zeit',formel:'τ = R × C',frage:'Zeitkonstante beim RC-Glied?',antwort:'Widerstand × Kapazität',erklaer:'Nach 1τ: 63% des Endwerts. Nach 5τ: 99,3% → praktisch vollständig.'},
-  {id:'e5',kat:'elek',tag:'Elektronik · RL-Zeit',formel:'τ = L / R',frage:'Zeitkonstante beim RL-Glied?',antwort:'Induktivität durch Widerstand',erklaer:'Nach 5τ hat die Spule ihren Endstrom. Wichtig bei Schütz-Abfall.'},
-  {id:'e6',kat:'elek',tag:'Elektronik · Frequenz',formel:'f = 1 / T',frage:'Zusammenhang Frequenz und Periodendauer?',antwort:'Frequenz = Kehrwert der Periodendauer',erklaer:'50 Hz → T=20 ms. 1 kHz → T=1 ms. Einheit: Hertz (Hz).'},
-  {id:'e7',kat:'elek',tag:'Elektronik · PWM',formel:'D = t_ein / T',frage:'Tastverhältnis bei PWM?',antwort:'Einschaltzeit durch Periodendauer',erklaer:'D=0,5 → 50% → halbe mittlere Spannung. Motor- & LED-Steuerung.'},
-  {id:'e8',kat:'elek',tag:'Elektronik · ADC',formel:'n = 2^bits',frage:'Auflösung eines 12-Bit-ADC?',antwort:'2¹² = 4096 Stufen',erklaer:'Bei 10V Referenz: 10V / 4096 ≈ 2,44 mV pro Stufe. 16-Bit → 65536.'},
-  {id:'e9',kat:'elek',tag:'Elektronik · PID',formel:'u = Kp·e + Ki·∫e + Kd·ė',frage:'PID-Regler Formel?',antwort:'Proportional + Integral + Differential',erklaer:'e = Soll−Ist. P: sofort, I: bleibende Abweichung, D: dämpft Schwingungen.'},
-  {id:'s1',kat:'sps',tag:'SPS · AND-Gatter',formel:'Q = A AND B',frage:'AND-Gatter Wahrheitstabelle?',antwort:'Ausgang 1 NUR wenn BEIDE Eingänge 1',erklaer:'Reihenschaltung von Kontakten im KOP. 0+1=0, 1+1=1.'},
-  {id:'s2',kat:'sps',tag:'SPS · OR-Gatter',formel:'Q = A OR B',frage:'OR-Gatter Wahrheitstabelle?',antwort:'Ausgang 1 wenn MINDESTENS EIN Eingang 1',erklaer:'Parallelschaltung von Kontakten. 0+1=1, 1+1=1.'},
-  {id:'s3',kat:'sps',tag:'SPS · NOT-Gatter',formel:'Q = NOT A = Ā',frage:'NOT-Gatter / Inverter?',antwort:'Eingang wird negiert: 0→1 und 1→0',erklaer:'Öffner-Kontakt im KOP. Ruhestromprinzip für Sicherheit.'},
-  {id:'s4',kat:'sps',tag:'SPS · Timer TON',formel:'IN=1 → nach t: Q=1',frage:'Einschaltverzögerung (TON)?',antwort:'Q wird 1 nach Ablauf der Zeit t wenn IN=1',erklaer:'IN=0 → Q sofort 0. TOF = Ausschaltverzögerung. TP = Impulsgeber.'},
-  {id:'s5',kat:'sps',tag:'SPS · Zähler CTU',formel:'CV zählt positive Flanken',frage:'Vorwärtszähler CTU?',antwort:'Zählt 0→1 Flanken am CU-Eingang',erklaer:'Q=1 wenn CV≥PV (Vorgabewert). R=1 → CV=0 (Reset).'},
-  {id:'s6',kat:'sps',tag:'SPS · Analogsignal',formel:'4–20 mA oder 0–10 V',frage:'Typische Analogsignal-Bereiche?',antwort:'4–20 mA oder 0–10 V',erklaer:'4–20 mA: Drahtbruch erkennbar (Signal <4mA=Fehler). Vorteil über 0–10V!'},
-  {id:'s7',kat:'sps',tag:'SPS · Sprachen IEC',formel:'KOP · FUP · AWL · ST · AS',frage:'5 SPS-Sprachen nach IEC 61131-3?',antwort:'Kontaktplan · Funktionsplan · Anweisungsliste · Structured Text · Ablaufsprache',erklaer:'KOP/FUP für Elektriker, ST für Programmierer, AS für Ablaufsteuerungen.'},
-  {id:'s8',kat:'sps',tag:'SPS · Feldbus',formel:'PROFIBUS · PROFINET · Modbus',frage:'Häufige Feldbussysteme?',antwort:'PROFIBUS (seriell), PROFINET (Ethernet), Modbus (einfach)',erklaer:'PROFINET/EtherCAT = Echtzeit-Ethernet für Antriebe & Steuerungen.'},
-  {id:'p1',kat:'pruef',tag:'AP1 · Aufbau',formel:'Praxis + Schriftlich',frage:'Woraus besteht die Mechatroniker AP1?',antwort:'Praktische Prüfung am Teilsystem + 90 Min schriftlich',erklaer:'Praktisch: Aufbau, Verdrahtung, IBN, Protokoll. Grundlage: LF 1–7.'},
-  {id:'p2',kat:'pruef',tag:'AP2 · Gewichtung',formel:'AP1: 40% · AP2: 60%',frage:'Gewichtung der Abschlussprüfung?',antwort:'AP1 zählt 40%, AP2 zählt 60%',erklaer:'Bestehen: Ø ≥ 50% und kein Bereich unter 30%. Kein isoliertes Durchfallen in AP1.'},
-  {id:'p3',kat:'pruef',tag:'AP2 · Report',formel:'max. 3 Seiten + 5 Seiten Anhang',frage:'Was ist der AP2-Report?',antwort:'Bericht über die praxisbezogene Aufgabe im Betrieb',erklaer:'Max. 3 Textseiten. Anhang max. 5 Seiten (Fotos, Schaltpläne). Basis fürs Fachgespräch.'},
-  {id:'p4',kat:'pruef',tag:'Schutzmaßnahmen',formel:'SK I · SK II · SK III',frage:'Elektrische Schutzklassen?',antwort:'SK I: Schutzleiter · SK II: Schutzisolierung · SK III: Schutzkleinspannung',erklaer:'SK I: PE muss angeschlossen. SK II: doppelte Isolierung, kein PE. SK III: max. 50V AC.'},
-  {id:'p5',kat:'pruef',tag:'Sicherheit · R_iso',formel:'R_iso ≥ 1 MΩ',frage:'Mindestisolationswiderstand?',antwort:'Mindestens 1 Megaohm',erklaer:'Gemessen mit 500V oder 1000V DC. Feuchtigkeit, Alterung reduzieren R_iso.'},
-  {id:'p6',kat:'pruef',tag:'Sicherheit · R_PE',formel:'R_PE ≤ 1 Ω',frage:'Maximalwiderstand des Schutzleiters?',antwort:'Höchstens 1 Ohm',erklaer:'Niedriger R_PE → schnelle Abschaltung bei Erdschluss. Bei langer Leitung: dicken Querschnitt!'},
+  {id:'dc1',kat:'dc',formel:'U = R × I',
+   de:{tag:'DC · Ohmsches Gesetz',frage:'Wie lautet das Ohmsche Gesetz?',antwort:'Spannung = Widerstand × Strom',erklaer:'Umstellen: R=U/I und I=U/R. Gilt für ohmsche Verbraucher. Grundlage der Elektrotechnik.'},
+   en:{tag:'DC · Ohm\'s Law',frage:'What is Ohm\'s Law?',antwort:'Voltage = Resistance × Current',erklaer:'Rearrange: R=U/I and I=U/R. Valid for ohmic loads. Foundation of electrical engineering.'}},
+  {id:'dc2',kat:'dc',formel:'P = U × I',
+   de:{tag:'DC · Leistung',frage:'Elektrische Leistung berechnen?',antwort:'Leistung = Spannung × Strom',erklaer:'Auch: P=U²/R oder P=I²×R. Einheit: Watt (W). 1 kW = 1000 W.'},
+   en:{tag:'DC · Power',frage:'Calculate electrical power?',antwort:'Power = Voltage × Current',erklaer:'Also: P=U²/R or P=I²×R. Unit: Watt (W). 1 kW = 1000 W.'}},
+  {id:'dc3',kat:'dc',formel:'W = P × t',
+   de:{tag:'DC · Energie',frage:'Elektrische Energie berechnen?',antwort:'Energie = Leistung × Zeit',erklaer:'Einheit: Joule oder Wattstunden. 1 kWh = 3 600 000 J.'},
+   en:{tag:'DC · Energy',frage:'Calculate electrical energy?',antwort:'Energy = Power × Time',erklaer:'Unit: Joule or watt-hours. 1 kWh = 3,600,000 J.'}},
+  {id:'dc4',kat:'dc',formel:'η = P_ab / P_zu',
+   de:{tag:'DC · Wirkungsgrad',frage:'Was ist der Wirkungsgrad?',antwort:'Abgegebene durch zugeführte Leistung',erklaer:'η: 0…1 (0…100%). Verluste als Wärme, Reibung. Guter Motor: η≈0,92.'},
+   en:{tag:'DC · Efficiency',frage:'What is efficiency?',antwort:'Output power divided by input power',erklaer:'η: 0…1 (0…100%). Losses as heat, friction. Good motor: η≈0.92.'}},
+  {id:'dc5',kat:'dc',formel:'R = R₁ + R₂ + R₃',
+   de:{tag:'DC · Reihe',frage:'Gesamtwiderstand Reihenschaltung?',antwort:'Widerstände addieren sich',erklaer:'Gleicher Strom überall. Spannungen addieren sich zu U_ges.'},
+   en:{tag:'DC · Series',frage:'Total resistance in series circuit?',antwort:'Resistances add together',erklaer:'Same current everywhere. Voltages add up to U_total.'}},
+  {id:'dc6',kat:'dc',formel:'1/R = 1/R₁ + 1/R₂',
+   de:{tag:'DC · Parallel',frage:'Gesamtwiderstand Parallelschaltung?',antwort:'Kehrwerte addieren, dann Kehrwert',erklaer:'Gleiche Spannung an allen Zweigen. R_ges < kleinstes R.'},
+   en:{tag:'DC · Parallel',frage:'Total resistance in parallel circuit?',antwort:'Add reciprocals, then take reciprocal',erklaer:'Same voltage across all branches. R_total < smallest R.'}},
+  {id:'dc7',kat:'dc',formel:'U₂ = U × R₂/(R₁+R₂)',
+   de:{tag:'DC · Spannungsteiler',frage:'Unbelasteter Spannungsteiler?',antwort:'Teilspannung proportional zum Teilwiderstand',erklaer:'Nur unbelastet! Mit Last ändert sich das Verhältnis.'},
+   en:{tag:'DC · Voltage Divider',frage:'Unloaded voltage divider?',antwort:'Partial voltage proportional to partial resistance',erklaer:'Unloaded only! With load the ratio changes.'}},
+  {id:'dc8',kat:'dc',formel:'Σ U = 0',
+   de:{tag:'DC · Maschenregel',frage:'Was sagt die Maschenregel?',antwort:'Summe aller Spannungen in einer Masche = 0',erklaer:'2. Kirchhoffscher Satz. Quellen +, Verbraucher −.'},
+   en:{tag:'DC · Mesh Rule',frage:'What does the mesh rule state?',antwort:'Sum of all voltages in a loop = 0',erklaer:'Kirchhoff\'s 2nd law. Sources +, loads −.'}},
+  {id:'dc9',kat:'dc',formel:'Σ I = 0',
+   de:{tag:'DC · Knotenregel',frage:'Was sagt die Knotenregel?',antwort:'Zufließende = abfließende Ströme',erklaer:'1. Kirchhoffscher Satz. Ladungserhaltung am Knoten.'},
+   en:{tag:'DC · Node Rule',frage:'What does the node rule state?',antwort:'Currents in = currents out',erklaer:'Kirchhoff\'s 1st law. Charge conservation at the node.'}},
+  {id:'dc10',kat:'dc',formel:'P_v = I² × R',
+   de:{tag:'DC · Verlustleistung',frage:'Wärmeentwicklung im Leiter?',antwort:'Quadrat des Stroms mal Widerstand',erklaer:'Deshalb dicken Querschnitt wählen! Doppelter Strom → 4× Verlustleistung!'},
+   en:{tag:'DC · Power Loss',frage:'Heat generation in a conductor?',antwort:'Square of current times resistance',erklaer:'Choose larger cross-section! Double current → 4× power loss!'}},
+  {id:'dc11',kat:'dc',formel:'R = ρ × l / A',
+   de:{tag:'DC · Leiterwiderstand',frage:'Wovon hängt der Leiterwiderstand ab?',antwort:'Spez. Widerstand × Länge / Querschnitt',erklaer:'ρ_Cu=0,0172 Ω·mm²/m. Doppelte Länge → 2× R. Doppelter Querschnitt → ½ R.'},
+   en:{tag:'DC · Conductor Resistance',frage:'What determines conductor resistance?',antwort:'Specific resistance × length / cross-section',erklaer:'ρ_Cu=0.0172 Ω·mm²/m. Double length → 2× R. Double cross-section → ½ R.'}},
+  {id:'dc12',kat:'dc',formel:'R_T = R₀(1+α·ΔT)',
+   de:{tag:'DC · Temperatur',frage:'Temperatureinfluss auf Widerstand?',antwort:'Metalle: R steigt mit Temperatur',erklaer:'α_Cu≈0,00393/K. Bei 100°C ist R_Cu ca. 40% größer.'},
+   en:{tag:'DC · Temperature',frage:'Temperature effect on resistance?',antwort:'Metals: R increases with temperature',erklaer:'α_Cu≈0.00393/K. At 100°C R_Cu is approx. 40% higher.'}},
+  {id:'ac1',kat:'ac',formel:'Z = √(R² + X²)',
+   de:{tag:'AC · Impedanz',frage:'Was ist die Impedanz Z?',antwort:'Gesamtwiderstand im Wechselstromkreis',erklaer:'X = XL − XC. Z ≥ R immer. Einheit: Ohm.'},
+   en:{tag:'AC · Impedance',frage:'What is impedance Z?',antwort:'Total resistance in the AC circuit',erklaer:'X = XL − XC. Z ≥ R always. Unit: Ohm.'}},
+  {id:'ac2',kat:'ac',formel:'XL = 2π × f × L',
+   de:{tag:'AC · Induktiver X',frage:'Induktiver Blindwiderstand?',antwort:'Steigt mit Frequenz und Induktivität',erklaer:'50 Hz, L=100mH: XL≈31,4 Ω. Spule sperrt hohe Frequenzen.'},
+   en:{tag:'AC · Inductive X',frage:'Inductive reactance?',antwort:'Increases with frequency and inductance',erklaer:'50 Hz, L=100mH: XL≈31.4 Ω. Coil blocks high frequencies.'}},
+  {id:'ac3',kat:'ac',formel:'XC = 1/(2π × f × C)',
+   de:{tag:'AC · Kapazitiver X',frage:'Kapazitiver Blindwiderstand?',antwort:'Sinkt mit steigender Frequenz',erklaer:'Kondensator sperrt DC, lässt AC durch. Gegenteil zur Spule!'},
+   en:{tag:'AC · Capacitive X',frage:'Capacitive reactance?',antwort:'Decreases with increasing frequency',erklaer:'Capacitor blocks DC, passes AC. Opposite to coil!'}},
+  {id:'ac4',kat:'ac',formel:'f₀ = 1/(2π√LC)',
+   de:{tag:'AC · Resonanz',frage:'Resonanzfrequenz berechnen?',antwort:'Wenn XL = XC → Z = R (minimal)',erklaer:'Maximaler Strom bei Resonanz. Genutzt in Filtern & Empfängern.'},
+   en:{tag:'AC · Resonance',frage:'Calculate resonant frequency?',antwort:'When XL = XC → Z = R (minimum)',erklaer:'Maximum current at resonance. Used in filters & receivers.'}},
+  {id:'ac5',kat:'ac',formel:'S = U × I',
+   de:{tag:'AC · Scheinleistung',frage:'Scheinleistung S?',antwort:'Produkt aus Spannung und Strom',erklaer:'Einheit: VA. Muss erzeugt werden, egal ob nutzbar.'},
+   en:{tag:'AC · Apparent Power',frage:'Apparent power S?',antwort:'Product of voltage and current',erklaer:'Unit: VA. Must be generated regardless of usability.'}},
+  {id:'ac6',kat:'ac',formel:'P = S × cos φ',
+   de:{tag:'AC · Wirkleistung',frage:'Wirkleistung P?',antwort:'Nutzbarer Anteil der Scheinleistung',erklaer:'Einheit: W. cos φ nahe 1 = effizient. Bei Motoren typisch 0,7–0,9.'},
+   en:{tag:'AC · Active Power',frage:'Active power P?',antwort:'Usable portion of apparent power',erklaer:'Unit: W. cos φ close to 1 = efficient. Motors typically 0.7–0.9.'}},
+  {id:'ac7',kat:'ac',formel:'Q = S × sin φ',
+   de:{tag:'AC · Blindleistung',frage:'Blindleistung Q?',antwort:'Nicht nutzbare, pendelnde Leistung',erklaer:'Einheit: var. S²=P²+Q². Blindleistung → Kompensation mit Kondensatoren!'},
+   en:{tag:'AC · Reactive Power',frage:'Reactive power Q?',antwort:'Non-usable, oscillating power',erklaer:'Unit: var. S²=P²+Q². Reactive power → compensate with capacitors!'}},
+  {id:'ac8',kat:'ac',formel:'ü = U₁/U₂ = n₁/n₂',
+   de:{tag:'AC · Trafo',frage:'Trafo-Übersetzungsverhältnis?',antwort:'Windungszahl bestimmt Spannungsverhältnis',erklaer:'Ideal: P₁=P₂. Real η≈95–98%. ü>1 = Abwärts-Trafo.'},
+   en:{tag:'AC · Transformer',frage:'Transformer turns ratio?',antwort:'Number of turns determines voltage ratio',erklaer:'Ideal: P₁=P₂. Real η≈95–98%. ü>1 = step-down transformer.'}},
+  {id:'ac9',kat:'ac',formel:'U_D = √3 × U_S',
+   de:{tag:'AC · Stern-Dreieck',frage:'Zusammenhang Stern/Dreieck Spannung?',antwort:'Dreieck = √3 × Stern',erklaer:'400V Netz: U_Stern=231V. Stern-Dreieck-Anlauf reduziert Anlaufstrom auf 1/3.'},
+   en:{tag:'AC · Star-Delta',frage:'Star/delta voltage relationship?',antwort:'Delta = √3 × Star',erklaer:'400V grid: U_star=231V. Star-delta starting reduces inrush current to 1/3.'}},
+  {id:'ac10',kat:'ac',formel:'P = √3 × U × I × cos φ',
+   de:{tag:'AC · Drehstrom P',frage:'Leistung im Drehstromnetz?',antwort:'√3 mal Spannung mal Strom mal cos φ',erklaer:'√3≈1,732. 400V, 10A, cosφ=0,85: P≈5.890 W.'},
+   en:{tag:'AC · Three-phase P',frage:'Power in three-phase grid?',antwort:'√3 times voltage times current times cos φ',erklaer:'√3≈1.732. 400V, 10A, cosφ=0.85: P≈5,890 W.'}},
+  {id:'m1',kat:'mech',formel:'M = P / ω',
+   de:{tag:'Mechanik · Drehmoment',frage:'Drehmoment berechnen?',antwort:'Leistung durch Winkelgeschwindigkeit',erklaer:'Einheit: Nm. Auch: M = F × r (Kraft mal Hebelarm).'},
+   en:{tag:'Mechanics · Torque',frage:'Calculate torque?',antwort:'Power divided by angular velocity',erklaer:'Unit: Nm. Also: M = F × r (force times lever arm).'}},
+  {id:'m2',kat:'mech',formel:'ω = 2π × n / 60',
+   de:{tag:'Mechanik · Winkelgeschw.',frage:'Winkelgeschwindigkeit aus Drehzahl?',antwort:'Umdrehungen/min → Radiant/Sekunde',erklaer:'n=1450 rpm: ω=2π×1450/60≈151,8 rad/s.'},
+   en:{tag:'Mechanics · Angular vel.',frage:'Angular velocity from speed?',antwort:'Revolutions/min → radians/second',erklaer:'n=1450 rpm: ω=2π×1450/60≈151.8 rad/s.'}},
+  {id:'m3',kat:'mech',formel:'P = M × ω',
+   de:{tag:'Mechanik · Leistung',frage:'Mechanische Leistung?',antwort:'Drehmoment × Winkelgeschwindigkeit',erklaer:'Auch: P = F × v. Einheit: Watt.'},
+   en:{tag:'Mechanics · Power',frage:'Mechanical power?',antwort:'Torque × angular velocity',erklaer:'Also: P = F × v. Unit: Watt.'}},
+  {id:'m4',kat:'mech',formel:'i = n₁ / n₂ = M₂ / M₁',
+   de:{tag:'Mechanik · Übersetzung',frage:'Getriebeübersetzung berechnen?',antwort:'Drehzahlverhältnis = inverses Drehmomentverh.',erklaer:'i>1 = langsamer & mehr Drehmoment. i<1 = schneller & weniger Drehmoment.'},
+   en:{tag:'Mechanics · Gear Ratio',frage:'Calculate gear ratio?',antwort:'Speed ratio = inverse torque ratio',erklaer:'i>1 = slower & more torque. i<1 = faster & less torque.'}},
+  {id:'m5',kat:'mech',formel:'F = m × a',
+   de:{tag:'Mechanik · Kraft',frage:'Grundgesetz der Mechanik?',antwort:'Kraft = Masse × Beschleunigung',erklaer:'Einheit: Newton (N). Gewichtskraft: F_G = m × 9,81.'},
+   en:{tag:'Mechanics · Force',frage:'Newton\'s second law?',antwort:'Force = Mass × Acceleration',erklaer:'Unit: Newton (N). Weight force: F_G = m × 9.81.'}},
+  {id:'m6',kat:'mech',formel:'W = F × s',
+   de:{tag:'Mechanik · Arbeit',frage:'Mechanische Arbeit?',antwort:'Kraft × Weg',erklaer:'Einheit: Joule (J). Nur wenn Kraft in Bewegungsrichtung wirkt.'},
+   en:{tag:'Mechanics · Work',frage:'Mechanical work?',antwort:'Force × Distance',erklaer:'Unit: Joule (J). Only when force acts in direction of motion.'}},
+  {id:'m7',kat:'mech',formel:'p = F / A',
+   de:{tag:'Mechanik · Druck',frage:'Druck berechnen?',antwort:'Kraft durch Fläche',erklaer:'Einheit: Pascal. 1 bar = 100 000 Pa. Hydraulik: typisch 100–250 bar.'},
+   en:{tag:'Mechanics · Pressure',frage:'Calculate pressure?',antwort:'Force divided by area',erklaer:'Unit: Pascal. 1 bar = 100,000 Pa. Hydraulics: typically 100–250 bar.'}},
+  {id:'m8',kat:'mech',formel:'η_ges = η₁ × η₂ × η₃',
+   de:{tag:'Mechanik · η-Kette',frage:'Wirkungsgrad einer Antriebskette?',antwort:'Alle Einzelwirkungsgrade multiplizieren',erklaer:'3 Stufen à η=0,95: η_ges=0,857 = nur 85,7%!'},
+   en:{tag:'Mechanics · η chain',frage:'Efficiency of a drive chain?',antwort:'Multiply all individual efficiencies',erklaer:'3 stages each η=0.95: η_total=0.857 = only 85.7%!'}},
+  {id:'m9',kat:'mech',formel:'μ = F_R / F_N',
+   de:{tag:'Mechanik · Reibung',frage:'Was ist die Reibungszahl μ?',antwort:'Reibungskraft / Normalkraft',erklaer:'Stahl/Stahl trocken: μ≈0,15. Mit Öl: μ≈0,05. Für Bremsberechnungen.'},
+   en:{tag:'Mechanics · Friction',frage:'What is the friction coefficient μ?',antwort:'Friction force / Normal force',erklaer:'Steel/steel dry: μ≈0.15. With oil: μ≈0.05. Used for brake calculations.'}},
+  {id:'e1',kat:'elek',formel:'Q = C × U',
+   de:{tag:'Elektronik · Kondensator',frage:'Ladung im Kondensator?',antwort:'Kapazität × Spannung',erklaer:'Einheit: Coulomb (C). C in Farad (µF, nF, pF in der Praxis).'},
+   en:{tag:'Electronics · Capacitor',frage:'Charge in capacitor?',antwort:'Capacitance × Voltage',erklaer:'Unit: Coulomb (C). C in Farad (µF, nF, pF in practice).'}},
+  {id:'e2',kat:'elek',formel:'W = ½ × C × U²',
+   de:{tag:'Elektronik · Kondensator W',frage:'Energie im Kondensator?',antwort:'Halbe Kapazität mal Spannung zum Quadrat',erklaer:'Kondensator gibt Energie schlagartig ab → Blitz, Schweißgerät.'},
+   en:{tag:'Electronics · Capacitor W',frage:'Energy in capacitor?',antwort:'Half capacitance times voltage squared',erklaer:'Capacitor releases energy suddenly → flash, welder.'}},
+  {id:'e3',kat:'elek',formel:'W = ½ × L × I²',
+   de:{tag:'Elektronik · Spule W',frage:'Energie in der Spule?',antwort:'Halbe Induktivität mal Strom zum Quadrat',erklaer:'Spule verhindert plötzliche Stromänderungen → Entstörung, Sanftanlauf.'},
+   en:{tag:'Electronics · Inductor W',frage:'Energy in inductor?',antwort:'Half inductance times current squared',erklaer:'Inductor prevents sudden current changes → suppression, soft start.'}},
+  {id:'e4',kat:'elek',formel:'τ = R × C',
+   de:{tag:'Elektronik · RC-Zeit',frage:'Zeitkonstante beim RC-Glied?',antwort:'Widerstand × Kapazität',erklaer:'Nach 1τ: 63% des Endwerts. Nach 5τ: 99,3% → praktisch vollständig.'},
+   en:{tag:'Electronics · RC time',frage:'Time constant of RC circuit?',antwort:'Resistance × Capacitance',erklaer:'After 1τ: 63% of final value. After 5τ: 99.3% → practically complete.'}},
+  {id:'e5',kat:'elek',formel:'τ = L / R',
+   de:{tag:'Elektronik · RL-Zeit',frage:'Zeitkonstante beim RL-Glied?',antwort:'Induktivität durch Widerstand',erklaer:'Nach 5τ hat die Spule ihren Endstrom. Wichtig bei Schütz-Abfall.'},
+   en:{tag:'Electronics · RL time',frage:'Time constant of RL circuit?',antwort:'Inductance divided by resistance',erklaer:'After 5τ inductor reaches final current. Important for contactor drop-out.'}},
+  {id:'e6',kat:'elek',formel:'f = 1 / T',
+   de:{tag:'Elektronik · Frequenz',frage:'Zusammenhang Frequenz und Periodendauer?',antwort:'Frequenz = Kehrwert der Periodendauer',erklaer:'50 Hz → T=20 ms. 1 kHz → T=1 ms. Einheit: Hertz (Hz).'},
+   en:{tag:'Electronics · Frequency',frage:'Relationship between frequency and period?',antwort:'Frequency = reciprocal of period',erklaer:'50 Hz → T=20 ms. 1 kHz → T=1 ms. Unit: Hertz (Hz).'}},
+  {id:'e7',kat:'elek',formel:'D = t_ein / T',
+   de:{tag:'Elektronik · PWM',frage:'Tastverhältnis bei PWM?',antwort:'Einschaltzeit durch Periodendauer',erklaer:'D=0,5 → 50% → halbe mittlere Spannung. Motor- & LED-Steuerung.'},
+   en:{tag:'Electronics · PWM',frage:'Duty cycle in PWM?',antwort:'On-time divided by period',erklaer:'D=0.5 → 50% → half average voltage. Motor & LED control.'}},
+  {id:'e8',kat:'elek',formel:'n = 2^bits',
+   de:{tag:'Elektronik · ADC',frage:'Auflösung eines 12-Bit-ADC?',antwort:'2¹² = 4096 Stufen',erklaer:'Bei 10V Referenz: 10V / 4096 ≈ 2,44 mV pro Stufe. 16-Bit → 65536.'},
+   en:{tag:'Electronics · ADC',frage:'Resolution of a 12-bit ADC?',antwort:'2¹² = 4096 steps',erklaer:'At 10V reference: 10V / 4096 ≈ 2.44 mV per step. 16-bit → 65536.'}},
+  {id:'e9',kat:'elek',formel:'u = Kp·e + Ki·∫e + Kd·ė',
+   de:{tag:'Elektronik · PID',frage:'PID-Regler Formel?',antwort:'Proportional + Integral + Differential',erklaer:'e = Soll−Ist. P: sofort, I: bleibende Abweichung, D: dämpft Schwingungen.'},
+   en:{tag:'Electronics · PID',frage:'PID controller formula?',antwort:'Proportional + Integral + Derivative',erklaer:'e = setpoint−actual. P: immediate, I: steady error, D: damps oscillations.'}},
+  {id:'s1',kat:'sps',formel:'Q = A AND B',
+   de:{tag:'SPS · AND-Gatter',frage:'AND-Gatter Wahrheitstabelle?',antwort:'Ausgang 1 NUR wenn BEIDE Eingänge 1',erklaer:'Reihenschaltung von Kontakten im KOP. 0+1=0, 1+1=1.'},
+   en:{tag:'PLC · AND Gate',frage:'AND gate truth table?',antwort:'Output 1 ONLY when BOTH inputs are 1',erklaer:'Series connection of contacts in LAD. 0+1=0, 1+1=1.'}},
+  {id:'s2',kat:'sps',formel:'Q = A OR B',
+   de:{tag:'SPS · OR-Gatter',frage:'OR-Gatter Wahrheitstabelle?',antwort:'Ausgang 1 wenn MINDESTENS EIN Eingang 1',erklaer:'Parallelschaltung von Kontakten. 0+1=1, 1+1=1.'},
+   en:{tag:'PLC · OR Gate',frage:'OR gate truth table?',antwort:'Output 1 when AT LEAST ONE input is 1',erklaer:'Parallel connection of contacts. 0+1=1, 1+1=1.'}},
+  {id:'s3',kat:'sps',formel:'Q = NOT A = Ā',
+   de:{tag:'SPS · NOT-Gatter',frage:'NOT-Gatter / Inverter?',antwort:'Eingang wird negiert: 0→1 und 1→0',erklaer:'Öffner-Kontakt im KOP. Ruhestromprinzip für Sicherheit.'},
+   en:{tag:'PLC · NOT Gate',frage:'NOT gate / inverter?',antwort:'Input is negated: 0→1 and 1→0',erklaer:'Normally-closed contact in LAD. De-energised principle for safety.'}},
+  {id:'s4',kat:'sps',formel:'IN=1 → nach t: Q=1',
+   de:{tag:'SPS · Timer TON',frage:'Einschaltverzögerung (TON)?',antwort:'Q wird 1 nach Ablauf der Zeit t wenn IN=1',erklaer:'IN=0 → Q sofort 0. TOF = Ausschaltverzögerung. TP = Impulsgeber.'},
+   en:{tag:'PLC · Timer TON',frage:'On-delay timer (TON)?',antwort:'Q becomes 1 after time t when IN=1',erklaer:'IN=0 → Q immediately 0. TOF = off-delay. TP = pulse generator.'}},
+  {id:'s5',kat:'sps',formel:'CV zählt positive Flanken',
+   de:{tag:'SPS · Zähler CTU',frage:'Vorwärtszähler CTU?',antwort:'Zählt 0→1 Flanken am CU-Eingang',erklaer:'Q=1 wenn CV≥PV (Vorgabewert). R=1 → CV=0 (Reset).'},
+   en:{tag:'PLC · Counter CTU',frage:'Up-counter CTU?',antwort:'Counts 0→1 edges at CU input',erklaer:'Q=1 when CV≥PV (preset value). R=1 → CV=0 (reset).'}},
+  {id:'s6',kat:'sps',formel:'4–20 mA oder 0–10 V',
+   de:{tag:'SPS · Analogsignal',frage:'Typische Analogsignal-Bereiche?',antwort:'4–20 mA oder 0–10 V',erklaer:'4–20 mA: Drahtbruch erkennbar (Signal <4mA=Fehler). Vorteil über 0–10V!'},
+   en:{tag:'PLC · Analogue signal',frage:'Typical analogue signal ranges?',antwort:'4–20 mA or 0–10 V',erklaer:'4–20 mA: wire break detectable (signal <4mA=fault). Advantage over 0–10V!'}},
+  {id:'s7',kat:'sps',formel:'KOP · FUP · AWL · ST · AS',
+   de:{tag:'SPS · Sprachen IEC',frage:'5 SPS-Sprachen nach IEC 61131-3?',antwort:'Kontaktplan · Funktionsplan · Anweisungsliste · Structured Text · Ablaufsprache',erklaer:'KOP/FUP für Elektriker, ST für Programmierer, AS für Ablaufsteuerungen.'},
+   en:{tag:'PLC · IEC Languages',frage:'5 PLC languages per IEC 61131-3?',antwort:'LAD · FBD · IL · Structured Text · SFC',erklaer:'LAD/FBD for electricians, ST for programmers, SFC for sequential control.'}},
+  {id:'s8',kat:'sps',formel:'PROFIBUS · PROFINET · Modbus',
+   de:{tag:'SPS · Feldbus',frage:'Häufige Feldbussysteme?',antwort:'PROFIBUS (seriell), PROFINET (Ethernet), Modbus (einfach)',erklaer:'PROFINET/EtherCAT = Echtzeit-Ethernet für Antriebe & Steuerungen.'},
+   en:{tag:'PLC · Fieldbus',frage:'Common fieldbus systems?',antwort:'PROFIBUS (serial), PROFINET (Ethernet), Modbus (simple)',erklaer:'PROFINET/EtherCAT = real-time Ethernet for drives & controllers.'}},
+  {id:'p1',kat:'pruef',formel:'Praxis + Schriftlich',
+   de:{tag:'AP1 · Aufbau',frage:'Woraus besteht die Mechatroniker AP1?',antwort:'Praktische Prüfung am Teilsystem + 90 Min schriftlich',erklaer:'Praktisch: Aufbau, Verdrahtung, IBN, Protokoll. Grundlage: LF 1–7.'},
+   en:{tag:'AP1 · Structure',frage:'What does the Mechatronics AP1 consist of?',antwort:'Practical exam on subsystem + 90 min written',erklaer:'Practical: assembly, wiring, commissioning, protocol. Basis: LF 1–7.'}},
+  {id:'p2',kat:'pruef',formel:'AP1: 40% · AP2: 60%',
+   de:{tag:'AP2 · Gewichtung',frage:'Gewichtung der Abschlussprüfung?',antwort:'AP1 zählt 40%, AP2 zählt 60%',erklaer:'Bestehen: Ø ≥ 50% und kein Bereich unter 30%. Kein isoliertes Durchfallen in AP1.'},
+   en:{tag:'AP2 · Weighting',frage:'Weighting of the final exam?',antwort:'AP1 counts 40%, AP2 counts 60%',erklaer:'Pass: avg ≥ 50% and no section below 30%. Cannot fail AP1 in isolation.'}},
+  {id:'p3',kat:'pruef',formel:'max. 3 Seiten + 5 Seiten Anhang',
+   de:{tag:'AP2 · Report',frage:'Was ist der AP2-Report?',antwort:'Bericht über die praxisbezogene Aufgabe im Betrieb',erklaer:'Max. 3 Textseiten. Anhang max. 5 Seiten (Fotos, Schaltpläne). Basis fürs Fachgespräch.'},
+   en:{tag:'AP2 · Report',frage:'What is the AP2 report?',antwort:'Report on the work-based practical task',erklaer:'Max. 3 text pages. Appendix max. 5 pages (photos, circuit diagrams). Basis for technical discussion.'}},
+  {id:'p4',kat:'pruef',formel:'SK I · SK II · SK III',
+   de:{tag:'Schutzmaßnahmen',frage:'Elektrische Schutzklassen?',antwort:'SK I: Schutzleiter · SK II: Schutzisolierung · SK III: Schutzkleinspannung',erklaer:'SK I: PE muss angeschlossen. SK II: doppelte Isolierung, kein PE. SK III: max. 50V AC.'},
+   en:{tag:'Protective measures',frage:'Electrical protection classes?',antwort:'Class I: protective conductor · Class II: double insulation · Class III: safety extra-low voltage',erklaer:'Class I: PE must be connected. Class II: double insulation, no PE. Class III: max. 50V AC.'}},
+  {id:'p5',kat:'pruef',formel:'R_iso ≥ 1 MΩ',
+   de:{tag:'Sicherheit · R_iso',frage:'Mindestisolationswiderstand?',antwort:'Mindestens 1 Megaohm',erklaer:'Gemessen mit 500V oder 1000V DC. Feuchtigkeit, Alterung reduzieren R_iso.'},
+   en:{tag:'Safety · R_iso',frage:'Minimum insulation resistance?',antwort:'At least 1 Megaohm',erklaer:'Measured with 500V or 1000V DC. Moisture, ageing reduce R_iso.'}},
+  {id:'p6',kat:'pruef',formel:'R_PE ≤ 1 Ω',
+   de:{tag:'Sicherheit · R_PE',frage:'Maximalwiderstand des Schutzleiters?',antwort:'Höchstens 1 Ohm',erklaer:'Niedriger R_PE → schnelle Abschaltung bei Erdschluss. Bei langer Leitung: dicken Querschnitt!'},
+   en:{tag:'Safety · R_PE',frage:'Maximum resistance of protective conductor?',antwort:'At most 1 Ohm',erklaer:'Low R_PE → fast disconnection on earth fault. Long cable: use larger cross-section!'}},
 ];
 
 var QUIZ = [
-  {q:'Wie lautet das Ohmsche Gesetz?',f:'U = ?',kat:'dc',opts:['U = R × I','U = R + I','U = R / I','U = I / R'],c:0,e:'U=R×I. Strom: I=U/R. Widerstand: R=U/I.'},
-  {q:'Was ist die Einheit der elektrischen Leistung?',f:'',kat:'dc',opts:['Watt (W)','Joule (J)','Ampere (A)','Volt (V)'],c:0,e:'Watt = Volt × Ampere. 1 kW = 1000 W.'},
-  {q:'Gesamtwiderstand: 3 Widerstände (100Ω, 220Ω, 470Ω) in Reihe?',f:'R = R₁ + R₂ + R₃',kat:'dc',opts:['790 Ω','70 Ω','197 Ω','790 kΩ'],c:0,e:'100+220+470=790 Ω. In der Reihe addieren sich alle Widerstände.'},
-  {q:'2 gleiche Widerstände (200Ω) parallel – Gesamtwiderstand?',f:'1/R = 1/R₁ + 1/R₂',kat:'dc',opts:['100 Ω','400 Ω','200 Ω','50 Ω'],c:0,e:'1/R=1/200+1/200=2/200 → R=100 Ω. Parallel immer kleiner als kleinster Wert.'},
-  {q:'Elektrische Leistung bei U=230V und I=4A?',f:'P = U × I',kat:'dc',opts:['920 W','57,5 W','234 W','920 kW'],c:0,e:'P=230×4=920 W = 0,92 kW. Typisch für einen Wasserkocher.'},
-  {q:'Wirkungsgrad eines Motors: P_ab=4,6 kW, P_zu=5 kW?',f:'η = P_ab / P_zu',kat:'dc',opts:['0,92 = 92%','0,88 = 88%','1,09 = 109%','0,46 = 46%'],c:0,e:'η=4,6/5=0,92 = 92%. Verlustleistung: 0,4 kW als Wärme.'},
-  {q:'Was ist der induktive Blindwiderstand bei f=50Hz und L=200mH?',f:'XL = 2π × f × L',kat:'ac',opts:['≈ 62,8 Ω','≈ 6,28 Ω','≈ 628 Ω','≈ 0,628 Ω'],c:0,e:'XL=2π×50×0,2≈62,83 Ω. Doppelte Induktivität → doppelter XL.'},
-  {q:'Leistungsfaktor cos φ = 0,8 bei S=10 kVA – Wirkleistung P?',f:'P = S × cos φ',kat:'ac',opts:['8 kW','12,5 kW','6 kW','10 kW'],c:0,e:'P=10×0,8=8 kW. Q=√(10²-8²)=6 kvar.'},
-  {q:'Stern-Dreieck-Anlauf – auf welchen Faktor sinkt der Anlaufstrom?',f:'',kat:'ac',opts:['1/3 des Direktanlaufstroms','1/√3','2/3','Bleibt gleich'],c:0,e:'Stern: U=400/√3≈231V. Dreieck: U=400V. Strom in Stern: 1/3 des Dreieckstroms.'},
-  {q:'AND-Gatter: A=1, B=0 – Ausgangswert Q?',f:'Q = A AND B',kat:'sps',opts:['0','1','Undefiniert','Beide'],c:0,e:'AND: Ausgang 1 NUR wenn ALLE Eingänge 1. A=1 UND B=0 → Q=0.'},
-  {q:'Timer TON: IN wechselt auf 0 während der Verzögerungszeit – was passiert?',f:'',kat:'sps',opts:['Timer wird zurückgesetzt, Q bleibt 0','Q schaltet sofort auf 1','Q bleibt im letzten Zustand','Fehler in der SPS'],c:0,e:'TON: IN=0 → sofort Reset. Verzögerung muss vollständig ablaufen wenn IN=1.'},
-  {q:'Vorteil von 4–20mA gegenüber 0–10V?',f:'',kat:'sps',opts:['Drahtbruch erkennbar (Signal < 4mA)','Geringerer Energieverbrauch','Höhere Auflösung','Einfachere Verkabelung'],c:0,e:'0mA = Drahtbruch oder Kurzschluss! 4mA = Messwert 0%. Sicherheitsvorteil!'},
-  {q:'Was ist das Tastverhältnis D bei PWM?',f:'D = t_ein / T',kat:'elek',opts:['Einschaltzeit / Periodendauer','Periodendauer / Ausschaltzeit','Amplitude / Frequenz','Ausschaltzeit / Einschaltzeit'],c:0,e:'D=0,7 → 70% Einschaltzeit → 70% der Versorgungsspannung im Mittel.'},
-  {q:'Zeitkonstante τ eines RC-Glieds: R=10kΩ, C=100µF?',f:'τ = R × C',kat:'elek',opts:['1 Sekunde','10 Sekunden','0,1 Sekunden','100 Sekunden'],c:0,e:'τ=10000×0,0001=1s. Nach 5s (5τ) ist der Kondensator praktisch voll geladen.'},
-  {q:'Mindestisolationswiderstand einer neuen elektrischen Anlage?',f:'',kat:'pruef',opts:['≥ 1 MΩ','≥ 1 kΩ','≥ 100 Ω','≥ 10 MΩ'],c:0,e:'VDE 0100: R_iso ≥ 1 MΩ. Gemessen mit 500V DC vor der Inbetriebnahme.'},
-  {q:'Maximalwiderstand des Schutzleiters R_PE?',f:'',kat:'pruef',opts:['≤ 1 Ω','≤ 10 Ω','≤ 100 mΩ','≤ 5 Ω'],c:0,e:'R_PE ≤ 1 Ω sichert schnelle Abschaltung. DGUV V3 / VDE 0701-0702.'},
-  {q:'Schutzklasse II bedeutet?',f:'',kat:'pruef',opts:['Doppelte Isolierung, kein PE nötig','Schutzleiter muss angeschlossen sein','Betrieb nur bis 50V','Nur im Freien einsetzbar'],c:0,e:'SK II: zwei unabhängige Isolierschichten. Erkennbar am □-Symbol. Kein PE erforderlich.'},
-  {q:'AP1 der Mechatroniker-Ausbildung findet statt...',f:'',kat:'pruef',opts:['Vor Ende des 2. Ausbildungsjahres','Am Ende des 3. Ausbildungsjahres','Nach der Zwischenprüfung im 1. LJ','Direkt vor AP2'],c:0,e:'AP1 = Ende 2. LJ. Basis: LF 1–7. Ergebnis geht in AP2-Gesamtnote ein (40%).'},
-  {q:'Drehmoment eines Motors: P=5,5 kW, n=1450 rpm?',f:'M = P/ω · ω=2π×n/60',kat:'mech',opts:['≈ 36,2 Nm','≈ 362 Nm','≈ 3,62 Nm','≈ 8000 Nm'],c:0,e:'ω=2π×1450/60≈151,8 rad/s. M=5500/151,8≈36,2 Nm.'},
-  {q:'Getriebeübersetzung i=4: Eingang n₁=1400rpm – Ausgangsdrehzahl?',f:'i = n₁/n₂',kat:'mech',opts:['350 rpm','5600 rpm','1400 rpm','700 rpm'],c:0,e:'n₂=n₁/i=1400/4=350 rpm. Drehmoment steigt: M₂=M₁×i=4-fach (ohne Verluste).'},
+  {c:0,kat:'dc',f:'U = ?',
+   de:{q:'Wie lautet das Ohmsche Gesetz?',opts:['U = R × I','U = R + I','U = R / I','U = I / R'],e:'U=R×I. Strom: I=U/R. Widerstand: R=U/I.'},
+   en:{q:'What is Ohm\'s Law?',opts:['U = R × I','U = R + I','U = R / I','U = I / R'],e:'U=R×I. Current: I=U/R. Resistance: R=U/I.'}},
+  {c:0,kat:'dc',f:'',
+   de:{q:'Was ist die Einheit der elektrischen Leistung?',opts:['Watt (W)','Joule (J)','Ampere (A)','Volt (V)'],e:'Watt = Volt × Ampere. 1 kW = 1000 W.'},
+   en:{q:'What is the unit of electrical power?',opts:['Watt (W)','Joule (J)','Ampere (A)','Volt (V)'],e:'Watt = Volt × Ampere. 1 kW = 1000 W.'}},
+  {c:0,kat:'dc',f:'R = R₁ + R₂ + R₃',
+   de:{q:'Gesamtwiderstand: 3 Widerstände (100Ω, 220Ω, 470Ω) in Reihe?',opts:['790 Ω','70 Ω','197 Ω','790 kΩ'],e:'100+220+470=790 Ω. In der Reihe addieren sich alle Widerstände.'},
+   en:{q:'Total resistance: 3 resistors (100Ω, 220Ω, 470Ω) in series?',opts:['790 Ω','70 Ω','197 Ω','790 kΩ'],e:'100+220+470=790 Ω. In series all resistances add together.'}},
+  {c:0,kat:'dc',f:'1/R = 1/R₁ + 1/R₂',
+   de:{q:'2 gleiche Widerstände (200Ω) parallel – Gesamtwiderstand?',opts:['100 Ω','400 Ω','200 Ω','50 Ω'],e:'1/R=1/200+1/200=2/200 → R=100 Ω. Parallel immer kleiner als kleinster Wert.'},
+   en:{q:'2 equal resistors (200Ω) in parallel – total resistance?',opts:['100 Ω','400 Ω','200 Ω','50 Ω'],e:'1/R=1/200+1/200=2/200 → R=100 Ω. Parallel always less than smallest value.'}},
+  {c:0,kat:'dc',f:'P = U × I',
+   de:{q:'Elektrische Leistung bei U=230V und I=4A?',opts:['920 W','57,5 W','234 W','920 kW'],e:'P=230×4=920 W = 0,92 kW. Typisch für einen Wasserkocher.'},
+   en:{q:'Electrical power at U=230V and I=4A?',opts:['920 W','57.5 W','234 W','920 kW'],e:'P=230×4=920 W = 0.92 kW. Typical for a kettle.'}},
+  {c:0,kat:'dc',f:'η = P_ab / P_zu',
+   de:{q:'Wirkungsgrad eines Motors: P_ab=4,6 kW, P_zu=5 kW?',opts:['0,92 = 92%','0,88 = 88%','1,09 = 109%','0,46 = 46%'],e:'η=4,6/5=0,92 = 92%. Verlustleistung: 0,4 kW als Wärme.'},
+   en:{q:'Motor efficiency: P_out=4.6 kW, P_in=5 kW?',opts:['0.92 = 92%','0.88 = 88%','1.09 = 109%','0.46 = 46%'],e:'η=4.6/5=0.92 = 92%. Power loss: 0.4 kW as heat.'}},
+  {c:0,kat:'ac',f:'XL = 2π × f × L',
+   de:{q:'Was ist der induktive Blindwiderstand bei f=50Hz und L=200mH?',opts:['≈ 62,8 Ω','≈ 6,28 Ω','≈ 628 Ω','≈ 0,628 Ω'],e:'XL=2π×50×0,2≈62,83 Ω. Doppelte Induktivität → doppelter XL.'},
+   en:{q:'What is the inductive reactance at f=50Hz and L=200mH?',opts:['≈ 62.8 Ω','≈ 6.28 Ω','≈ 628 Ω','≈ 0.628 Ω'],e:'XL=2π×50×0.2≈62.83 Ω. Double inductance → double XL.'}},
+  {c:0,kat:'ac',f:'P = S × cos φ',
+   de:{q:'Leistungsfaktor cos φ = 0,8 bei S=10 kVA – Wirkleistung P?',opts:['8 kW','12,5 kW','6 kW','10 kW'],e:'P=10×0,8=8 kW. Q=√(10²-8²)=6 kvar.'},
+   en:{q:'Power factor cos φ = 0.8 at S=10 kVA – active power P?',opts:['8 kW','12.5 kW','6 kW','10 kW'],e:'P=10×0.8=8 kW. Q=√(10²-8²)=6 kvar.'}},
+  {c:0,kat:'ac',f:'',
+   de:{q:'Stern-Dreieck-Anlauf – auf welchen Faktor sinkt der Anlaufstrom?',opts:['1/3 des Direktanlaufstroms','1/√3','2/3','Bleibt gleich'],e:'Stern: U=400/√3≈231V. Dreieck: U=400V. Strom in Stern: 1/3 des Dreieckstroms.'},
+   en:{q:'Star-delta starting – by what factor does inrush current decrease?',opts:['1/3 of direct-on-line current','1/√3','2/3','Stays the same'],e:'Star: U=400/√3≈231V. Delta: U=400V. Current in star: 1/3 of delta current.'}},
+  {c:0,kat:'sps',f:'Q = A AND B',
+   de:{q:'AND-Gatter: A=1, B=0 – Ausgangswert Q?',opts:['0','1','Undefiniert','Beide'],e:'AND: Ausgang 1 NUR wenn ALLE Eingänge 1. A=1 UND B=0 → Q=0.'},
+   en:{q:'AND gate: A=1, B=0 – output value Q?',opts:['0','1','Undefined','Both'],e:'AND: output 1 ONLY when ALL inputs are 1. A=1 AND B=0 → Q=0.'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Timer TON: IN wechselt auf 0 während der Verzögerungszeit – was passiert?',opts:['Timer wird zurückgesetzt, Q bleibt 0','Q schaltet sofort auf 1','Q bleibt im letzten Zustand','Fehler in der SPS'],e:'TON: IN=0 → sofort Reset. Verzögerung muss vollständig ablaufen wenn IN=1.'},
+   en:{q:'Timer TON: IN switches to 0 during delay time – what happens?',opts:['Timer resets, Q stays 0','Q switches immediately to 1','Q stays in last state','Error in PLC'],e:'TON: IN=0 → immediate reset. Delay must complete fully when IN=1.'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Vorteil von 4–20mA gegenüber 0–10V?',opts:['Drahtbruch erkennbar (Signal < 4mA)','Geringerer Energieverbrauch','Höhere Auflösung','Einfachere Verkabelung'],e:'0mA = Drahtbruch oder Kurzschluss! 4mA = Messwert 0%. Sicherheitsvorteil!'},
+   en:{q:'Advantage of 4–20mA over 0–10V?',opts:['Wire break detectable (signal < 4mA)','Lower energy consumption','Higher resolution','Simpler wiring'],e:'0mA = wire break or short circuit! 4mA = measured value 0%. Safety advantage!'}},
+  {c:0,kat:'elek',f:'D = t_ein / T',
+   de:{q:'Was ist das Tastverhältnis D bei PWM?',opts:['Einschaltzeit / Periodendauer','Periodendauer / Ausschaltzeit','Amplitude / Frequenz','Ausschaltzeit / Einschaltzeit'],e:'D=0,7 → 70% Einschaltzeit → 70% der Versorgungsspannung im Mittel.'},
+   en:{q:'What is the duty cycle D in PWM?',opts:['On-time / Period','Period / Off-time','Amplitude / Frequency','Off-time / On-time'],e:'D=0.7 → 70% on-time → 70% of supply voltage on average.'}},
+  {c:0,kat:'elek',f:'τ = R × C',
+   de:{q:'Zeitkonstante τ eines RC-Glieds: R=10kΩ, C=100µF?',opts:['1 Sekunde','10 Sekunden','0,1 Sekunden','100 Sekunden'],e:'τ=10000×0,0001=1s. Nach 5s (5τ) ist der Kondensator praktisch voll geladen.'},
+   en:{q:'Time constant τ of RC circuit: R=10kΩ, C=100µF?',opts:['1 second','10 seconds','0.1 seconds','100 seconds'],e:'τ=10000×0.0001=1s. After 5s (5τ) capacitor is practically fully charged.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'Mindestisolationswiderstand einer neuen elektrischen Anlage?',opts:['≥ 1 MΩ','≥ 1 kΩ','≥ 100 Ω','≥ 10 MΩ'],e:'VDE 0100: R_iso ≥ 1 MΩ. Gemessen mit 500V DC vor der Inbetriebnahme.'},
+   en:{q:'Minimum insulation resistance of a new electrical installation?',opts:['≥ 1 MΩ','≥ 1 kΩ','≥ 100 Ω','≥ 10 MΩ'],e:'VDE 0100: R_iso ≥ 1 MΩ. Measured with 500V DC before commissioning.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'Maximalwiderstand des Schutzleiters R_PE?',opts:['≤ 1 Ω','≤ 10 Ω','≤ 100 mΩ','≤ 5 Ω'],e:'R_PE ≤ 1 Ω sichert schnelle Abschaltung. DGUV V3 / VDE 0701-0702.'},
+   en:{q:'Maximum resistance of the protective conductor R_PE?',opts:['≤ 1 Ω','≤ 10 Ω','≤ 100 mΩ','≤ 5 Ω'],e:'R_PE ≤ 1 Ω ensures fast disconnection. DGUV V3 / VDE 0701-0702.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'Schutzklasse II bedeutet?',opts:['Doppelte Isolierung, kein PE nötig','Schutzleiter muss angeschlossen sein','Betrieb nur bis 50V','Nur im Freien einsetzbar'],e:'SK II: zwei unabhängige Isolierschichten. Erkennbar am □-Symbol. Kein PE erforderlich.'},
+   en:{q:'Protection class II means?',opts:['Double insulation, no PE required','Protective conductor must be connected','Operation only up to 50V','For outdoor use only'],e:'Class II: two independent insulating layers. Identified by □ symbol. No PE required.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'AP1 der Mechatroniker-Ausbildung findet statt...',opts:['Vor Ende des 2. Ausbildungsjahres','Am Ende des 3. Ausbildungsjahres','Nach der Zwischenprüfung im 1. LJ','Direkt vor AP2'],e:'AP1 = Ende 2. LJ. Basis: LF 1–7. Ergebnis geht in AP2-Gesamtnote ein (40%).'},
+   en:{q:'The Mechatronics AP1 exam takes place...',opts:['Before end of 2nd training year','At end of 3rd training year','After interim exam in year 1','Directly before AP2'],e:'AP1 = end of year 2. Basis: LF 1–7. Result contributes to AP2 final grade (40%).'}},
+  {c:0,kat:'mech',f:'M = P/ω · ω=2π×n/60',
+   de:{q:'Drehmoment eines Motors: P=5,5 kW, n=1450 rpm?',opts:['≈ 36,2 Nm','≈ 362 Nm','≈ 3,62 Nm','≈ 8000 Nm'],e:'ω=2π×1450/60≈151,8 rad/s. M=5500/151,8≈36,2 Nm.'},
+   en:{q:'Torque of a motor: P=5.5 kW, n=1450 rpm?',opts:['≈ 36.2 Nm','≈ 362 Nm','≈ 3.62 Nm','≈ 8000 Nm'],e:'ω=2π×1450/60≈151.8 rad/s. M=5500/151.8≈36.2 Nm.'}},
+  {c:0,kat:'mech',f:'i = n₁/n₂',
+   de:{q:'Getriebeübersetzung i=4: Eingang n₁=1400rpm – Ausgangsdrehzahl?',opts:['350 rpm','5600 rpm','1400 rpm','700 rpm'],e:'n₂=n₁/i=1400/4=350 rpm. Drehmoment steigt: M₂=M₁×i=4-fach (ohne Verluste).'},
+   en:{q:'Gear ratio i=4: input n₁=1400rpm – output speed?',opts:['350 rpm','5600 rpm','1400 rpm','700 rpm'],e:'n₂=n₁/i=1400/4=350 rpm. Torque increases: M₂=M₁×i=4× (without losses).'}},
 
   // ── SCHÜTZKOMBINATIONEN ─────────────────────────────────────────
-  {q:'Was ist eine Schützverriegelung (elektrische Verriegelung)?',f:'',kat:'sps',opts:['Öffnerkontakt des einen Schützes in der Spulenzuleitung des anderen — verhindert gleichzeitiges Anziehen','Schütz schaltet selbst ab nach Zeit','Sicherung vor dem Schütz','Motorschutzschalter-Funktion'],c:0,e:'Verriegelung: K1-Öffner in K2-Spulenzuleitung und umgekehrt. Verhindert Kurzschluss z.B. bei Rechtslauf/Linkslauf oder Y/Δ-Umschaltung. Immer zusätzlich mechanische Verriegelung!'},
-  {q:'Warum braucht die Stern-Dreieck-Schaltung eine elektrische UND mechanische Verriegelung?',f:'',kat:'sps',opts:['K_Y und K_Δ gleichzeitig = Kurzschluss der Motorwicklungen','Motoren drehen sonst falsch','Stromspitze beim Anlauf','Wärmeschutz der Wicklungen'],c:0,e:'Bei gleichzeitigem K_Y und K_Δ werden die Wicklungsenden kurzgeschlossen → Kurzschluss! Elektrische Verriegelung im Schaltplan + mechanische Verriegelung (Klinke) am Schütz zwingend.'},
-  {q:'Was ist die Aufgabe des Zeitrelais (KZR) in der Stern-Dreieck-Schaltung?',f:'',kat:'sps',opts:['Steuert die Umschaltzeit von Y auf Δ (typisch 5–15 s)','Schaltet den Motor nach Zeit ab','Begrenzt den Anlaufstrom','Messen der Motortemperatur'],c:0,e:'KZR: Einschaltverzögerung. Nach Ablauf der eingestellten Zeit (wenn Motor in Y hochgelaufen) wird auf Δ umgeschaltet. Einstellzeit richtet sich nach Motorleistung und Last.'},
-  {q:'Was versteht man unter einer Schützmatrix (Wendeschützschaltung)?',f:'',kat:'sps',opts:['Zwei Schütze tauschen zwei Phasen → Drehrichtungsumkehr des Motors','Drei Schütze für drei Phasen','Schütz und Motorschutz kombiniert','Stern-Dreieck-Automatik'],c:0,e:'Wendeschütz: K_Rechts und K_Links tauschen je zwei Phasen (z.B. L1↔L3). Dadurch dreht das Drehfeld und der Motor in Gegenrichtung. Verriegelung zwingend! Umschalten nur im Stillstand oder nach Pause.'},
-  {q:'Welche Schaltung wird verwendet, um einen Motor an zwei verschiedenen Orten zu starten/stoppen?',f:'',kat:'sps',opts:['Start-Taster parallel schalten, Stop-Taster in Reihe schalten','Beide Taster parallel','Beide Taster in Reihe','Zwei separate Schütze'],c:0,e:'Mehrstellenbedienung: Start-Taster (Schließer) parallel → einer reicht zum Starten. Stop-Taster (Öffner) in Reihe → jeder kann abschalten. Klassisch für Transportbänder, Pumpen.'},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Was ist eine Schützverriegelung (elektrische Verriegelung)?',opts:['Öffnerkontakt des einen Schützes in der Spulenzuleitung des anderen — verhindert gleichzeitiges Anziehen','Schütz schaltet selbst ab nach Zeit','Sicherung vor dem Schütz','Motorschutzschalter-Funktion'],e:'Verriegelung: K1-Öffner in K2-Spulenzuleitung und umgekehrt. Verhindert Kurzschluss z.B. bei Rechtslauf/Linkslauf oder Y/Δ-Umschaltung. Immer zusätzlich mechanische Verriegelung!'},
+   en:{q:'What is a contactor interlock (electrical interlock)?',opts:['NC contact of one contactor in the coil supply of the other — prevents simultaneous pick-up','Contactor switches off after time','Fuse before the contactor','Motor protection function'],e:'Interlock: K1-NC in K2 coil supply and vice versa. Prevents short circuit e.g. with forward/reverse or Y/Δ switching. Always add mechanical interlock!'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Warum braucht die Stern-Dreieck-Schaltung eine elektrische UND mechanische Verriegelung?',opts:['K_Y und K_Δ gleichzeitig = Kurzschluss der Motorwicklungen','Motoren drehen sonst falsch','Stromspitze beim Anlauf','Wärmeschutz der Wicklungen'],e:'Bei gleichzeitigem K_Y und K_Δ werden die Wicklungsenden kurzgeschlossen → Kurzschluss! Elektrische Verriegelung im Schaltplan + mechanische Verriegelung (Klinke) am Schütz zwingend.'},
+   en:{q:'Why does star-delta switching need both electrical AND mechanical interlock?',opts:['K_Y and K_Δ simultaneously = short circuit of motor windings','Motors would rotate in wrong direction','Current spike during starting','Thermal protection of windings'],e:'Simultaneous K_Y and K_Δ short-circuits the winding ends → short circuit! Electrical interlock in schematic + mechanical interlock (latch) on contactor mandatory.'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Was ist die Aufgabe des Zeitrelais (KZR) in der Stern-Dreieck-Schaltung?',opts:['Steuert die Umschaltzeit von Y auf Δ (typisch 5–15 s)','Schaltet den Motor nach Zeit ab','Begrenzt den Anlaufstrom','Messen der Motortemperatur'],e:'KZR: Einschaltverzögerung. Nach Ablauf der eingestellten Zeit (wenn Motor in Y hochgelaufen) wird auf Δ umgeschaltet. Einstellzeit richtet sich nach Motorleistung und Last.'},
+   en:{q:'What is the function of the timing relay (KZR) in star-delta starting?',opts:['Controls the switchover time from Y to Δ (typically 5–15 s)','Switches off motor after time','Limits inrush current','Measures motor temperature'],e:'KZR: on-delay timer. After set time (once motor has run up in Y) it switches to Δ. Setting time depends on motor power and load.'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Was versteht man unter einer Schützmatrix (Wendeschützschaltung)?',opts:['Zwei Schütze tauschen zwei Phasen → Drehrichtungsumkehr des Motors','Drei Schütze für drei Phasen','Schütz und Motorschutz kombiniert','Stern-Dreieck-Automatik'],e:'Wendeschütz: K_Rechts und K_Links tauschen je zwei Phasen (z.B. L1↔L3). Dadurch dreht das Drehfeld und der Motor in Gegenrichtung. Verriegelung zwingend! Umschalten nur im Stillstand oder nach Pause.'},
+   en:{q:'What is a reversing contactor circuit?',opts:['Two contactors swap two phases → reversal of motor direction','Three contactors for three phases','Contactor and motor protection combined','Star-delta automatic'],e:'Reversing contactor: K_Forward and K_Reverse each swap two phases (e.g. L1↔L3). This reverses the rotating field and motor direction. Interlock mandatory! Switch only at standstill or after pause.'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Welche Schaltung wird verwendet, um einen Motor an zwei verschiedenen Orten zu starten/stoppen?',opts:['Start-Taster parallel schalten, Stop-Taster in Reihe schalten','Beide Taster parallel','Beide Taster in Reihe','Zwei separate Schütze'],e:'Mehrstellenbedienung: Start-Taster (Schließer) parallel → einer reicht zum Starten. Stop-Taster (Öffner) in Reihe → jeder kann abschalten. Klassisch für Transportbänder, Pumpen.'},
+   en:{q:'Which circuit is used to start/stop a motor from two different locations?',opts:['Connect start buttons in parallel, stop buttons in series','Both buttons parallel','Both buttons in series','Two separate contactors'],e:'Multi-station control: start buttons (NO) parallel → any one can start. Stop buttons (NC) in series → any one can stop. Classic for conveyors, pumps.'}},
 
   // ── HYDRAULIK & PNEUMATIK ───────────────────────────────────────
-  {q:'Hydraulikzylinder: p=200 bar, Kolbendurchmesser d=80mm – Ausfahrkraft F?',f:'F = p × A · A = π×d²/4',kat:'mech',opts:['≈ 100 kN','≈ 10 kN','≈ 1000 kN','≈ 1 kN'],c:0,e:'A = π×0,08²/4 = 0,005026 m². F = 200×10⁵ × 0,005026 ≈ 100 520 N ≈ 100 kN.'},
-  {q:'Was ist der Unterschied zwischen einfach- und doppeltwirkendem Zylinder?',f:'',kat:'mech',opts:['Einfach: Druckluft/Öl nur auf eine Seite, Rückhub durch Feder. Doppelt: beide Seiten steuerbar','Einfach ist schneller','Doppelt hat mehr Kraft','Kein Unterschied'],c:0,e:'Einfachwirkend: kostengünstig, einfache Ansteuerung, Rückhub durch Feder (Federkraft begrenzt). Doppeltwirkend: volle Kraft und Kontrolle in beide Richtungen, 2 Druckanschlüsse.'},
-  {q:'FRL-Einheit in der Pneumatik: was bedeutet jeder Buchstabe?',f:'',kat:'mech',opts:['Filter – Regler – Öler','Frequenz – Regelung – Leitung','Federdruck – Regelventil – Leckageschutz','Fließ – Rückdruck – Leitungsschutz'],c:0,e:'FRL = Wartungseinheit: F=Filter (Schmutz, Wasser), R=Druckregler (konstanter Arbeitsdruck), L=Öler (Schmierung der Ventile und Zylinder). Erste Station nach dem Kompressor.'},
+  {c:0,kat:'mech',f:'F = p × A · A = π×d²/4',
+   de:{q:'Hydraulikzylinder: p=200 bar, Kolbendurchmesser d=80mm – Ausfahrkraft F?',opts:['≈ 100 kN','≈ 10 kN','≈ 1000 kN','≈ 1 kN'],e:'A = π×0,08²/4 = 0,005026 m². F = 200×10⁵ × 0,005026 ≈ 100 520 N ≈ 100 kN.'},
+   en:{q:'Hydraulic cylinder: p=200 bar, piston diameter d=80mm – extension force F?',opts:['≈ 100 kN','≈ 10 kN','≈ 1000 kN','≈ 1 kN'],e:'A = π×0.08²/4 = 0.005026 m². F = 200×10⁵ × 0.005026 ≈ 100,520 N ≈ 100 kN.'}},
+  {c:0,kat:'mech',f:'',
+   de:{q:'Was ist der Unterschied zwischen einfach- und doppeltwirkendem Zylinder?',opts:['Einfach: Druckluft/Öl nur auf eine Seite, Rückhub durch Feder. Doppelt: beide Seiten steuerbar','Einfach ist schneller','Doppelt hat mehr Kraft','Kein Unterschied'],e:'Einfachwirkend: kostengünstig, einfache Ansteuerung, Rückhub durch Feder (Federkraft begrenzt). Doppeltwirkend: volle Kraft und Kontrolle in beide Richtungen, 2 Druckanschlüsse.'},
+   en:{q:'What is the difference between single-acting and double-acting cylinders?',opts:['Single: pressure on one side only, return by spring. Double: both sides controllable','Single-acting is faster','Double-acting has more force','No difference'],e:'Single-acting: cost-effective, simple control, return by spring (limited spring force). Double-acting: full force and control in both directions, 2 pressure ports.'}},
+  {c:0,kat:'mech',f:'',
+   de:{q:'FRL-Einheit in der Pneumatik: was bedeutet jeder Buchstabe?',opts:['Filter – Regler – Öler','Frequenz – Regelung – Leitung','Federdruck – Regelventil – Leckageschutz','Fließ – Rückdruck – Leitungsschutz'],e:'FRL = Wartungseinheit: F=Filter (Schmutz, Wasser), R=Druckregler (konstanter Arbeitsdruck), L=Öler (Schmierung der Ventile und Zylinder). Erste Station nach dem Kompressor.'},
+   en:{q:'FRL unit in pneumatics: what does each letter stand for?',opts:['Filter – Regulator – Lubricator','Frequency – Regulation – Line','Spring pressure – Control valve – Leak protection','Flow – Back pressure – Line protection'],e:'FRL = service unit: F=Filter (dirt, water), R=pressure Regulator (constant working pressure), L=Lubricator (lubrication of valves and cylinders). First station after compressor.'}},
 
   // ── NORMEN & VORSCHRIFTEN ───────────────────────────────────────
-  {q:'Was prüft VDE 0100-600 und wann wird sie angewendet?',f:'',kat:'pruef',opts:['Abnahmeprüfung neuer Niederspannungsanlagen: Sicht, Isolation, PE, FI, Funktion','Wartungsvorschriften für alte Anlagen','SPS-Programmierung','Schutzklassen von Motoren'],c:0,e:'VDE 0100-600: Erstprüfung (Abnahme) nach Errichtung. Umfasst Sichtprüfung, Durchgangsprüfung PE, Isolationsmessung (≥1MΩ), Schutzleiter, FI-Test, Kurzschlussstrom, Funktion.'},
-  {q:'DGUV Vorschrift 3: Wie oft müssen ortsveränderliche Betriebsmittel geprüft werden?',f:'',kat:'pruef',opts:['Je nach Einsatz: 6 Monate bis 2 Jahre (in Büros bis 4 Jahre)','Jährlich immer','Nur bei Verdacht auf Schaden','Alle 5 Jahre'],c:0,e:'DGUV V3: Fristen nach Gefährdungsbeurteilung. Baustellen: 3 Monate. Harte Nutzung: 6 Monate. Büro: bis 5 Jahre. Stationäre Anlagen: 4 Jahre. Ergebnis im Prüfprotokoll!'},
-  {q:'Was bedeutet IP 67?',f:'',kat:'pruef',opts:['Vollständig staubdicht + zeitweiliges Untertauchen bis 1m/30min','Staubdicht + Strahlwassergeschützt','Staubdicht + Druckwasserdicht','Berührungsgeschützt + Spritzwassergeschützt'],c:0,e:'IP 67: Ziffer 6 = vollständig staubdicht. Ziffer 7 = Schutz gegen zeitweiliges Untertauchen (bis 1m, 30 min). Typisch für Außenanlagen, Lebensmittelbereich.'},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'Was prüft VDE 0100-600 und wann wird sie angewendet?',opts:['Abnahmeprüfung neuer Niederspannungsanlagen: Sicht, Isolation, PE, FI, Funktion','Wartungsvorschriften für alte Anlagen','SPS-Programmierung','Schutzklassen von Motoren'],e:'VDE 0100-600: Erstprüfung (Abnahme) nach Errichtung. Umfasst Sichtprüfung, Durchgangsprüfung PE, Isolationsmessung (≥1MΩ), Schutzleiter, FI-Test, Kurzschlussstrom, Funktion.'},
+   en:{q:'What does VDE 0100-600 test and when is it applied?',opts:['Acceptance inspection of new LV installations: visual, insulation, PE, RCD, function','Maintenance rules for old installations','PLC programming','Motor protection classes'],e:'VDE 0100-600: initial inspection (acceptance) after installation. Includes visual check, PE continuity, insulation (≥1MΩ), protective conductor, RCD test, short-circuit current, function.'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'DGUV Vorschrift 3: Wie oft müssen ortsveränderliche Betriebsmittel geprüft werden?',opts:['Je nach Einsatz: 6 Monate bis 2 Jahre (in Büros bis 4 Jahre)','Jährlich immer','Nur bei Verdacht auf Schaden','Alle 5 Jahre'],e:'DGUV V3: Fristen nach Gefährdungsbeurteilung. Baustellen: 3 Monate. Harte Nutzung: 6 Monate. Büro: bis 5 Jahre. Stationäre Anlagen: 4 Jahre. Ergebnis im Prüfprotokoll!'},
+   en:{q:'DGUV Regulation 3: how often must portable equipment be inspected?',opts:['Depends on use: 6 months to 2 years (offices up to 4 years)','Annually always','Only if damage is suspected','Every 5 years'],e:'DGUV V3: intervals based on risk assessment. Construction: 3 months. Heavy use: 6 months. Office: up to 5 years. Fixed installations: 4 years. Result in inspection protocol!'}},
+  {c:0,kat:'pruef',f:'',
+   de:{q:'Was bedeutet IP 67?',opts:['Vollständig staubdicht + zeitweiliges Untertauchen bis 1m/30min','Staubdicht + Strahlwassergeschützt','Staubdicht + Druckwasserdicht','Berührungsgeschützt + Spritzwassergeschützt'],e:'IP 67: Ziffer 6 = vollständig staubdicht. Ziffer 7 = Schutz gegen zeitweiliges Untertauchen (bis 1m, 30 min). Typisch für Außenanlagen, Lebensmittelbereich.'},
+   en:{q:'What does IP 67 mean?',opts:['Fully dust-tight + temporary submersion up to 1m/30min','Dust-tight + water-jet protected','Dust-tight + high-pressure water protected','Touch-protected + splash-proof'],e:'IP 67: digit 6 = fully dust-tight. Digit 7 = protection against temporary submersion (up to 1m, 30 min). Typical for outdoor and food industry applications.'}},
 
   // ── REGELUNGSTECHNIK ────────────────────────────────────────────
-  {q:'Was ist der Unterschied zwischen P-Regler und PI-Regler?',f:'',kat:'sps',opts:['P hat bleibende Regelabweichung, PI beseitigt sie durch Integralanteil','P ist schneller, PI langsamer','Kein praktischer Unterschied','PI hat mehr Energie'],c:0,e:'P-Regler: einfach, schnell, aber bleibende Regelabweichung (stationärer Fehler). PI-Regler: Integralanteil summiert Fehler auf → beseitigt stationären Fehler, aber langsamer. Für genaue Temperatur- und Druckregelung PI.'},
-  {q:'Welcher PID-Anteil dämpft Schwingungen und reagiert auf schnelle Änderungen?',f:'',kat:'sps',opts:['D-Anteil (Differenzial)','P-Anteil (Proportional)','I-Anteil (Integral)','Keiner'],c:0,e:'D-Anteil: reagiert auf die Änderungsgeschwindigkeit der Regelabweichung (ė). Wirkt dämpfend auf Schwingungen, beschleunigt Reaktion auf schnelle Störungen. Nachteil: verstärkt Messrauschen.'},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Was ist der Unterschied zwischen P-Regler und PI-Regler?',opts:['P hat bleibende Regelabweichung, PI beseitigt sie durch Integralanteil','P ist schneller, PI langsamer','Kein praktischer Unterschied','PI hat mehr Energie'],e:'P-Regler: einfach, schnell, aber bleibende Regelabweichung (stationärer Fehler). PI-Regler: Integralanteil summiert Fehler auf → beseitigt stationären Fehler, aber langsamer. Für genaue Temperatur- und Druckregelung PI.'},
+   en:{q:'What is the difference between a P controller and PI controller?',opts:['P has steady-state error, PI eliminates it via integral term','P is faster, PI slower','No practical difference','PI has more energy'],e:'P controller: simple, fast, but steady-state error remains. PI controller: integral term accumulates error → eliminates steady-state error, but slower. Use PI for precise temperature and pressure control.'}},
+  {c:0,kat:'sps',f:'',
+   de:{q:'Welcher PID-Anteil dämpft Schwingungen und reagiert auf schnelle Änderungen?',opts:['D-Anteil (Differenzial)','P-Anteil (Proportional)','I-Anteil (Integral)','Keiner'],e:'D-Anteil: reagiert auf die Änderungsgeschwindigkeit der Regelabweichung (ė). Wirkt dämpfend auf Schwingungen, beschleunigt Reaktion auf schnelle Störungen. Nachteil: verstärkt Messrauschen.'},
+   en:{q:'Which PID term damps oscillations and responds to rapid changes?',opts:['D term (derivative)','P term (proportional)','I term (integral)','None'],e:'D term: reacts to rate of change of control error (ė). Damps oscillations, speeds response to fast disturbances. Disadvantage: amplifies measurement noise.'}},
 ];
 
 
@@ -1646,7 +1833,7 @@ function getProgress(lfId){
   var p=progress[lfId];
   if(!p)return{done:0,total:0};
   var lf=LERNFELDER.find(function(l){return l.id===lfId;});
-  var total=lf?lf.themen.length:0;
+  var total=lf?lf.de.themen.length:0;
   var done=Object.keys(p).filter(function(k){return p[k];}).length;
   return{done:done,total:total};
 }
@@ -1667,9 +1854,11 @@ function buildLernfelder(){
       var c=colorForFarbe(lf.farbe);
       var p=getProgress(lf.id);
       var pct=p.total?Math.round(p.done/p.total*100):0;
+      var lfLang=currentLang==='en'?lf.en:lf.de;
+      var themenLabel=currentLang==='en'?'Topics':'Themen';
       return '<div class="lf-tile" data-lf="'+lf.id+'">'+
         '<div class="lf-num" style="background:'+c.ic+';border-color:'+c.bc+';color:'+c.tc+'">'+lf.nr.split(' ')[1]+'</div>'+
-        '<div class="lf-body"><div class="lf-title">'+lf.nr+' – '+lf.titel+'</div><div class="lf-meta">'+lf.stunden+' · '+lf.themen.length+' Themen</div></div>'+
+        '<div class="lf-body"><div class="lf-title">'+lf.nr+' – '+lfLang.titel+'</div><div class="lf-meta">'+lf.stunden+' · '+lfLang.themen.length+' '+themenLabel+'</div></div>'+
         '<div style="text-align:right;flex-shrink:0;"><div class="lf-pct" style="color:'+c.tc+'">'+pct+'%</div><div class="lf-pbar"><div class="lf-pfill" style="width:'+pct+'%;background:'+c.tc+'"></div></div></div>'+
       '</div>';
     }).join('');
@@ -1688,11 +1877,15 @@ function buildDetail(lfId){
   var c=colorForFarbe(lf.farbe);
   if(!progress[lfId])progress[lfId]={};
   var el=document.getElementById('detail-content');
+  var lfLang=currentLang==='en'?lf.en:lf.de;
+  var hintText=currentLang==='en'?'// Tick topics once you know them':'// Themen abhaken sobald du sie kennst';
+  var markAllText=currentLang==='en'?'✓ Tick all':'✓ Alle abhaken';
+  var tickedToast=currentLang==='en'?'✓ All topics ticked':'✓ Alle Themen abgehakt';
   el.innerHTML='<div class="card">'+
     '<div style="font-family:var(--mo);font-size:10px;font-weight:700;color:'+c.tc+';letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;">'+lf.nr+' · '+lf.stunden+'</div>'+
-    '<div style="font-family:var(--sa);font-size:16px;font-weight:700;color:var(--tx);margin-bottom:.75rem;line-height:1.4;">'+lf.titel+'</div>'+
-    '<p class="hint">// Themen abhaken sobald du sie kennst</p>'+
-    lf.themen.map(function(t,i){
+    '<div style="font-family:var(--sa);font-size:16px;font-weight:700;color:var(--tx);margin-bottom:.75rem;line-height:1.4;">'+lfLang.titel+'</div>'+
+    '<p class="hint">'+hintText+'</p>'+
+    lfLang.themen.map(function(t,i){
       var done=progress[lfId][i];
       return '<div class="topic-item" data-lf="'+lfId+'" data-idx="'+i+'">'+
         '<div class="topic-check'+(done?' done':'')+'">'+( done?'✓':'')+'</div>'+
@@ -1700,7 +1893,7 @@ function buildDetail(lfId){
       '</div>';
     }).join('')+
   '</div>'+
-  '<button class="btn btn-s" id="mark-all-btn">✓ Alle abhaken</button>';
+  '<button class="btn btn-s" id="mark-all-btn">'+markAllText+'</button>';
   document.querySelectorAll('.topic-item').forEach(function(item){
     item.addEventListener('click',function(){
       var lid=this.dataset.lf,idx=parseInt(this.dataset.idx);
@@ -1710,8 +1903,8 @@ function buildDetail(lfId){
     });
   });
   var _el_mark_all_btn=document.getElementById('mark-all-btn');if(_el_mark_all_btn)_el_mark_all_btn.addEventListener('click',function(){
-    lf.themen.forEach(function(_,i){progress[lfId][i]=true;});
-    save();buildDetail(lfId);toast('✓ Alle Themen abgehakt');
+    lfLang.themen.forEach(function(_,i){progress[lfId][i]=true;});
+    save();buildDetail(lfId);toast(tickedToast);
   });
 }
 
@@ -1731,18 +1924,19 @@ function initCards(filter){
 }
 function showCard(){
   if(!fcDeck.length){
-    document.getElementById('fc-q').textContent='Keine Karten in dieser Kategorie!';
+    document.getElementById('fc-q').textContent=currentLang==='en'?'No cards in this category!':'Keine Karten in dieser Kategorie!';
     document.getElementById('fc-formula').textContent='';
     document.getElementById('fc-tag').textContent='';
     return;
   }
   var card=fcDeck[fcIdx];
-  document.getElementById('fc-tag').textContent=card.tag;
+  var cardLang=currentLang==='en'?card.en:card.de;
+  document.getElementById('fc-tag').textContent=cardLang.tag;
   document.getElementById('fc-formula').textContent=card.formel||'';
   document.getElementById('fc-formula').style.display=card.formel?'block':'none';
-  document.getElementById('fc-q').textContent=card.frage;
-  document.getElementById('fc-ans').textContent=card.antwort;
-  document.getElementById('fc-exp').textContent=card.erklaer;
+  document.getElementById('fc-q').textContent=cardLang.frage;
+  document.getElementById('fc-ans').textContent=cardLang.antwort;
+  document.getElementById('fc-exp').textContent=cardLang.erklaer;
   var fc=document.getElementById('fc');
   fc.classList.remove('flip');
   fcFlipped=false;
@@ -1872,7 +2066,7 @@ var _el_quiz_back=document.getElementById('quiz-back');if(_el_quiz_back)_el_quiz
 // FORTSCHRITT
 // ══════════════════════════════════════════════
 function buildFortschritt(){
-  var totalThemen=LERNFELDER.reduce(function(s,lf){return s+lf.themen.length;},0);
+  var totalThemen=LERNFELDER.reduce(function(s,lf){return s+lf.de.themen.length;},0);
   var doneThemen=LERNFELDER.reduce(function(s,lf){
     if(!progress[lf.id])return s;
     return s+Object.keys(progress[lf.id]).filter(function(k){return progress[lf.id][k];}).length;
@@ -1893,7 +2087,8 @@ function buildFortschritt(){
   else{
     var unkCards=CARDS.filter(function(c){return fcUnknown.indexOf(c.id)>-1;});
     unkEl.innerHTML=unkCards.map(function(c){
-      return '<div style="font-family:var(--mo);font-size:11px;color:var(--tx2);padding:.4rem 0;border-bottom:1px solid var(--br);">'+c.tag+' · '+c.frage+'</div>';
+      var cLang=currentLang==='en'?c.en:c.de;
+      return '<div style="font-family:var(--mo);font-size:11px;color:var(--tx2);padding:.4rem 0;border-bottom:1px solid var(--br);">'+cLang.tag+' · '+cLang.frage+'</div>';
     }).join('');
   }
 }
@@ -2245,12 +2440,13 @@ function showSRCard(){
   var sr = getSR(card.id);
   srFlipped = false;
   document.getElementById('sr-fc').classList.remove('flip');
-  document.getElementById('sr-tag').textContent = card.tag;
+  var srCardLang = currentLang==='en' ? card.en : card.de;
+  document.getElementById('sr-tag').textContent = srCardLang.tag;
   document.getElementById('sr-formula').textContent = card.formel||'';
   document.getElementById('sr-formula').style.display = card.formel ? 'block':'none';
-  document.getElementById('sr-q').textContent = card.frage;
-  document.getElementById('sr-ans').textContent = card.antwort;
-  document.getElementById('sr-exp').textContent = card.erklaer;
+  document.getElementById('sr-q').textContent = srCardLang.frage;
+  document.getElementById('sr-ans').textContent = srCardLang.antwort;
+  document.getElementById('sr-exp').textContent = srCardLang.erklaer;
   document.getElementById('sr-rate-btns').style.display = 'none';
   var pct = Math.round(srSessIdx/srSession.length*100);
   document.getElementById('sr-prog').style.width = pct+'%';
@@ -3181,7 +3377,8 @@ if('serviceWorker' in navigator){
   var isLocal = ['localhost','127.0.0.1','0.0.0.0'].includes(location.hostname)
              || location.protocol === 'file:'
              || location.hostname.endsWith('.local')
-             || location.hostname.endsWith('.github.io');
+             || location.hostname.endsWith('.github.io')
+             || location.protocol === 'https:';
   if(isLocal){
     window.addEventListener('load', function(){
       navigator.serviceWorker.register('./pwa/sw.js', {scope: './'})

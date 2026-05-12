@@ -1,0 +1,12 @@
+---
+# ══════════════════════════════════════════════════════════════
+# Arc Studio — IONOS Deploy Now Konfiguration
+# Docs: https://docs.ionos.space/
+# ══════════════════════════════════════════════════════════════
+
+distFolder: .          # Ausgabeordner (Root, da kein Build nötig)
+ionosNamespace: ""     # Wird von IONOS automatisch befüllt
+
+# Kein Build-Prozess notwendig (reines HTML/CSS/JS)
+# Falls du später einen Build-Schritt brauchst:
+# buildCommand: "echo 'No build needed'"
